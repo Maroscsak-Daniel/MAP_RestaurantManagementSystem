@@ -23,7 +23,11 @@ public class Chef extends Staff {
     }
 
     @Override
-    public void displayInfo() {
-        System.out.println("Chef - ID: " + getId() + ", Name: " + getName() + ", Specialization: " + specialization);
+    public String toString() {
+        return "Chef{" +
+                "id='" + getId() + '\'' +
+                ", name='" + getName() + '\'' +
+                ", specialization='" + specialization + '\'' +
+                '}';
     }
 }

@@ -23,7 +23,12 @@ public class Server extends Staff {
     }
 
     @Override
-    public void displayInfo() {
-        System.out.println("Server - ID: " + getId() + ", Name: " + getName() + ", Designation: " + designation);
+    public String toString() {
+        return "Server{" +
+                "id='" + getId() + '\'' +
+                ", name='" + getName() + '\'' +
+                ", designation='" + designation + '\'' +
+                '}';
     }
+
 }
