@@ -34,4 +34,15 @@ public class Bill {
     public void setTotalAmount(double totalAmount) {
         this.totalAmount = totalAmount;
     }
+
+    @Override
+    public String toString() {
+        return "Bill{" +
+                "Id='" + Id + '\'' +
+                ", orderId='" + orderId + '\'' +
+                ", totalAmount=" + totalAmount +
+                '}';
+    }
+
+
 }
