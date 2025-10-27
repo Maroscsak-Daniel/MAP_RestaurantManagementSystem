@@ -7,19 +7,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class OrderLineRepository {
+public class OrderLineRepository implements AbstractRepository<OrderLine>{
 
     private final List<OrderLine> orderLines = new ArrayList<>();
 
-    public void save(OrderLine orderLine) {
+    @Override
+    public OrderLine save(OrderLine orderLine) {
         delete(orderLine.getId());
         orderLines.add(orderLine);
+        return orderLine;
     }
 
+    @Override
     public List<OrderLine> findAll() {
         return new ArrayList<>(orderLines);
     }
 
+    @Override
     public OrderLine findById(String id) {
         for (OrderLine ol : orderLines) {
             if (ol.getId().equals(id)) {
@@ -29,8 +33,10 @@ public class OrderLineRepository {
         return null;
     }
 
-    public void delete(String id) {
+    @Override
+    public OrderLine delete(String id) {
         orderLines.removeIf(ol -> ol.getId().equals(id));
+        return  findById(id);
     }
 
     public void clear() {

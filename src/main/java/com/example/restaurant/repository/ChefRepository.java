@@ -7,19 +7,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class ChefRepository {
+public class ChefRepository implements AbstractRepository<Chef> {
 
     private final List<Chef> chefs = new ArrayList<>();
 
-    public void save(Chef chef) {
+    @Override
+    public Chef save(Chef chef) {
         delete(chef.getId());
         chefs.add(chef);
+        return chef;
     }
 
+    @Override
     public List<Chef> findAll() {
         return new ArrayList<>(chefs);
     }
 
+    @Override
     public Chef findById(String id) {
         for (Chef c : chefs) {
             if (c.getId().equals(id)) {
@@ -29,8 +33,10 @@ public class ChefRepository {
         return null;
     }
 
-    public void delete(String id) {
+    @Override
+    public Chef delete(String id) {
         chefs.removeIf(c -> c.getId().equals(id));
+        return findById(id);
     }
 
     public void clear() {

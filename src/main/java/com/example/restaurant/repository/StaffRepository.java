@@ -7,19 +7,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class StaffRepository {
+public class StaffRepository implements AbstractRepository<Staff>{
 
     private final List<Staff> staffList = new ArrayList<>();
 
-    public void save(Staff staff) {
+    @Override
+    public Staff save(Staff staff) {
         delete(staff.getId());
         staffList.add(staff);
+        return staff;
     }
 
+    @Override
     public List<Staff> findAll() {
         return new ArrayList<>(staffList);
     }
 
+    @Override
     public Staff findById(String id) {
         for (Staff s : staffList) {
             if (s.getId().equals(id)) {
@@ -29,8 +33,10 @@ public class StaffRepository {
         return null;
     }
 
-    public void delete(String id) {
+    @Override
+    public Staff delete(String id) {
         staffList.removeIf(s -> s.getId().equals(id));
+        return findById(id);
     }
 
     public void clear() {
