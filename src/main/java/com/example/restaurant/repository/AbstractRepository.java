@@ -9,5 +9,4 @@ public interface AbstractRepository <T>{
     T findById(String id);
     T delete(String Id);
 
-
 }
