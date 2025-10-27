@@ -34,4 +34,13 @@ public class OrderAssignment {
     public void setStaffId(String staffId) {
         this.staffId = staffId;
     }
+
+    @Override
+    public String toString() {
+        return "OrderAssignment{" +
+                "Id='" + Id + '\'' +
+                ", OrderId='" + OrderId + '\'' +
+                ", staffId='" + staffId + '\'' +
+                '}';
+    }
 }

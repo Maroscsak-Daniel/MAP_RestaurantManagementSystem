@@ -8,9 +8,9 @@ public class Order {
     private String tableId;
     private String status;
     private ArrayList<OrderLine> orderLines;
-    private ArrayList<Assignment> assignments;
+    private ArrayList<OrderAssignment> assignments;
 
-    public Order(String id, String customerId, String tableId, String status, ArrayList<OrderLine> orderLines, ArrayList<Assignment> assignments) {
+    public Order(String id, String customerId, String tableId, String status, ArrayList<OrderLine> orderLines, ArrayList<OrderAssignment> assignments) {
         Id = id;
         this.customerId = customerId;
         this.tableId = tableId;
@@ -59,11 +59,23 @@ public class Order {
         this.orderLines = orderLines;
     }
 
-    public ArrayList<Assignment> getAssignments() {
+    public ArrayList<OrderAssignment> getAssignments() {
         return assignments;
     }
 
-    public void setAssignments(ArrayList<Assignment> assignments) {
+    public void setAssignments(ArrayList<OrderAssignment> assignments) {
         this.assignments = assignments;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "Id='" + Id + '\'' +
+                ", customerId='" + customerId + '\'' +
+                ", tableId='" + tableId + '\'' +
+                ", status='" + status + '\'' +
+                ", orderLines=" + orderLines +
+                ", assignments=" + assignments +
+                '}';
     }
 }

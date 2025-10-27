@@ -36,4 +36,13 @@ public class Customer {
     public void setOrders(ArrayList<Order> orders) {
         this.orders = orders;
     }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "Id='" + Id + '\'' +
+                ", name='" + name + '\'' +
+                ", orders=" + orders +
+                '}';
+    }
 }

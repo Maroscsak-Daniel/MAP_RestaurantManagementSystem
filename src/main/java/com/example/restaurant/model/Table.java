@@ -46,4 +46,14 @@ public class Table {
     public void setOrders(ArrayList<Order> orders) {
         this.orders = orders;
     }
+
+    @Override
+    public String toString() {
+        return "Table{" +
+                "Id='" + Id + '\'' +
+                ", number=" + number +
+                ", occupiedStatus='" + occupiedStatus + '\'' +
+                ", orders=" + orders +
+                '}';
+    }
 }
