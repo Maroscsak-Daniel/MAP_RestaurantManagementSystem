@@ -2,12 +2,14 @@ package com.example.restaurant.repository;
 
 import com.example.restaurant.model.Order;
 import com.example.restaurant.model.Table;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class TableRepo implements AbstractRepository<Table> {
-    private List<Table> tableRepo = new ArrayList<>();
+    private final List<Table> tableRepo = new ArrayList<>();
 
     @Override
     public Table save(Table table) {

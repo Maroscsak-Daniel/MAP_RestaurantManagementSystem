@@ -2,10 +2,12 @@ package com.example.restaurant.repository;
 
 import com.example.restaurant.model.Order;
 import com.example.restaurant.model.OrderAssignment;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class OrderAssignmentRepo implements AbstractRepository<OrderAssignment> {
     private List<OrderAssignment> orderAssignmentRepo = new ArrayList<>();
 
