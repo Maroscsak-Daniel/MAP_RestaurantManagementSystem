@@ -81,17 +81,21 @@ public class RestaurantManagementSystemApplication {
 
             Order o1 = new Order("O1", "C1", "T1", "Open", orderLines, orderss);
             Order o2 = new Order("O2", "C2", "T2", "Closed", orderLines, orderss);
-            ArrayList<Order> order = new ArrayList<>();
-            order.add(o1);
-            order.add(o2);
+            orderService.add(o1);
+            orderService.add(o2);
+            ArrayList<Order> orders = new ArrayList<>();
+            orders.add(o1);
+            orders.add(o2);
 
-            Customer c1 = new Customer("C1", "John Smith", order );
-            Customer c2 = new Customer("C2", "Emily Davis", order);
+
+
+            Customer c1 = new Customer("C1", "John Smith", orders);
+            Customer c2 = new Customer("C2", "Emily Davis", orders);
             customerService.add(c1);
             customerService.add(c2);
 
-            Table t1 = new Table("T1", 1, "Free", order);
-            Table t2 = new Table("T2", 2, "Occupied", order);
+            Table t1 = new Table("T1", 1, "Free", orders);
+            Table t2 = new Table("T2", 2, "Occupied", orders);
             tableService.add(t1);
             tableService.add(t2);
 
