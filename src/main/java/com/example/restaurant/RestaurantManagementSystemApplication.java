@@ -64,7 +64,7 @@ public class RestaurantManagementSystemApplication {
             menuItemService.getAllMenuItems().forEach(System.out::println);
 
 
-            // ===== PART 2: Colleague’s Section =====
+            // ===== PART 2: Ingrid Matei =====
             CustomerService customerService = context.getBean(CustomerService.class);
             TableService tableService = context.getBean(TableService.class);
             OrderService orderService = context.getBean(OrderService.class);
@@ -75,18 +75,17 @@ public class RestaurantManagementSystemApplication {
             OrderAssignment a2 = new OrderAssignment("A2", "O2", "S2");
             assignmentService.add(a1);
             assignmentService.add(a2);
-            ArrayList<OrderAssignment> orderss = new ArrayList<>();
-            orderss.add(a1);
-            orderss.add(a2);
+            ArrayList<OrderAssignment> assignments = new ArrayList<>();
+            assignments.add(a1);
+            assignments.add(a2);
 
-            Order o1 = new Order("O1", "C1", "T1", "Open", orderLines, orderss);
-            Order o2 = new Order("O2", "C2", "T2", "Closed", orderLines, orderss);
+            Order o1 = new Order("O1", "C1", "T1", "Open", orderLines, assignments);
+            Order o2 = new Order("O2", "C2", "T2", "Closed", orderLines, assignments);
             orderService.add(o1);
             orderService.add(o2);
             ArrayList<Order> orders = new ArrayList<>();
             orders.add(o1);
             orders.add(o2);
-
 
 
             Customer c1 = new Customer("C1", "John Smith", orders);
