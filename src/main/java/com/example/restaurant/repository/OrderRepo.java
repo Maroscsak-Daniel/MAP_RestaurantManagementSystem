@@ -3,10 +3,12 @@ package com.example.restaurant.repository;
 import com.example.restaurant.model.Bill;
 import com.example.restaurant.model.Customer;
 import com.example.restaurant.model.Order;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class OrderRepo implements AbstractRepository <Order>{
     private List<Order> orderRepo = new ArrayList<Order>();
 

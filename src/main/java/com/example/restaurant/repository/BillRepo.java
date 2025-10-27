@@ -2,12 +2,14 @@ package com.example.restaurant.repository;
 
 import com.example.restaurant.model.Bill;
 import com.example.restaurant.model.Customer;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class BillRepo  implements AbstractRepository < Bill>{
-    private List<Bill> billRepo =  new ArrayList<>();
+    private final List<Bill> billRepo =  new ArrayList<>();
 
 
     @Override
