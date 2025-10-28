@@ -1,6 +1,8 @@
 package com.example.restaurant.model;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Order {
     private String Id;
@@ -67,15 +69,33 @@ public class Order {
         this.assignments = assignments;
     }
 
+//    @Override
+//    public String toString() {
+//        return "Order{" +
+//                "Id='" + Id + '\'' +
+//                ", customerId='" + customerId + '\'' +
+//                ", tableId='" + tableId + '\'' +
+//                ", status='" + status + '\'' +
+//                ", orderLines=" + orderLines +
+//                ", assignments=" + assignments +
+//                '}';
+//    }
+
     @Override
     public String toString() {
-        return "Order{" +
-                "Id='" + Id + '\'' +
-                ", customerId='" + customerId + '\'' +
-                ", tableId='" + tableId + '\'' +
-                ", status='" + status + '\'' +
-                ", orderLines=" + orderLines +
-                ", assignments=" + assignments +
-                '}';
+        return "Order {\n" +
+                "  Id='" + Id + "',\n" +
+                "  customerId='" + customerId + "',\n" +
+                "  tableId='" + tableId + "',\n" +
+                "  status='" + status + "',\n" +
+                "  orderLines=" + formatList(orderLines) + ",\n" +
+                "  assignments=" + formatList(assignments) + "\n" +
+                "}";
+    }
+
+    private String formatList(List<?> list) {
+        return list.stream()
+                .map(item -> "    " + item.toString())
+                .collect(Collectors.joining(",\n", "[\n", "\n  ]"));
     }
 }
