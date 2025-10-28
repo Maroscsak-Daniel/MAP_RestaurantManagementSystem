@@ -1,7 +1,7 @@
 package com.example.restaurant.service;
 
 import com.example.restaurant.model.Bill;
-import com.example.restaurant.repository.BillRepo;
+import com.example.restaurant.repository.BillRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,9 +10,9 @@ import java.util.stream.Collectors;
 @Service
 public class BillService {
 
-    private final BillRepo repo;
+    private final BillRepository repo;
 
-    public BillService(BillRepo repo) {
+    public BillService(BillRepository repo) {
         this.repo = repo;
     }
 

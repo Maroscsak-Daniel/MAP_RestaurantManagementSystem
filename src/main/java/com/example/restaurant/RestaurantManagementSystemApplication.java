@@ -37,8 +37,8 @@ public class RestaurantManagementSystemApplication {
             System.out.println("All Menu Items:");
             menuItemService.getAllMenuItems().forEach(System.out::println);
 
-            Chef chef = new Chef("C1", "Gordon Ramsay", "Italian Cuisine");
-            Server server = new Server("S1", "Alice Johnson", "Waitress");
+            Chef chef = new Chef("C1", "Gordon Ramsay", " 3 years", "Italian Cuisine");
+            Server server = new Server("S1", "Alice Johnson", "2 years", "Waitress");
             chefService.addChef(chef);
             serverService.addServer(server);
 
@@ -48,8 +48,8 @@ public class RestaurantManagementSystemApplication {
             System.out.println("\nAll Servers:");
             serverService.getAllServers().forEach(System.out::println);
 
-            OrderLine ol1 = new OrderLine("OL1", "M1", 2);
-            OrderLine ol2 = new OrderLine("OL2", "M2", 1);
+            OrderLine ol1 = new OrderLine("OL1", "M1", 2, "peanuts");
+            OrderLine ol2 = new OrderLine("OL2", "M2", 1, "gluten");
             orderLineService.addOrderLine(ol1);
             orderLineService.addOrderLine(ol2);
             ArrayList<OrderLine> orderLines = new ArrayList<>();

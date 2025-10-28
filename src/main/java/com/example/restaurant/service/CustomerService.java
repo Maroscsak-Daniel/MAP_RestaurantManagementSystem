@@ -1,16 +1,16 @@
 package com.example.restaurant.service;
 
 import com.example.restaurant.model.Customer;
-import com.example.restaurant.repository.CustomerRepo;
+import com.example.restaurant.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 @Service
 public class CustomerService {
 
-    private final CustomerRepo repo;
+    private final CustomerRepository repo;
 
-    public CustomerService(CustomerRepo repo) {
+    public CustomerService(CustomerRepository repo) {
         this.repo = repo;
     }
 

@@ -4,7 +4,7 @@ import com.example.restaurant.model.Order;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class OrderRepo extends IRepository<Order>{
+public class OrderRepository extends IRepository<Order>{
 
     @Override
     protected String getId(Order order) {

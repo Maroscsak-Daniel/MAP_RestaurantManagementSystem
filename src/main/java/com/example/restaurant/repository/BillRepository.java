@@ -4,7 +4,7 @@ import com.example.restaurant.model.Bill;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class BillRepo extends IRepository<Bill>{
+public class BillRepository extends IRepository<Bill>{
 
     @Override
     protected String getId(Bill bill) {

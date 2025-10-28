@@ -4,8 +4,8 @@ public class Chef extends Staff {
 
     private String specialization;
 
-    public Chef(String id, String name, String specialization) {
-        super(id, name); // calls Staff constructor
+    public Chef(String id, String name, String experience, String specialization) {
+        super(id, name, experience); // calls Staff constructor
         this.specialization = specialization;
     }
 
@@ -25,6 +25,7 @@ public class Chef extends Staff {
         return "Chef{" +
                 "id='" + getId() + '\'' +
                 ", name='" + getName() + '\'' +
+                ", experience='" + getExperience() + '\'' +
                 ", specialization='" + specialization + '\'' +
                 '}';
     }

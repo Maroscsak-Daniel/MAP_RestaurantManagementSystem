@@ -5,12 +5,22 @@ public class OrderLine {
     private String id;
     private String menuItemId;
     private double quantity;
+    private String allergens;
 
     // Constructors
-    public OrderLine(String id, String menuItemId, double quantity) {
+    public OrderLine(String id, String menuItemId, double quantity,  String allergens) {
         this.id = id;
         this.menuItemId = menuItemId;
         this.quantity = quantity;
+        this.allergens = allergens;
+    }
+
+    public String getAllergens() {
+        return allergens;
+    }
+
+    public void setAllergens(String allergens) {
+        this.allergens = allergens;
     }
 
     public OrderLine() {
@@ -47,6 +57,7 @@ public class OrderLine {
         return "OrderLine{" +
                 "id='" + id + '\'' +
                 ", menuItemId='" + menuItemId + '\'' +
+                ", allergens='" + allergens + '\'' +
                 ", quantity=" + quantity +
                 '}';
     }

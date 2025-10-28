@@ -4,12 +4,16 @@ public abstract class Staff {
 
     private String id;
     private String name;
+    private String experience;
 
     // Constructor
-    public Staff(String id, String name) {
+    public Staff(String id, String name, String experience) {
         this.id = id;
         this.name = name;
+        this.experience = experience;
     }
+
+
 
     // Default constructor (optional, for frameworks)
     public Staff() {
@@ -32,8 +36,16 @@ public abstract class Staff {
         this.name = name;
     }
 
+    public String getExperience() {
+        return experience;
+    }
+
+    public void setExperience(String experience) {
+        this.experience = experience;
+    }
+
     // Optional: a method common to all staff members
     public void displayInfo() {
-        System.out.println("ID: " + id + ", Name: " + name);
+        System.out.println("ID: " + id + ", Name: " + name + " Experience: " + experience);
     }
 }

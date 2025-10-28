@@ -6,6 +6,7 @@ public class MenuItem {
     private String name;
     private double price;
 
+
     // Constructors
     public MenuItem(String id, String name, double price) {
         this.id = id;

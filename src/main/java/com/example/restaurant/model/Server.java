@@ -5,8 +5,8 @@ public class Server extends Staff {
     private String designation;
 
     // Constructor
-    public Server(String id, String name, String designation) {
-        super(id, name);
+    public Server(String id, String name, String experience,  String designation) {
+        super(id, name, experience);
         this.designation = designation;
     }
 
@@ -27,6 +27,7 @@ public class Server extends Staff {
         return "Server{" +
                 "id='" + getId() + '\'' +
                 ", name='" + getName() + '\'' +
+                ", experience='" + getExperience() + '\'' +
                 ", designation='" + designation + '\'' +
                 '}';
     }

@@ -1,7 +1,7 @@
 package com.example.restaurant.service;
 
 import com.example.restaurant.model.Order;
-import com.example.restaurant.repository.OrderRepo;
+import com.example.restaurant.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,9 +10,9 @@ import java.util.stream.Collectors;
 @Service
 public class OrderService {
 
-    private final OrderRepo repo;
+    private final OrderRepository repo;
 
-    public OrderService(OrderRepo repo) {
+    public OrderService(OrderRepository repo) {
         this.repo = repo;
     }
 
