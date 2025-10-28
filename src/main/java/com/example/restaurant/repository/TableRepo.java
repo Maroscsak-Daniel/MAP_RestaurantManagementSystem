@@ -1,46 +1,14 @@
 package com.example.restaurant.repository;
 
-import com.example.restaurant.model.Order;
 import com.example.restaurant.model.Table;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Repository
-public class TableRepo implements AbstractRepository<Table> {
-    private final List<Table> tableRepo = new ArrayList<>();
+public class TableRepo extends IRepository<Table> {
 
     @Override
-    public Table save(Table table) {
-        delete(table.getId());
-        tableRepo.add(table);
-        return table;
+    protected String getId(Table table) {
+        return table.getId();
     }
 
-    @Override
-    public List<Table> findAll() {
-        return new ArrayList<>(tableRepo);
-    }
-
-    @Override
-    public Table findById(String id) {
-        for (Table t : tableRepo) {
-            if (t.getId().equals(id)) {
-                return t;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public Table delete(String id) {
-        tableRepo.removeIf(c -> c.getId().equals(id));
-        return findById(id);
-    }
-
-
-    public void clear() {
-        tableRepo.clear();
-    }
 }
