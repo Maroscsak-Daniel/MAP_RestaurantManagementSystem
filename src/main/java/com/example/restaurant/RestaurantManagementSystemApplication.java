@@ -79,8 +79,8 @@ public class RestaurantManagementSystemApplication {
             assignments.add(a1);
             assignments.add(a2);
 
-            Order o1 = new Order("O1", "C1", "T1", "Open", orderLines, assignments);
-            Order o2 = new Order("O2", "C2", "T2", "Closed", orderLines, assignments);
+            Order o1 = new Order("O1", "C1", "T1", "Open", orderLines, assignments, "cash");
+            Order o2 = new Order("O2", "C2", "T2", "Closed", orderLines, assignments, "card");
             orderService.add(o1);
             orderService.add(o2);
             ArrayList<Order> orders = new ArrayList<>();

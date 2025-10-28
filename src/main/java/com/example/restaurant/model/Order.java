@@ -11,14 +11,24 @@ public class Order {
     private String status;
     private ArrayList<OrderLine> orderLines;
     private ArrayList<OrderAssignment> assignments;
+    private String paymentMethod;
 
-    public Order(String id, String customerId, String tableId, String status, ArrayList<OrderLine> orderLines, ArrayList<OrderAssignment> assignments) {
+    public Order(String id, String customerId, String tableId, String status, ArrayList<OrderLine> orderLines, ArrayList<OrderAssignment> assignments, String paymentMethod) {
         Id = id;
         this.customerId = customerId;
         this.tableId = tableId;
         this.status = status;
         this.orderLines = orderLines;
         this.assignments = assignments;
+        this.paymentMethod = paymentMethod;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 
     public String getId() {
@@ -84,12 +94,13 @@ public class Order {
     @Override
     public String toString() {
         return "Order {\n" +
-                "  Id='" + Id + "',\n" +
-                "  customerId='" + customerId + "',\n" +
-                "  tableId='" + tableId + "',\n" +
-                "  status='" + status + "',\n" +
-                "  orderLines=" + formatList(orderLines) + ",\n" +
-                "  assignments=" + formatList(assignments) + "\n" +
+                "  Id= '" + Id + "',\n" +
+                "  customerId= '" + customerId + "',\n" +
+                "  tableId= '" + tableId + "',\n" +
+                "  status= '" + status + "',\n" +
+                "  orderLines= " + formatList(orderLines) + ",\n" +
+                "  assignments= " + formatList(assignments) + "\n" +
+                "  payment method= " + paymentMethod + "\n" +
                 "}";
     }
 
@@ -98,4 +109,5 @@ public class Order {
                 .map(item -> "    " + item.toString())
                 .collect(Collectors.joining(",\n", "[\n", "\n  ]"));
     }
+
 }
