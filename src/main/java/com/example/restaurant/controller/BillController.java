@@ -2,49 +2,52 @@ package com.example.restaurant.controller;
 
 import com.example.restaurant.model.Bill;
 import com.example.restaurant.service.BillService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-@RestController
+@Controller
 @RequestMapping("/bills")
 public class BillController {
 
-    private final BillService service;
+    private final BillService billService;
 
-    public BillController(BillService service) {
-        this.service = service;
+    public BillController(BillService billService) {
+        this.billService = billService;
+        // Date inițiale pentru testare
+        if (billService.getAll().isEmpty()) {
+            billService.add(new Bill("B001", "O100", 55.50));
+            billService.add(new Bill("B002", "O101", 120.00));
+        }
     }
 
-    @GetMapping("/all")
-    public List<Bill> all() {
-        return service.getAll();
+    // GET /bills - Afișează lista completă (GET all)
+    @GetMapping
+    public String getAllBills(Model model) {
+        model.addAttribute("bills", billService.getAll());
+        // Returnează templates/bill/index.html
+        return "bill/index";
     }
 
-    @GetMapping("/{id}")
-    public Bill byId(@PathVariable String id) {
-        return service.getById(id);
+    // GET /bills/new - Afișează formularul de creare
+    @GetMapping("/new")
+    public String showCreateForm(Model model) {
+        model.addAttribute("bill", new Bill(null, null, 0.0));
+        // Returnează templates/bill/form.html
+        return "bill/form";
     }
 
-    @GetMapping("/by-order/{orderId}")
-    public List<Bill> byOrder(@PathVariable String orderId) {
-        return service.getByOrderId(orderId);
+    // POST /bills - Procesează formularul și creează obiectul (CREATE)
+    @PostMapping
+    public String createBill(@ModelAttribute Bill bill) {
+        billService.add(bill);
+        return "redirect:/bills";
     }
 
-    @PostMapping("/add")
-    public String add(@RequestBody Bill b) {
-        service.add(b);
-        return "Bill added.";
+    // POST /bills/{id}/delete - Șterge obiectul
+    @PostMapping("/{id}/delete")
+    public String deleteBill(@PathVariable String id) {
+        billService.delete(id);
+        return "redirect:/bills";
     }
-
-    @DeleteMapping("/{id}")
-    public String delete(@PathVariable String id) {
-        service.delete(id);
-        return "Bill deleted.";
-    }
-
-    @DeleteMapping("/clear")
-    public String clear() {
-        service.clear();
-        return "All bills cleared.";}
 }

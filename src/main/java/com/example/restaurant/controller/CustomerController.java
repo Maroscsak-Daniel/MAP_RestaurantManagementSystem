@@ -2,45 +2,58 @@ package com.example.restaurant.controller;
 
 import com.example.restaurant.model.Customer;
 import com.example.restaurant.service.CustomerService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import java.util.ArrayList; // Necesara pentru constructorul Customer
 
-import java.util.List;
-
-@RestController
+@Controller
 @RequestMapping("/customers")
 public class CustomerController {
 
-    private final CustomerService service;
+    private final CustomerService customerService;
 
-    public CustomerController(CustomerService service) {
-        this.service = service;
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
+        // Date inițiale pentru testare
+        if (customerService.getAll().isEmpty()) {
+            customerService.add(new Customer("C001", "Alina Munteanu", new ArrayList<>()));
+            customerService.add(new Customer("C002", "Marius Popa", new ArrayList<>()));
+        }
     }
 
-    @GetMapping("/all")
-    public List<Customer> all() {
-        return service.getAll();
+    // GET /customers - Afișează lista completă (GET all)
+    @GetMapping
+    public String getAllCustomers(Model model) {
+        model.addAttribute("customers", customerService.getAll());
+        // Returnează templates/customer/index.html
+        return "customer/index";
     }
 
-    @GetMapping("/{id}")
-    public Customer byId(@PathVariable String id) {
-        return service.getById(id);
+    // GET /customers/new - Afișează formularul de creare
+    @GetMapping("/new")
+    public String showCreateForm(Model model) {
+        // Obiect Customer gol. Orders este lăsat ArrayList gol.
+        model.addAttribute("customer", new Customer(null, null, new ArrayList<>()));
+        // Returnează templates/customer/form.html
+        return "customer/form";
     }
 
-    @PostMapping("/add")
-    public String add(@RequestBody Customer c) {
-        service.add(c);
-        return "Customer added.";
+    // POST /customers - Procesează formularul și creează obiectul (CREATE)
+    @PostMapping
+    public String createCustomer(@ModelAttribute Customer customer) {
+        // Asigurăm că lista de orders nu este null înainte de salvare
+        if (customer.getOrders() == null) {
+            customer.setOrders(new ArrayList<>());
+        }
+        customerService.add(customer);
+        return "redirect:/customers";
     }
 
-    @DeleteMapping("/{id}")
-    public String delete(@PathVariable String id) {
-        service.delete(id);
-        return "Customer deleted.";
-    }
-
-    @DeleteMapping("/clear")
-    public String clear() {
-        service.clear();
-        return "All customers cleared.";
+    // POST /customers/{id}/delete - Șterge obiectul
+    @PostMapping("/{id}/delete")
+    public String deleteCustomer(@PathVariable String id) {
+        customerService.delete(id);
+        return "redirect:/customers";
     }
 }

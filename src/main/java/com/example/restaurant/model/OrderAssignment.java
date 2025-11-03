@@ -10,6 +10,7 @@ public class OrderAssignment {
         OrderId = orderId;
         this.staffId = staffId;
     }
+    public OrderAssignment(){}
 
     public String getId() {
         return Id;

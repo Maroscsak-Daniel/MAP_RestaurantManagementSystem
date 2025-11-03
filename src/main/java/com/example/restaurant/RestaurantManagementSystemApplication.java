@@ -56,6 +56,7 @@ public class RestaurantManagementSystemApplication {
             orderLines.add(ol1);
             orderLines.add(ol2);
 
+
             System.out.println("\nAll OrderLines:");
             orderLineService.getAllOrderLines().forEach(System.out::println);
 

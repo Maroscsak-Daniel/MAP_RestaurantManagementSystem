@@ -2,11 +2,11 @@ package com.example.restaurant.controller;
 
 import com.example.restaurant.model.Chef;
 import com.example.restaurant.service.ChefService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-@RestController
+@Controller
 @RequestMapping("/chefs")
 public class ChefController {
 
@@ -14,33 +14,42 @@ public class ChefController {
 
     public ChefController(ChefService chefService) {
         this.chefService = chefService;
+        // Date inițiale pentru testare
+        if (chefService.getAllChefs().isEmpty()) {
+            chefService.addChef(new Chef("CH01", "Ion Popescu", "10 ani", "Patiserie"));
+            chefService.addChef(new Chef("CH02", "Maria Dobre", "5 ani", "Bucătărie Caldă"));
+        }
     }
 
-    @GetMapping("/all")
-    public List<Chef> getAll() {
-        return chefService.getAllChefs();
+    //[cite_start]// GET /chefs - Afișează lista completă (GET all) [cite: 51, 64]
+    @GetMapping
+    public String getAllChefs(Model model) {
+        model.addAttribute("chefs", chefService.getAllChefs());
+        // Returnează templates/chef/index.html
+        return "chef/index";
     }
 
-    @GetMapping("/{id}")
-    public Chef getById(@PathVariable String id) {
-        return chefService.getChefById(id);
+    //[cite_start]// GET /chefs/new - Afișează formularul de creare [cite: 52, 66]
+    @GetMapping("/new")
+    public String showCreateForm(Model model) {
+        // Obiect Chef gol, gata să primească date
+        model.addAttribute("chef", new Chef());
+        // Returnează templates/chef/form.html
+        return "chef/form";
     }
 
-    @PostMapping("/add")
-    public String add(@RequestBody Chef chef) {
+    //[cite_start]// POST /chefs - Procesează formularul și creează obiectul (CREATE) [cite: 66]
+    @PostMapping
+    public String createChef(@ModelAttribute Chef chef) {
+        //[cite_start]// Controllerul apelează Service-ul (respectă SRP și MVC) [cite: 130, 131, 134]
         chefService.addChef(chef);
-        return "Chef added successfully!";
+        return "redirect:/chefs";
     }
 
-    @DeleteMapping("/{id}")
-    public String delete(@PathVariable String id) {
+    //[cite_start]// POST /chefs/{id}/delete - Șterge obiectul [cite: 53, 67]
+    @PostMapping("/{id}/delete")
+    public String deleteChef(@PathVariable String id) {
         chefService.deleteChef(id);
-        return "Chef deleted successfully!";
-    }
-
-    @DeleteMapping("/clear")
-    public String clearAll() {
-        chefService.clearAll();
-        return "All chefs cleared.";
+        return "redirect:/chefs";
     }
 }

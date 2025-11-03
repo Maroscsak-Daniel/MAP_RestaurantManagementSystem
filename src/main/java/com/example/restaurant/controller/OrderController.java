@@ -1,62 +1,65 @@
 package com.example.restaurant.controller;
 
 import com.example.restaurant.model.Order;
+import com.example.restaurant.model.OrderAssignment;
+import com.example.restaurant.model.OrderLine;
 import com.example.restaurant.service.OrderService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import java.util.ArrayList;
 
-import java.util.List;
-
-@RestController
+@Controller
 @RequestMapping("/orders")
 public class OrderController {
 
-    private final OrderService service;
+    private final OrderService orderService;
 
-    public OrderController(OrderService service) {
-        this.service = service;
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
+        // Date inițiale pentru testare
+        if (orderService.getAll().isEmpty()) {
+            // Se creează liste goale pentru OrderLine și OrderAssignment, conform modelului
+            orderService.add(new Order("O100", "C001", "T1", "Completed", new ArrayList<OrderLine>(), new ArrayList<OrderAssignment>(), "Card"));
+            orderService.add(new Order("O101", "C002", "T3", "Pending", new ArrayList<OrderLine>(), new ArrayList<OrderAssignment>(), "Cash"));
+        }
     }
 
-    @GetMapping("/all")
-    public List<Order> all() {
-        return service.getAll();
+    // GET /orders - Afișează lista completă (GET all)
+    @GetMapping
+    public String getAllOrders(Model model) {
+        model.addAttribute("orders", orderService.getAll());
+        // Returnează templates/order/index.html
+        return "order/index";
     }
 
-    @GetMapping("/{id}")
-    public Order byId(@PathVariable String id) {
-        return service.getById(id);
+    // GET /orders/new - Afișează formularul de creare
+    @GetMapping("/new")
+    public String showCreateForm(Model model) {
+        // Obiect Order gol, cu liste inițializate
+        model.addAttribute("order", new Order(null, null, null, "Pending", new ArrayList<OrderLine>(), new ArrayList<OrderAssignment>(), "Cash"));
+        // Returnează templates/order/form.html
+        return "order/form";
     }
 
-    @GetMapping("/by-customer/{customerId}")
-    public List<Order> byCustomer(@PathVariable String customerId) {
-        return service.getByCustomer(customerId);
+    // POST /orders - Procesează formularul și creează obiectul (CREATE)
+    @PostMapping
+    public String createOrder(@ModelAttribute Order order) {
+        // Asigurăm că listele nu sunt null înainte de salvare
+        if (order.getOrderLines() == null) {
+            order.setOrderLines(new ArrayList<>());
+        }
+        if (order.getAssignments() == null) {
+            order.setAssignments(new ArrayList<>());
+        }
+        orderService.add(order);
+        return "redirect:/orders";
     }
 
-    @GetMapping("/by-table/{tableId}")
-    public List<Order> byTable(@PathVariable String tableId) {
-        return service.getByTable(tableId);
-    }
-
-    @PostMapping("/add")
-    public String add(@RequestBody Order o) {
-        service.add(o);
-        return "Order added.";
-    }
-
-    @PatchMapping("/{id}/status/{status}")
-    public String setStatus(@PathVariable String id, @PathVariable String status) {
-        service.setStatus(id, status);
-        return "Order status updated.";
-    }
-
-    @DeleteMapping("/{id}")
-    public String delete(@PathVariable String id) {
-        service.delete(id);
-        return "Order deleted.";
-    }
-
-    @DeleteMapping("/clear")
-    public String clear() {
-        service.clear();
-        return "All orders cleared.";
+    // POST /orders/{id}/delete - Șterge obiectul
+    @PostMapping("/{id}/delete")
+    public String deleteOrder(@PathVariable String id) {
+        orderService.delete(id);
+        return "redirect:/orders";
     }
 }

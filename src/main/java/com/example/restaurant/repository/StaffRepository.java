@@ -1,10 +1,9 @@
 package com.example.restaurant.repository;
 
 import com.example.restaurant.model.Staff;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public class StaffRepository extends IRepository<Staff>{
+@org.springframework.stereotype.Repository
+public class StaffRepository extends Repository<Staff> {
 
     @Override
     protected String getId(Staff staff) {
