@@ -2,55 +2,53 @@ package com.example.restaurant.controller;
 
 import com.example.restaurant.model.OrderAssignment;
 import com.example.restaurant.service.OrderAssignmentService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-@RestController
+@Controller
 @RequestMapping("/assignments")
 public class OrderAssignmentController {
 
-    private final OrderAssignmentService service;
+    private final OrderAssignmentService orderAssignmentService;
 
-    public OrderAssignmentController(OrderAssignmentService service) {
-        this.service = service;
+    public OrderAssignmentController(OrderAssignmentService orderAssignmentService) {
+        this.orderAssignmentService = orderAssignmentService;
+        // Date inițiale pentru testare
+        if (orderAssignmentService.getAll().isEmpty()) {
+            // Presupunând că avem Order O100 și Staff S001, CH01
+            orderAssignmentService.add(new OrderAssignment("A01", "O100", "S001"));
+            orderAssignmentService.add(new OrderAssignment("A02", "O100", "CH01"));
+        }
     }
 
-    @GetMapping("/all")
-    public List<OrderAssignment> all() {
-        return service.getAll();
+    // GET /assignments - Afișează lista completă (GET all)
+    @GetMapping
+    public String getAllOrderAssignments(Model model) {
+        model.addAttribute("assignments", orderAssignmentService.getAll());
+        // Returnează templates/assignment/index.html (am schimbat directorul în 'assignment' pentru simplitate)
+        return "assignment/index";
     }
 
-    @GetMapping("/{id}")
-    public OrderAssignment byId(@PathVariable String id) {
-        return service.getById(id);
+    // GET /assignments/new - Afișează formularul de creare
+    @GetMapping("/new")
+    public String showCreateForm(Model model) {
+        model.addAttribute("assignment", new OrderAssignment(null, null, null));
+        // Returnează templates/assignment/form.html
+        return "assignment/form";
     }
 
-    @GetMapping("/by-order/{orderId}")
-    public List<OrderAssignment> byOrder(@PathVariable String orderId) {
-        return service.getByOrder(orderId);
+    // POST /assignments - Procesează formularul și creează obiectul (CREATE)
+    @PostMapping
+    public String createOrderAssignment(@ModelAttribute OrderAssignment assignment) {
+        orderAssignmentService.add(assignment);
+        return "redirect:/assignments";
     }
 
-    @GetMapping("/by-staff/{staffId}")
-    public List<OrderAssignment> byStaff(@PathVariable String staffId) {
-        return service.getByStaff(staffId);
-    }
-
-    @PostMapping("/add")
-    public String add(@RequestBody OrderAssignment a) {
-        service.add(a);
-        return "OrderAssignment added.";
-    }
-
-    @DeleteMapping("/{id}")
-    public String delete(@PathVariable String id) {
-        service.delete(id);
-        return "OrderAssignment deleted.";
-    }
-
-    @DeleteMapping("/clear")
-    public String clear() {
-        service.clear();
-        return "All assignments cleared.";
+    // POST /assignments/{id}/delete - Șterge obiectul
+    @PostMapping("/{id}/delete")
+    public String deleteOrderAssignment(@PathVariable String id) {
+        orderAssignmentService.delete(id);
+        return "redirect:/assignments";
     }
 }
