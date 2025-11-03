@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Orders</title>
+</head>
+<body>
+<h2>All Orders</h2>
+
+<a href="/orders/new">Add New Order</a>
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Customer ID</th>
+        <th>Table ID</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="order : ${orders}">
+        <td th:text="${order.id}"></td>
+        <td th:text="${order.customerId}"></td>
+        <td th:text="${order.tableId}"></td>
+        <td th:text="${order.status}"></td>
+        <td>
+            <form th:action="@{'/orders/' + ${order.id} + '/delete'}" method="post" style="display:inline">
+                <button type="submit">Delete</button>
+            </form>
+
+            <form th:action="@{'/orders/' + ${order.id} + '/status'}" method="post" style="display:inline">
+                <input type="text" name="status" placeholder="New status">
+                <button type="submit">Update Status</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

@@ -2,61 +2,47 @@ package com.example.restaurant.controller;
 
 import com.example.restaurant.model.Order;
 import com.example.restaurant.service.OrderService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-@RestController
+@Controller
 @RequestMapping("/orders")
 public class OrderController {
 
-    private final OrderService service;
+    private final OrderService orderService;
 
-    public OrderController(OrderService service) {
-        this.service = service;
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
     }
 
-    @GetMapping("/all")
-    public List<Order> all() {
-        return service.getAll();
+    @GetMapping
+    public String listOrders(Model model) {
+        model.addAttribute("orders", orderService.getAll());
+        return "order/index"; // → templates/order/index.html
     }
 
-    @GetMapping("/{id}")
-    public Order byId(@PathVariable String id) {
-        return service.getById(id);
+    @GetMapping("/new")
+    public String showAddForm(Model model) {
+        model.addAttribute("order", new Order("", "", "", "Open", null, null));
+        return "order/form"; // → templates/order/form.html
     }
 
-    @GetMapping("/by-customer/{customerId}")
-    public List<Order> byCustomer(@PathVariable String customerId) {
-        return service.getByCustomer(customerId);
+    @PostMapping
+    public String addOrder(@ModelAttribute Order order) {
+        orderService.add(order);
+        return "redirect:/orders";
     }
 
-    @GetMapping("/by-table/{tableId}")
-    public List<Order> byTable(@PathVariable String tableId) {
-        return service.getByTable(tableId);
+    @PostMapping("/{id}/delete")
+    public String deleteOrder(@PathVariable String id) {
+        orderService.delete(id);
+        return "redirect:/orders";
     }
 
-    @PostMapping("/add")
-    public String add(@RequestBody Order o) {
-        service.add(o);
-        return "Order added.";
-    }
-
-    @PatchMapping("/{id}/status/{status}")
-    public String setStatus(@PathVariable String id, @PathVariable String status) {
-        service.setStatus(id, status);
-        return "Order status updated.";
-    }
-
-    @DeleteMapping("/{id}")
-    public String delete(@PathVariable String id) {
-        service.delete(id);
-        return "Order deleted.";
-    }
-
-    @DeleteMapping("/clear")
-    public String clear() {
-        service.clear();
-        return "All orders cleared.";
+    @PostMapping("/{id}/status")
+    public String updateStatus(@PathVariable String id, @RequestParam String status) {
+        orderService.setStatus(id, status);
+        return "redirect:/orders";
     }
 }

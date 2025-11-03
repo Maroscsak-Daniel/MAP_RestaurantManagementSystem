@@ -37,7 +37,7 @@ public class RestaurantManagementSystemApplication {
             System.out.println("All Menu Items:");
             menuItemService.getAllMenuItems().forEach(System.out::println);
 
-            Chef chef = new Chef("C1", "Gordon Ramsay", "Italian Cuisine");
+            Chef chef = new Chef("C1", "Gordon Ramsay", "10 years", "Italian Cuisine");
             Server server = new Server("S1", "Alice Johnson", "Waitress");
             chefService.addChef(chef);
             serverService.addServer(server);

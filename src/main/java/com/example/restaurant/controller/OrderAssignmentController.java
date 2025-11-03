@@ -2,55 +2,41 @@ package com.example.restaurant.controller;
 
 import com.example.restaurant.model.OrderAssignment;
 import com.example.restaurant.service.OrderAssignmentService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-@RestController
+@Controller
 @RequestMapping("/assignments")
 public class OrderAssignmentController {
 
-    private final OrderAssignmentService service;
+    private final OrderAssignmentService assignmentService;
 
-    public OrderAssignmentController(OrderAssignmentService service) {
-        this.service = service;
+    public OrderAssignmentController(OrderAssignmentService assignmentService) {
+        this.assignmentService = assignmentService;
     }
 
-    @GetMapping("/all")
-    public List<OrderAssignment> all() {
-        return service.getAll();
+    @GetMapping
+    public String listAssignments(Model model) {
+        model.addAttribute("assignments", assignmentService.getAll());
+        return "assignment/index"; // → templates/assignment/index.html
     }
 
-    @GetMapping("/{id}")
-    public OrderAssignment byId(@PathVariable String id) {
-        return service.getById(id);
+    @GetMapping("/new")
+    public String showAddForm(Model model) {
+        model.addAttribute("assignment", new OrderAssignment("", "", ""));
+        return "assignment/form"; // → templates/assignment/form.html
     }
 
-    @GetMapping("/by-order/{orderId}")
-    public List<OrderAssignment> byOrder(@PathVariable String orderId) {
-        return service.getByOrder(orderId);
+    @PostMapping
+    public String addAssignment(@ModelAttribute OrderAssignment assignment) {
+        assignmentService.add(assignment);
+        return "redirect:/assignments";
     }
 
-    @GetMapping("/by-staff/{staffId}")
-    public List<OrderAssignment> byStaff(@PathVariable String staffId) {
-        return service.getByStaff(staffId);
-    }
-
-    @PostMapping("/add")
-    public String add(@RequestBody OrderAssignment a) {
-        service.add(a);
-        return "OrderAssignment added.";
-    }
-
-    @DeleteMapping("/{id}")
-    public String delete(@PathVariable String id) {
-        service.delete(id);
-        return "OrderAssignment deleted.";
-    }
-
-    @DeleteMapping("/clear")
-    public String clear() {
-        service.clear();
-        return "All assignments cleared.";
+    @PostMapping("/{id}/delete")
+    public String deleteAssignment(@PathVariable String id) {
+        assignmentService.delete(id);
+        return "redirect:/assignments";
     }
 }

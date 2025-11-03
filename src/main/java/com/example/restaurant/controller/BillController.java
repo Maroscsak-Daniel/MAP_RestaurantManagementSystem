@@ -2,49 +2,41 @@ package com.example.restaurant.controller;
 
 import com.example.restaurant.model.Bill;
 import com.example.restaurant.service.BillService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-@RestController
+@Controller
 @RequestMapping("/bills")
 public class BillController {
 
-    private final BillService service;
+    private final BillService billService;
 
-    public BillController(BillService service) {
-        this.service = service;
+    public BillController(BillService billService) {
+        this.billService = billService;
     }
 
-    @GetMapping("/all")
-    public List<Bill> all() {
-        return service.getAll();
+    @GetMapping
+    public String listBills(Model model) {
+        model.addAttribute("bills", billService.getAll());
+        return "bill/index"; // → templates/bill/index.html
     }
 
-    @GetMapping("/{id}")
-    public Bill byId(@PathVariable String id) {
-        return service.getById(id);
+    @GetMapping("/new")
+    public String showAddForm(Model model) {
+        model.addAttribute("bill", new Bill("", "", 0.0));
+        return "bill/form"; // → templates/bill/form.html
     }
 
-    @GetMapping("/by-order/{orderId}")
-    public List<Bill> byOrder(@PathVariable String orderId) {
-        return service.getByOrderId(orderId);
+    @PostMapping
+    public String addBill(@ModelAttribute Bill bill) {
+        billService.add(bill);
+        return "redirect:/bills";
     }
 
-    @PostMapping("/add")
-    public String add(@RequestBody Bill b) {
-        service.add(b);
-        return "Bill added.";
+    @PostMapping("/{id}/delete")
+    public String deleteBill(@PathVariable String id) {
+        billService.delete(id);
+        return "redirect:/bills";
     }
-
-    @DeleteMapping("/{id}")
-    public String delete(@PathVariable String id) {
-        service.delete(id);
-        return "Bill deleted.";
-    }
-
-    @DeleteMapping("/clear")
-    public String clear() {
-        service.clear();
-        return "All bills cleared.";}
 }

@@ -3,10 +3,12 @@ package com.example.restaurant.model;
 public class Chef extends Staff {
 
     private String specialization;
+    private String experience;
 
-    public Chef(String id, String name, String specialization) {
+    public Chef(String id, String name, String specialization, String experience) {
         super(id, name); // calls Staff constructor
         this.specialization = specialization;
+        this.experience = experience;
     }
 
     public Chef() {

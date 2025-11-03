@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lista Bucătari (Chefs)</title>
+</head>
+<body>
+<h1>Lista Bucătari</h1>
+<p><a th:href="@{/chefs/new}">Adaugă Bucătar Nou</a></p>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Nume</th>
+        <th>Experiență</th>
+        <th>Specializare</th>
+        <th>Acțiuni</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="chef : ${chefs}">
+        <td th:text="${chef.id}">CH00</td>
+        <td th:text="${chef.name}">Nume Chef</td>
+        <td th:text="${chef.experience}">Experienta</td>
+        <td th:text="${chef.specialization}">Specializare</td>
+        <td>
+            <form th:action="@{'/chefs/' + ${chef.id} + '/delete'}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

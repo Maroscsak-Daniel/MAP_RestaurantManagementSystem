@@ -2,11 +2,11 @@ package com.example.restaurant.controller;
 
 import com.example.restaurant.model.MenuItem;
 import com.example.restaurant.service.MenuItemService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-@RestController
+@Controller
 @RequestMapping("/menuitems")
 public class MenuItemController {
 
@@ -16,31 +16,27 @@ public class MenuItemController {
         this.menuItemService = menuItemService;
     }
 
-    @GetMapping("/all")
-    public List<MenuItem> getAll() {
-        return menuItemService.getAllMenuItems();
+    @GetMapping
+    public String listMenuItems(Model model) {
+        model.addAttribute("menuitems", menuItemService.getAllMenuItems());
+        return "menuitem/index";   // → templates/menuitem/index.html
     }
 
-    @GetMapping("/{id}")
-    public MenuItem getById(@PathVariable String id) {
-        return menuItemService.getMenuItemById(id);
+    @GetMapping("/new")
+    public String showAddForm(Model model) {
+        model.addAttribute("menuitem", new MenuItem());
+        return "menuitem/form";    // → templates/menuitem/form.html
     }
 
-    @PostMapping("/add")
-    public String add(@RequestBody MenuItem item) {
-        menuItemService.addMenuItem(item);
-        return "MenuItem added successfully!";
+    @PostMapping
+    public String addMenuItem(@ModelAttribute MenuItem menuItem) {
+        menuItemService.addMenuItem(menuItem);
+        return "redirect:/menuitems";
     }
 
-    @DeleteMapping("/{id}")
-    public String delete(@PathVariable String id) {
+    @PostMapping("/{id}/delete")
+    public String deleteMenuItem(@PathVariable String id) {
         menuItemService.deleteMenuItem(id);
-        return "MenuItem deleted successfully!";
-    }
-
-    @DeleteMapping("/clear")
-    public String clearAll() {
-        menuItemService.clearAll();
-        return "All menu items cleared.";
+        return "redirect:/menuitems";
     }
 }
