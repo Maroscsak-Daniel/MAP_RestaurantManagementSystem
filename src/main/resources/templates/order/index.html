@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lista Comenzi (Orders)</title>
+</head>
+<body>
+<h1>Lista Comenzi</h1>
+<p><a th:href="@{/orders/new}">Adaugă Comandă Nouă</a></p>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Client ID</th>
+        <th>Masă ID</th>
+        <th>Status</th>
+        <th>Metodă Plată</th>
+        <th>Acțiuni</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="order : ${orders}">
+        <td th:text="${order.id}">O000</td>
+        <td th:text="${order.customerId}">C000</td>
+        <td th:text="${order.tableId}">T000</td>
+        <td th:text="${order.status}">Status</td>
+        <td th:text="${order.paymentMethod}">Metodă</td>
+        <td>
+            <form th:action="@{'/orders/' + ${order.id} + '/delete'}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
