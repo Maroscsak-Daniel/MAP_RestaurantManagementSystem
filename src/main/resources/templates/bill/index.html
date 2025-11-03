@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lista Bonuri (Bills)</title>
+</head>
+<body>
+<h1>Lista Bonuri</h1>
+<p><a th:href="@{/bills/new}">Adaugă Bon Nou</a></p>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Order ID</th>
+        <th>Total Suma</th>
+        <th>Acțiuni</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="bill : ${bills}">
+        <td th:text="${bill.id}">B000</td>
+        <td th:text="${bill.orderId}">O000</td>
+        <td th:text="${#numbers.formatDecimal(bill.totalAmount, 0, 'COMMA', 2, 'POINT')}">0.00</td>
+        <td>
+            <form th:action="@{'/bills/' + ${bill.id} + '/delete'}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

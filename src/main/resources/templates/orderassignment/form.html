@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Adauga Asignare Comanda</title>
+</head>
+<body>
+<h1>Adauga Asignare Comandă Noua</h1>
+
+<form th:action="@{/assignments}" th:object="${assignment}" method="post">
+
+    <label for="id">ID Asignare:</label>
+    <input type="text" id="id" th:field="*{Id}" required/><br/><br/>
+
+    <label for="orderId">Comandă ID:</label>
+    <input type="text" id="orderId" th:field="*{OrderId}" required/><br/><br/>
+
+    <label for="staffId">Angajat ID (Server/Chef):</label>
+    <input type="text" id="staffId" th:field="*{StaffId}" required/><br/><br/>
+
+    <button type="submit">Salvează Asignare</button>
+</form>
+<p><a th:href="@{/assignments}">Înapoi la Lista</a></p>
+</body>
+</html>

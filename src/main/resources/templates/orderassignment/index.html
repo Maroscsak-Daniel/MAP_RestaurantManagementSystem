@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lista Asignări Comenzi (Assignments)</title>
+</head>
+<body>
+<h1>Lista Asignări Comenzi</h1>
+<p><a th:href="@{/assignments/new}">Adaugă Asignare Nouă</a></p>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID Asignare</th>
+        <th>Comandă ID</th>
+        <th>Angajat ID</th>
+        <th>Acțiuni</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="assignment : ${assignments}">
+        <td th:text="${assignment.id}">A000</td>
+        <td th:text="${assignment.orderId}">O000</td>
+        <td th:text="${assignment.staffId}">S000/CH00</td>
+        <td>
+            <form th:action="@{'/assignments/' + ${assignment.id} + '/delete'}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
