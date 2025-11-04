@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Adaugă Comandă</title>
+    <title>Add order</title>
 </head>
 <body>
-<h1>Adaugă Comandă Nouă</h1>
+<h1>Add new order</h1>
 <form th:action="@{/orders}" th:object="${order}" method="post">
 
     <label for="id">ID:</label>
@@ -13,7 +13,7 @@
     <label for="customerId">Client ID:</label>
     <input type="text" id="customerId" th:field="*{customerId}" required/><br/><br/>
 
-    <label for="tableId">Masă ID:</label>
+    <label for="tableId">Table ID:</label>
     <input type="text" id="tableId" th:field="*{tableId}" required/><br/><br/>
 
     <label for="status">Status:</label>
@@ -24,14 +24,14 @@
         <option value="Cancelled">Cancelled</option>
     </select><br/><br/>
 
-    <label for="paymentMethod">Metodă Plată:</label>
+    <label for="paymentMethod">Payment method:</label>
     <select id="paymentMethod" th:field="*{paymentMethod}">
         <option value="Cash">Cash</option>
         <option value="Card">Card</option>
     </select><br/><br/>
 
-    <button type="submit">Salvează Comandă</button>
+    <button type="submit">Save order</button>
 </form>
-<p><a th:href="@{/orders}">Înapoi la Listă</a></p>
+<p><a th:href="@{/orders}">Back to the list</a></p>
 </body>
 </html>

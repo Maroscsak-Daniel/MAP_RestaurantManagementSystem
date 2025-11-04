@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Adaugă Masă</title>
+    <title>Add table</title>
 </head>
 <body>
-<h1>Adaugă Masă Nouă</h1>
+<h1>Add new table</h1>
 <form th:action="@{/tables}" th:object="${table}" method="post">
 
     <label for="id">ID:</label>
     <input type="text" id="id" th:field="*{id}" required/><br/><br/>
 
-    <label for="number">Număr Masă:</label>
+    <label for="number">Table number:</label>
     <input type="number" id="number" th:field="*{number}" required/><br/><br/>
 
-    <label for="occupiedStatus">Status Ocupare:</label>
+    <label for="occupiedStatus">Table status:</label>
     <select id="occupiedStatus" th:field="*{occupiedStatus}">
         <option value="Free">Free</option>
         <option value="Occupied">Occupied</option>
     </select><br/><br/>
 
-    <button type="submit">Salvează Masă</button>
+    <button type="submit">Save table</button>
 </form>
-<p><a th:href="@{/tables}">Înapoi la Listă</a></p>
+<p><a th:href="@{/tables}">Back to the list</a></p>
 </body>
 </html>

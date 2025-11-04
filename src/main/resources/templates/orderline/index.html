@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Lista Linii Comenzi (OrderLines)</title>
+    <title>OrderLine list</title>
 </head>
 <body>
-<h1>Lista Linii Comenzi</h1>
+<h1>Orderline list</h1>
 
-<p><a th:href="@{/orderlines/new}">Adaugă Linie Nouă</a></p>
+<p><a th:href="@{/orderlines/new}">Add new orderline</a></p>
 
 <table border="1">
     <thead>
     <tr>
-        <th>ID Linie</th>
-        <th>Element Meniu ID</th>
-        <th>Cantitate</th>
-        <th>Alergeni/Notițe</th>
-        <th>Acțiuni</th>
+        <th>Line ID</th>
+        <th>Menu item ID</th>
+        <th>Quantity</th>
+        <th>Allergens</th>
+        <th>Actions</th>
     </tr>
     </thead>
     <tbody>
@@ -23,7 +23,7 @@
         <td th:text="${line.id}">L000</td>
         <td th:text="${line.menuItemId}">M000</td>
         <td th:text="${#numbers.formatDecimal(line.quantity, 1, 'POINT')}">1.0</td>
-        <td th:text="${line.allergens}">Alergeni</td>
+        <td th:text="${line.allergens}">Allergens</td>
         <td>
             <form th:action="@{'/orderlines/' + ${line.id} + '/delete'}" method="post">
                 <button type="submit">Delete</button>
