@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/bills")
-public class BillController {
+public class BillController{
 
     private final BillService billService;
 

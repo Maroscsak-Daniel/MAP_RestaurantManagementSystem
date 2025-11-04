@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Lista Comenzi (Orders)</title>
+    <title>Orders list</title>
 </head>
 <body>
-<h1>Lista Comenzi</h1>
-<p><a th:href="@{/orders/new}">Adaugă Comandă Nouă</a></p>
+<h1>Orders list</h1>
+<p><a th:href="@{/orders/new}">Add new order</a></p>
 
 <table border="1">
     <thead>
     <tr>
         <th>ID</th>
         <th>Client ID</th>
-        <th>Masă ID</th>
+        <th>Table ID</th>
         <th>Status</th>
-        <th>Metodă Plată</th>
-        <th>Acțiuni</th>
+        <th>Payment method</th>
+        <th>Actions</th>
     </tr>
     </thead>
     <tbody>
@@ -24,7 +24,7 @@
         <td th:text="${order.customerId}">C000</td>
         <td th:text="${order.tableId}">T000</td>
         <td th:text="${order.status}">Status</td>
-        <td th:text="${order.paymentMethod}">Metodă</td>
+        <td th:text="${order.paymentMethod}">Method</td>
         <td>
             <form th:action="@{'/orders/' + ${order.id} + '/delete'}" method="post">
                 <button type="submit">Delete</button>

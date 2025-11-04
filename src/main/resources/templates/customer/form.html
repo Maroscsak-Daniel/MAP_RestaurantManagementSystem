@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Adaugă Client</title>
+    <title>Add client</title>
 </head>
 <body>
-<h1>Adaugă Client Nou</h1>
+<h1>Add new client</h1>
 <form th:action="@{/customers}" th:object="${customer}" method="post">
 
     <label for="id">ID:</label>
     <input type="text" id="id" th:field="*{id}" required/><br/><br/>
 
-    <label for="name">Nume:</label>
+    <label for="name">Name:</label>
     <input type="text" id="name" th:field="*{name}" required/><br/><br/>
 
-    <button type="submit">Salvează Client</button>
+    <button type="submit">Save client</button>
 </form>
-<p><a th:href="@{/customers}">Înapoi la Listă</a></p>
+<p><a th:href="@{/customers}">Back to the list</a></p>
 </body>
 </html>
