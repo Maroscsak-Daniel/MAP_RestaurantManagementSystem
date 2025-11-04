@@ -22,7 +22,7 @@
     <tr th:each="line : ${orderlines}">
         <td th:text="${line.id}">L000</td>
         <td th:text="${line.menuItemId}">M000</td>
-        <td th:text="${#numbers.formatDecimal(line.quantity, 1, 'POINT')}">1.0</td>
+        <td th:text="${line.quantity}">1</td>
         <td th:text="${line.allergens}">Allergens</td>
         <td>
             <form th:action="@{'/orderlines/' + ${line.id} + '/delete'}" method="post">
