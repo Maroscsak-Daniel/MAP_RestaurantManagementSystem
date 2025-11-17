@@ -8,43 +8,55 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/bills")
-public class BillController{
+public class BillController {
 
     private final BillService billService;
 
     public BillController(BillService billService) {
         this.billService = billService;
-        // Date inițiale pentru testare
-        if (billService.getAll().isEmpty()) {
-            billService.add(new Bill("B001", "O100", 55.50));
-            billService.add(new Bill("B002", "O101", 120.00));
-        }
     }
 
-    // GET /bills - Afișează lista completă (GET all)
+    // GET /bills - list all
     @GetMapping
     public String getAllBills(Model model) {
         model.addAttribute("bills", billService.getAll());
-        // Returnează templates/bill/index.html
         return "bill/index";
     }
 
-    // GET /bills/new - Afișează formularul de creare
+    // GET /bills/new - create form
     @GetMapping("/new")
     public String showCreateForm(Model model) {
-        model.addAttribute("bill", new Bill(null, null, 0.0));
-        // Returnează templates/bill/form.html
+        model.addAttribute("bill", new Bill());
         return "bill/form";
     }
 
-    // POST /bills - Procesează formularul și creează obiectul (CREATE)
+    // POST /bills - create
     @PostMapping
     public String createBill(@ModelAttribute Bill bill) {
         billService.add(bill);
         return "redirect:/bills";
     }
 
-    // POST /bills/{id}/delete - Șterge obiectul
+    // GET /bills/{id}/edit - edit form
+    @GetMapping("/{id}/edit")
+    public String showEditForm(@PathVariable String id, Model model) {
+        Bill bill = billService.getById(id);
+        if (bill == null) {
+            return "redirect:/bills";
+        }
+        model.addAttribute("bill", bill);
+        return "bill/form";
+    }
+
+    // POST /bills/{id} - update
+    @PostMapping("/{id}")
+    public String updateBill(@PathVariable String id, @ModelAttribute Bill bill) {
+        bill.setId(id);
+        billService.update(bill);
+        return "redirect:/bills";
+    }
+
+    // POST /bills/{id}/delete - delete
     @PostMapping("/{id}/delete")
     public String deleteBill(@PathVariable String id) {
         billService.delete(id);

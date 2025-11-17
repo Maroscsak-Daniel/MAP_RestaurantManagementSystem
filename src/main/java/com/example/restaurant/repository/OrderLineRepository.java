@@ -1,13 +1,12 @@
 package com.example.restaurant.repository;
 
 import com.example.restaurant.model.OrderLine;
+import org.springframework.stereotype.Repository;
 
-@org.springframework.stereotype.Repository
-public class OrderLineRepository extends Repository<OrderLine> {
+@Repository
+public class OrderLineRepository extends InFileRepository<OrderLine> {
 
-    @Override
-    protected String getId(OrderLine OL) {
-        return OL.getId();
+    public OrderLineRepository() {
+        super("orderLines.json", OrderLine.class);
     }
-
 }

@@ -1,0 +1,41 @@
+[ {
+  "id" : "m1",
+  "name" : "Margherita Pizza",
+  "price" : 29.0
+}, {
+  "id" : "m2",
+  "name" : "Caesar Salad",
+  "price" : 24.5
+}, {
+  "id" : "m3",
+  "name" : "Beef Burger",
+  "price" : 36.0
+}, {
+  "id" : "m4",
+  "name" : "Chicken Soup",
+  "price" : 18.0
+}, {
+  "id" : "m5",
+  "name" : "Pasta Carbonara",
+  "price" : 32.0
+}, {
+  "id" : "m6",
+  "name" : "Greek Salad",
+  "price" : 22.0
+}, {
+  "id" : "m7",
+  "name" : "Ribeye Steak",
+  "price" : 72.0
+}, {
+  "id" : "m8",
+  "name" : "Tomato Soup",
+  "price" : 17.0
+}, {
+  "id" : "m9",
+  "name" : "Fish & Chips",
+  "price" : 40.0
+}, {
+  "id" : "m10",
+  "name" : "Chocolate Cake",
+  "price" : 16.0
+} ]

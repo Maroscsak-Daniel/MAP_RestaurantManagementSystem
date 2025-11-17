@@ -5,7 +5,8 @@ import com.example.restaurant.service.TableService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import java.util.ArrayList; // Necesara pentru constructorul Table
+
+import java.util.ArrayList;
 
 @Controller
 @RequestMapping("/tables")
@@ -15,43 +16,51 @@ public class TableController {
 
     public TableController(TableService tableService) {
         this.tableService = tableService;
-        // Date inițiale pentru testare
-        if (tableService.getAll().isEmpty()) {
-            tableService.add(new Table("T1", 1, "Occupied", new ArrayList<>()));
-            tableService.add(new Table("T2", 2, "Free", new ArrayList<>()));
-            tableService.add(new Table("T3", 3, "Free", new ArrayList<>()));
-        }
     }
 
-    // GET /tables - Afișează lista completă (GET all)
     @GetMapping
     public String getAllTables(Model model) {
         model.addAttribute("tables", tableService.getAll());
-        // Returnează templates/table/index.html
         return "table/index";
     }
 
-    // GET /tables/new - Afișează formularul de creare
     @GetMapping("/new")
     public String showCreateForm(Model model) {
-        // Obiect Table gol. Orders este lăsat null sau ArrayList gol.
-        model.addAttribute("table", new Table(null, 0, "Free", new ArrayList<>()));
-        // Returnează templates/table/form.html
+        Table table = new Table();
+        table.setOrderIds(new ArrayList<>());
+        table.setOccupiedStatus("free");
+        model.addAttribute("table", table);
         return "table/form";
     }
 
-    // POST /tables - Procesează formularul și creează obiectul (CREATE)
     @PostMapping
     public String createTable(@ModelAttribute Table table) {
-        // Ne asigurăm că lista de orders nu este null înainte de salvare, deși constructorul o setează
-        if (table.getOrders() == null) {
-            table.setOrders(new ArrayList<>());
-        }
+        if (table.getOrderIds() == null)
+            table.setOrderIds(new ArrayList<>());
         tableService.add(table);
         return "redirect:/tables";
     }
 
-    // POST /tables/{id}/delete - Șterge obiectul
+    @GetMapping("/{id}/edit")
+    public String showEditForm(@PathVariable String id, Model model) {
+        Table table = tableService.getById(id);
+        if (table == null)
+            return "redirect:/tables";
+        if (table.getOrderIds() == null)
+            table.setOrderIds(new ArrayList<>());
+        model.addAttribute("table", table);
+        return "table/form";
+    }
+
+    @PostMapping("/{id}")
+    public String updateTable(@PathVariable String id, @ModelAttribute Table table) {
+        table.setId(id);
+        if (table.getOrderIds() == null)
+            table.setOrderIds(new ArrayList<>());
+        tableService.update(table);
+        return "redirect:/tables";
+    }
+
     @PostMapping("/{id}/delete")
     public String deleteTable(@PathVariable String id) {
         tableService.delete(id);

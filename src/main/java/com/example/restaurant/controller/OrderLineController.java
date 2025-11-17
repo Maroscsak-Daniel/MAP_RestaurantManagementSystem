@@ -14,42 +14,52 @@ public class OrderLineController {
 
     public OrderLineController(OrderLineService orderLineService) {
         this.orderLineService = orderLineService;
-        // Date inițiale in-memory pentru testare (opțional, dar recomandat)
-        if (orderLineService.getAllOrderLines().isEmpty()) {
-            orderLineService.addOrderLine(new OrderLine("L01", "M001", 2.0, "Fără ceapă"));
-            orderLineService.addOrderLine(new OrderLine("L02", "M002", 1.0, "Cu extra dressing"));
-        }
     }
 
-    // 1. GET /orderlines - Afișează lista completă (GET all)
+    // GET /orderlines - list all
     @GetMapping
     public String getAllOrderLines(Model model) {
         model.addAttribute("orderlines", orderLineService.getAllOrderLines());
-        // Returnează templates/orderline/index.html
         return "orderline/index";
     }
 
-    // 2. GET /orderlines/new - Afișează formularul de creare
+    // GET /orderlines/new - create form
     @GetMapping("/new")
     public String showCreateForm(Model model) {
-        model.addAttribute("orderLine", new OrderLine());
-        // Returnează templates/orderline/form.html
+        model.addAttribute("orderline", new OrderLine());
         return "orderline/form";
     }
 
-    // 3. POST /orderlines - Procesează formularul și creează obiectul (CREATE)
+    // POST /orderlines - create
     @PostMapping
     public String createOrderLine(@ModelAttribute OrderLine orderLine) {
         orderLineService.addOrderLine(orderLine);
-        // Redirecționează către lista actualizată
         return "redirect:/orderlines";
     }
 
-    // 4. POST /orderlines/{id}/delete - Șterge obiectul (DELETE)
+    // GET /orderlines/{id}/edit - edit form
+    @GetMapping("/{id}/edit")
+    public String showEditForm(@PathVariable String id, Model model) {
+        OrderLine orderLine = orderLineService.getOrderLineById(id);
+        if (orderLine == null) {
+            return "redirect:/orderlines";
+        }
+        model.addAttribute("orderline", orderLine);
+        return "orderline/form";
+    }
+
+    // POST /orderlines/{id} - update
+    @PostMapping("/{id}")
+    public String updateOrderLine(@PathVariable String id, @ModelAttribute OrderLine orderLine) {
+        orderLine.setId(id);
+        orderLineService.updateOrderLine(orderLine);
+        return "redirect:/orderlines";
+    }
+
+    // POST /orderlines/{id}/delete - delete
     @PostMapping("/{id}/delete")
     public String deleteOrderLine(@PathVariable String id) {
         orderLineService.deleteOrderLine(id);
-        // Redirecționează către lista actualizată
         return "redirect:/orderlines";
     }
 }

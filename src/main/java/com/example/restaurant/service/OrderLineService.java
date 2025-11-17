@@ -9,29 +9,29 @@ import java.util.List;
 @Service
 public class OrderLineService {
 
-    private final OrderLineRepository orderLineRepository;
+    private final OrderLineRepository repo;
 
-    public OrderLineService(OrderLineRepository orderLineRepository) {
-        this.orderLineRepository = orderLineRepository;
+    public OrderLineService(OrderLineRepository repo) {
+        this.repo = repo;
     }
 
     public void addOrderLine(OrderLine orderLine) {
-        orderLineRepository.save(orderLine);
+        repo.add(orderLine);
+    }
+
+    public void updateOrderLine(OrderLine orderLine) {
+        repo.update(orderLine);
     }
 
     public List<OrderLine> getAllOrderLines() {
-        return orderLineRepository.findAll();
+        return repo.getAll();
     }
 
     public OrderLine getOrderLineById(String id) {
-        return orderLineRepository.findById(id);
+        return repo.getById(id);
     }
 
     public void deleteOrderLine(String id) {
-        orderLineRepository.delete(id);
-    }
-
-    public void clearAll() {
-        orderLineRepository.clear();
+        repo.delete(id);
     }
 }

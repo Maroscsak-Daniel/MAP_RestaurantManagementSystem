@@ -1,22 +1,26 @@
 package com.example.restaurant.model;
 
 public class Bill {
-    private String Id;
+    private String id;
     private String orderId;
-    double totalAmount;
+    private double totalAmount;
+
+    public Bill() {
+        // required for JSON deserialization
+    }
 
     public Bill(String id, String orderId, double totalAmount) {
-        Id = id;
+        this.id = id;
         this.orderId = orderId;
         this.totalAmount = totalAmount;
     }
 
     public String getId() {
-        return Id;
+        return id;
     }
 
     public void setId(String id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getOrderId() {
@@ -38,11 +42,9 @@ public class Bill {
     @Override
     public String toString() {
         return "Bill{" +
-                "Id='" + Id + '\'' +
+                "id='" + id + '\'' +
                 ", orderId='" + orderId + '\'' +
                 ", totalAmount=" + totalAmount +
                 '}';
     }
-
-
 }

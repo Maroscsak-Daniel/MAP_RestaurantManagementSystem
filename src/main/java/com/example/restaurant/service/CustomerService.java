@@ -5,6 +5,7 @@ import com.example.restaurant.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service
 public class CustomerService {
 
@@ -15,22 +16,22 @@ public class CustomerService {
     }
 
     public void add(Customer customer) {
-        repo.save(customer);
+        repo.add(customer);   // JSON ADD
+    }
+
+    public void update(Customer customer) {
+        repo.update(customer); // JSON UPDATE (if editing customers)
     }
 
     public List<Customer> getAll() {
-        return repo.findAll();
+        return repo.getAll();  // JSON GET ALL
     }
 
     public Customer getById(String id) {
-        return repo.findById(id);
+        return repo.getById(id);  // JSON GET BY ID
     }
 
     public void delete(String id) {
-        repo.delete(id);
-    }
-
-    public void clear() {
-        repo.clear();
+        repo.delete(id);      // JSON DELETE
     }
 }

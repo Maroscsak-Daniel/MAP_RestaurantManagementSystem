@@ -9,29 +9,29 @@ import java.util.List;
 @Service
 public class ServerService {
 
-    private final ServerRepository serverRepository;
+    private final ServerRepository repo;
 
-    public ServerService(ServerRepository serverRepository) {
-        this.serverRepository = serverRepository;
+    public ServerService(ServerRepository repo) {
+        this.repo = repo;
     }
 
     public void addServer(Server server) {
-        serverRepository.save(server);
+        repo.add(server);
+    }
+
+    public void updateServer(Server server) {
+        repo.update(server);
     }
 
     public List<Server> getAllServers() {
-        return serverRepository.findAll();
+        return repo.getAll();
     }
 
     public Server getServerById(String id) {
-        return serverRepository.findById(id);
+        return repo.getById(id);
     }
 
     public void deleteServer(String id) {
-        serverRepository.delete(id);
-    }
-
-    public void clearAll() {
-        serverRepository.clear();
+        repo.delete(id);
     }
 }

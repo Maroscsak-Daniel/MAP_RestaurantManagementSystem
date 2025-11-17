@@ -1,13 +1,12 @@
 package com.example.restaurant.repository;
 
 import com.example.restaurant.model.MenuItem;
+import org.springframework.stereotype.Repository;
 
-@org.springframework.stereotype.Repository
-public class MenuItemRepository extends Repository<MenuItem> {
+@Repository
+public class MenuItemRepository extends InFileRepository<MenuItem> {
 
-    @Override
-    protected String getId(MenuItem item) {
-        return item.getId();
+    public MenuItemRepository() {
+        super("menuItems.json", MenuItem.class);
     }
-
 }

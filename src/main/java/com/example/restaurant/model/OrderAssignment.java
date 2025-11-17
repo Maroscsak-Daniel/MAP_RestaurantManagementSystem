@@ -1,31 +1,33 @@
 package com.example.restaurant.model;
 
 public class OrderAssignment {
-    private String Id;
-    private String OrderId;
+    private String id;
+    private String orderId;
     private String staffId;
 
+    public OrderAssignment() {
+    }
+
     public OrderAssignment(String id, String orderId, String staffId) {
-        Id = id;
-        OrderId = orderId;
+        this.id = id;
+        this.orderId = orderId;
         this.staffId = staffId;
     }
-    public OrderAssignment(){}
 
     public String getId() {
-        return Id;
+        return id;
     }
 
     public void setId(String id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getOrderId() {
-        return OrderId;
+        return orderId;
     }
 
     public void setOrderId(String orderId) {
-        OrderId = orderId;
+        this.orderId = orderId;
     }
 
     public String getStaffId() {
@@ -39,8 +41,8 @@ public class OrderAssignment {
     @Override
     public String toString() {
         return "OrderAssignment{" +
-                "Id='" + Id + '\'' +
-                ", OrderId='" + OrderId + '\'' +
+                "id='" + id + '\'' +
+                ", orderId='" + orderId + '\'' +
                 ", staffId='" + staffId + '\'' +
                 '}';
     }

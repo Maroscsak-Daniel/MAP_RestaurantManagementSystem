@@ -3,46 +3,50 @@ package com.example.restaurant.model;
 import java.util.ArrayList;
 
 public class Customer {
-    private String Id;
-    private String name;
-    private ArrayList<Order> orders;
 
-    public Customer(String id, String name, ArrayList<Order> orders) {
-        Id = id;
+    private String id;
+    private String name;
+    private ArrayList<String> orderIds;   // IDs only
+
+    public Customer() {
+    }
+
+    public Customer(String id, String name, ArrayList<String> orderIds) {
+        this.id = id;
         this.name = name;
-        this.orders = orders;
+        this.orderIds = orderIds;
     }
 
     public String getId() {
-        return Id;
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public ArrayList<Order> getOrders() {
-        return orders;
-    }
-
-    public void setId(String id) {
-        this.Id = id;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setOrders(ArrayList<Order> orders) {
-        this.orders = orders;
+    public ArrayList<String> getOrderIds() {
+        return orderIds;
+    }
+
+    public void setOrderIds(ArrayList<String> orderIds) {
+        this.orderIds = orderIds;
     }
 
     @Override
     public String toString() {
         return "Customer{" +
-                "Id='" + Id + '\'' +
+                "id='" + id + '\'' +
                 ", name='" + name + '\'' +
-                ", orders=" + orders +
+                ", orderIds=" + orderIds +
                 '}';
     }
 }

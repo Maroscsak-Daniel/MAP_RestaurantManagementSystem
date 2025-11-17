@@ -1,12 +1,11 @@
 package com.example.restaurant.controller;
 
 import com.example.restaurant.model.Order;
-import com.example.restaurant.model.OrderAssignment;
-import com.example.restaurant.model.OrderLine;
 import com.example.restaurant.service.OrderService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.ArrayList;
 
 @Controller
@@ -17,46 +16,78 @@ public class OrderController {
 
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
-        // Date inițiale pentru testare
-        if (orderService.getAll().isEmpty()) {
-            // Se creează liste goale pentru OrderLine și OrderAssignment, conform modelului
-            orderService.add(new Order("O100", "C001", "T1", "Completed", new ArrayList<OrderLine>(), new ArrayList<OrderAssignment>(), "Card"));
-            orderService.add(new Order("O101", "C002", "T3", "Pending", new ArrayList<OrderLine>(), new ArrayList<OrderAssignment>(), "Cash"));
-        }
     }
 
-    // GET /orders - Afișează lista completă (GET all)
+    // GET /orders - list all
     @GetMapping
     public String getAllOrders(Model model) {
         model.addAttribute("orders", orderService.getAll());
-        // Returnează templates/order/index.html
         return "order/index";
     }
 
-    // GET /orders/new - Afișează formularul de creare
+    // GET /orders/new - show create form
     @GetMapping("/new")
     public String showCreateForm(Model model) {
-        // Obiect Order gol, cu liste inițializate
-        model.addAttribute("order", new Order(null, null, null, "Pending", new ArrayList<OrderLine>(), new ArrayList<OrderAssignment>(), "Cash"));
-        // Returnează templates/order/form.html
+
+        Order order = new Order();
+        order.setStatus("Pending");
+        order.setPaymentMethod("Cash");
+
+        // IMPORTANT: ID LISTS MUST BE INITIALIZED
+        order.setOrderLineIds(new ArrayList<>());
+        order.setAssignmentIds(new ArrayList<>());
+
+        model.addAttribute("order", order);
         return "order/form";
     }
 
-    // POST /orders - Procesează formularul și creează obiectul (CREATE)
+    // POST /orders - create
     @PostMapping
     public String createOrder(@ModelAttribute Order order) {
-        // Asigurăm că listele nu sunt null înainte de salvare
-        if (order.getOrderLines() == null) {
-            order.setOrderLines(new ArrayList<>());
-        }
-        if (order.getAssignments() == null) {
-            order.setAssignments(new ArrayList<>());
-        }
+
+        // Make sure lists are never null
+        if (order.getOrderLineIds() == null)
+            order.setOrderLineIds(new ArrayList<>());
+
+        if (order.getAssignmentIds() == null)
+            order.setAssignmentIds(new ArrayList<>());
+
         orderService.add(order);
         return "redirect:/orders";
     }
 
-    // POST /orders/{id}/delete - Șterge obiectul
+    // GET /orders/{id}/edit - form for editing
+    @GetMapping("/{id}/edit")
+    public String showEditForm(@PathVariable String id, Model model) {
+        Order order = orderService.getById(id);
+        if (order == null) return "redirect:/orders";
+
+        // Ensure non-null lists
+        if (order.getOrderLineIds() == null)
+            order.setOrderLineIds(new ArrayList<>());
+        if (order.getAssignmentIds() == null)
+            order.setAssignmentIds(new ArrayList<>());
+
+        model.addAttribute("order", order);
+        return "order/form";
+    }
+
+    // POST /orders/{id} - update existing
+    @PostMapping("/{id}")
+    public String updateOrder(@PathVariable String id, @ModelAttribute Order order) {
+
+        order.setId(id); // Ensure ID remains consistent
+
+        if (order.getOrderLineIds() == null)
+            order.setOrderLineIds(new ArrayList<>());
+        if (order.getAssignmentIds() == null)
+            order.setAssignmentIds(new ArrayList<>());
+
+        orderService.update(order);
+        return "redirect:/orders";
+    }
+
+    // POST /orders/{id}/delete - delete
     @PostMapping("/{id}/delete")
     public String deleteOrder(@PathVariable String id) {
         orderService.delete(id);

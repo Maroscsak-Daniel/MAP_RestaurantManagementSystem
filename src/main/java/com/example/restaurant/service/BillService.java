@@ -17,27 +17,27 @@ public class BillService {
     }
 
     public void add(Bill bill) {
-        repo.save(bill);
+        repo.add(bill);
+    }
+
+    public void update(Bill bill) {
+        repo.update(bill);
     }
 
     public List<Bill> getAll() {
-        return repo.findAll();
+        return repo.getAll();
     }
 
     public Bill getById(String id) {
-        return repo.findById(id);
+        return repo.getById(id);
     }
 
     public void delete(String id) {
         repo.delete(id);
     }
 
-    public void clear() {
-        repo.clear();
-    }
-
     public List<Bill> getByOrderId(String orderId) {
-        return repo.findAll().stream()
+        return repo.getAll().stream()
                 .filter(b -> orderId.equals(b.getOrderId()))
                 .collect(Collectors.toList());
     }

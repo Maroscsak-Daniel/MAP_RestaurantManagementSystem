@@ -9,29 +9,29 @@ import java.util.List;
 @Service
 public class MenuItemService {
 
-    private final MenuItemRepository menuItemRepository;
+    private final MenuItemRepository repo;
 
-    public MenuItemService(MenuItemRepository menuItemRepository) {
-        this.menuItemRepository = menuItemRepository;
+    public MenuItemService(MenuItemRepository repo) {
+        this.repo = repo;
     }
 
     public void addMenuItem(MenuItem item) {
-        menuItemRepository.save(item);
+        repo.add(item);
+    }
+
+    public void updateMenuItem(MenuItem item) {
+        repo.update(item);
     }
 
     public List<MenuItem> getAllMenuItems() {
-        return menuItemRepository.findAll();
+        return repo.getAll();
     }
 
     public MenuItem getMenuItemById(String id) {
-        return menuItemRepository.findById(id);
+        return repo.getById(id);
     }
 
     public void deleteMenuItem(String id) {
-        menuItemRepository.delete(id);
-    }
-
-    public void clearAll() {
-        menuItemRepository.clear();
+        repo.delete(id);
     }
 }

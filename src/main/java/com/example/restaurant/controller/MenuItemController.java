@@ -7,44 +7,56 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/menuitems") // Recomandat plural, dar poți folosi și /menuitem
+@RequestMapping("/menuitems")
 public class MenuItemController {
 
     private final MenuItemService menuItemService;
 
     public MenuItemController(MenuItemService menuItemService) {
         this.menuItemService = menuItemService;
-        // Date inițiale pentru testare
-        if (menuItemService.getAllMenuItems().isEmpty()) {
-            menuItemService.addMenuItem(new MenuItem("M001", "Cheeseburger", 35.00));
-            menuItemService.addMenuItem(new MenuItem("M002", "Salată Cezar", 28.50));
-        }
     }
 
-    // GET /menuitems - Afișează lista completă (GET all)
+    // GET /menuitems - list all
     @GetMapping
     public String getAllMenuItems(Model model) {
         model.addAttribute("menuitems", menuItemService.getAllMenuItems());
-        // Returnează templates/menuitem/index.html
         return "menuitem/index";
     }
 
-    // GET /menuitems/new - Afișează formularul de creare
+    // GET /menuitems/new - create form
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("menuitem", new MenuItem());
-        // Returnează templates/menuitem/form.html
         return "menuitem/form";
     }
 
-    // POST /menuitems - Procesează formularul și creează obiectul (CREATE)
+    // POST /menuitems - create
     @PostMapping
     public String createMenuItem(@ModelAttribute MenuItem menuitem) {
         menuItemService.addMenuItem(menuitem);
         return "redirect:/menuitems";
     }
 
-    // POST /menuitems/{id}/delete - Șterge obiectul
+    // GET /menuitems/{id}/edit - edit form
+    @GetMapping("/{id}/edit")
+    public String showEditForm(@PathVariable String id, Model model) {
+        MenuItem item = menuItemService.getMenuItemById(id);
+        if (item == null) {
+            return "redirect:/menuitems";
+        }
+        model.addAttribute("menuitem", item);
+        return "menuitem/form";
+    }
+
+    // POST /menuitems/{id} - update
+    @PostMapping("/{id}")
+    public String updateMenuItem(@PathVariable String id, @ModelAttribute MenuItem menuitem) {
+        menuitem.setId(id);
+        menuItemService.updateMenuItem(menuitem);
+        return "redirect:/menuitems";
+    }
+
+    // POST /menuitems/{id}/delete - delete
     @PostMapping("/{id}/delete")
     public String deleteMenuItem(@PathVariable String id) {
         menuItemService.deleteMenuItem(id);

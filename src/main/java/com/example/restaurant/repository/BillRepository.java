@@ -1,13 +1,12 @@
 package com.example.restaurant.repository;
 
 import com.example.restaurant.model.Bill;
+import org.springframework.stereotype.Repository;
 
-@org.springframework.stereotype.Repository
-public class BillRepository extends Repository<Bill> {
+@Repository
+public class BillRepository extends InFileRepository<Bill> {
 
-    @Override
-    protected String getId(Bill bill) {
-        return bill.getId();
+    public BillRepository() {
+        super("bills.json", Bill.class);
     }
-
 }

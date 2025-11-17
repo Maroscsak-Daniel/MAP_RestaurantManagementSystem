@@ -1,12 +1,12 @@
 package com.example.restaurant.repository;
 
 import com.example.restaurant.model.Chef;
+import org.springframework.stereotype.Repository;
 
-@org.springframework.stereotype.Repository
-public class ChefRepository extends Repository<Chef> {
+@Repository
+public class ChefRepository extends InFileRepository<Chef> {
 
-    @Override
-    protected String getId(Chef chef) {
-        return chef.getId();
+    public ChefRepository() {
+        super("chefs.json", Chef.class);
     }
 }

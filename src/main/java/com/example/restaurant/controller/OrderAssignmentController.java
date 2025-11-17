@@ -14,38 +14,50 @@ public class OrderAssignmentController {
 
     public OrderAssignmentController(OrderAssignmentService orderAssignmentService) {
         this.orderAssignmentService = orderAssignmentService;
-        // Date inițiale pentru testare
-        if (orderAssignmentService.getAll().isEmpty()) {
-            // Presupunând că avem Order O100 și Staff S001, CH01
-            orderAssignmentService.add(new OrderAssignment("A01", "O100", "S001"));
-            orderAssignmentService.add(new OrderAssignment("A02", "O100", "CH01"));
-        }
     }
 
-    // GET /assignments - Afișează lista completă (GET all)
+    // GET /assignments - list all
     @GetMapping
     public String getAllOrderAssignments(Model model) {
         model.addAttribute("assignments", orderAssignmentService.getAll());
-        // Returnează templates/assignment/index.html (am schimbat directorul în 'assignment' pentru simplitate)
         return "assignment/index";
     }
 
-    // GET /assignments/new - Afișează formularul de creare
+    // GET /assignments/new - create form
     @GetMapping("/new")
     public String showCreateForm(Model model) {
-        model.addAttribute("assignment", new OrderAssignment(null, null, null));
-        // Returnează templates/assignment/form.html
+        model.addAttribute("assignment", new OrderAssignment());
         return "assignment/form";
     }
 
-    // POST /assignments - Procesează formularul și creează obiectul (CREATE)
+    // POST /assignments - create
     @PostMapping
     public String createOrderAssignment(@ModelAttribute OrderAssignment assignment) {
         orderAssignmentService.add(assignment);
         return "redirect:/assignments";
     }
 
-    // POST /assignments/{id}/delete - Șterge obiectul
+    // GET /assignments/{id}/edit - edit form
+    @GetMapping("/{id}/edit")
+    public String showEditForm(@PathVariable String id, Model model) {
+        OrderAssignment assignment = orderAssignmentService.getById(id);
+        if (assignment == null) {
+            return "redirect:/assignments";
+        }
+        model.addAttribute("assignment", assignment);
+        return "assignment/form";
+    }
+
+    // POST /assignments/{id} - update
+    @PostMapping("/{id}")
+    public String updateOrderAssignment(@PathVariable String id,
+                                        @ModelAttribute OrderAssignment assignment) {
+        assignment.setId(id);
+        orderAssignmentService.update(assignment);
+        return "redirect:/assignments";
+    }
+
+    // POST /assignments/{id}/delete - delete
     @PostMapping("/{id}/delete")
     public String deleteOrderAssignment(@PathVariable String id) {
         orderAssignmentService.delete(id);

@@ -1,0 +1,51 @@
+[ {
+  "id" : "t1",
+  "number" : 1,
+  "occupiedStatus" : "free",
+  "orderIds" : [ "o1", "o2" ]
+}, {
+  "id" : "t2",
+  "number" : 2,
+  "occupiedStatus" : "occupied",
+  "orderIds" : [ "o3" ]
+}, {
+  "id" : "t3",
+  "number" : 3,
+  "occupiedStatus" : "free",
+  "orderIds" : [ ]
+}, {
+  "id" : "t4",
+  "number" : 4,
+  "occupiedStatus" : "occupied",
+  "orderIds" : [ "o4" ]
+}, {
+  "id" : "t5",
+  "number" : 5,
+  "occupiedStatus" : "free",
+  "orderIds" : [ ]
+}, {
+  "id" : "t6",
+  "number" : 6,
+  "occupiedStatus" : "occupied",
+  "orderIds" : [ "o5" ]
+}, {
+  "id" : "t7",
+  "number" : 7,
+  "occupiedStatus" : "free",
+  "orderIds" : [ ]
+}, {
+  "id" : "t8",
+  "number" : 8,
+  "occupiedStatus" : "free",
+  "orderIds" : [ ]
+}, {
+  "id" : "t9",
+  "number" : 9,
+  "occupiedStatus" : "occupied",
+  "orderIds" : [ "o6" ]
+}, {
+  "id" : "t10",
+  "number" : 10,
+  "occupiedStatus" : "free",
+  "orderIds" : [ ]
+} ]

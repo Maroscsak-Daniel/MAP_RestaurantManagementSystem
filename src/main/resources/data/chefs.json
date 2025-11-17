@@ -1,0 +1,51 @@
+[ {
+  "id" : "chef1",
+  "name" : "Adrian Popescu",
+  "experience" : "5 years",
+  "specialization" : "Grill"
+}, {
+  "id" : "chef2",
+  "name" : "Mara Dumitrescu",
+  "experience" : "8 years",
+  "specialization" : "Italian Cuisine"
+}, {
+  "id" : "chef3",
+  "name" : "Victor Ionescu",
+  "experience" : "3 years",
+  "specialization" : "Pastry"
+}, {
+  "id" : "chef4",
+  "name" : "Cristina Zaharia",
+  "experience" : "10 years",
+  "specialization" : "Seafood"
+}, {
+  "id" : "chef5",
+  "name" : "Ioan Radu",
+  "experience" : "6 years",
+  "specialization" : "Vegan Dishes"
+}, {
+  "id" : "chef6",
+  "name" : "Sonia Georgescu",
+  "experience" : "4 years",
+  "specialization" : "Sushi"
+}, {
+  "id" : "chef7",
+  "name" : "Rares Mihai",
+  "experience" : "7 years",
+  "specialization" : "French Cuisine"
+}, {
+  "id" : "chef8",
+  "name" : "Teodora Matei",
+  "experience" : "2 years",
+  "specialization" : "Breakfast & Brunch"
+}, {
+  "id" : "chef9",
+  "name" : "Andrei Filip",
+  "experience" : "12 years",
+  "specialization" : "Steakhouse"
+}, {
+  "id" : "chef10",
+  "name" : "Larisa Stancu",
+  "experience" : "9 years",
+  "specialization" : "Desserts"
+} ]

@@ -1,42 +1,41 @@
 package com.example.restaurant.model;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class Order {
-    private String Id;
+
+    private String id;
     private String customerId;
     private String tableId;
     private String status;
-    private ArrayList<OrderLine> orderLines;
-    private ArrayList<OrderAssignment> assignments;
+
+    private ArrayList<String> orderLineIds;      // ✔ only IDs
+    private ArrayList<String> assignmentIds;     // ✔ only IDs
+
     private String paymentMethod;
 
-    public Order(String id, String customerId, String tableId, String status, ArrayList<OrderLine> orderLines, ArrayList<OrderAssignment> assignments, String paymentMethod) {
-        Id = id;
+    public Order() {
+    }
+
+    public Order(String id, String customerId, String tableId, String status,
+                 ArrayList<String> orderLineIds,
+                 ArrayList<String> assignmentIds,
+                 String paymentMethod) {
+        this.id = id;
         this.customerId = customerId;
         this.tableId = tableId;
         this.status = status;
-        this.orderLines = orderLines;
-        this.assignments = assignments;
-        this.paymentMethod = paymentMethod;
-    }
-
-    public String getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    public void setPaymentMethod(String paymentMethod) {
+        this.orderLineIds = orderLineIds;
+        this.assignmentIds = assignmentIds;
         this.paymentMethod = paymentMethod;
     }
 
     public String getId() {
-        return Id;
+        return id;
     }
 
     public void setId(String id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getCustomerId() {
@@ -63,51 +62,40 @@ public class Order {
         this.status = status;
     }
 
-    public ArrayList<OrderLine> getOrderLines() {
-        return orderLines;
+    public ArrayList<String> getOrderLineIds() {
+        return orderLineIds;
     }
 
-    public void setOrderLines(ArrayList<OrderLine> orderLines) {
-        this.orderLines = orderLines;
+    public void setOrderLineIds(ArrayList<String> orderLineIds) {
+        this.orderLineIds = orderLineIds;
     }
 
-    public ArrayList<OrderAssignment> getAssignments() {
-        return assignments;
+    public ArrayList<String> getAssignmentIds() {
+        return assignmentIds;
     }
 
-    public void setAssignments(ArrayList<OrderAssignment> assignments) {
-        this.assignments = assignments;
+    public void setAssignmentIds(ArrayList<String> assignmentIds) {
+        this.assignmentIds = assignmentIds;
     }
 
-//    @Override
-//    public String toString() {
-//        return "Order{" +
-//                "Id='" + Id + '\'' +
-//                ", customerId='" + customerId + '\'' +
-//                ", tableId='" + tableId + '\'' +
-//                ", status='" + status + '\'' +
-//                ", orderLines=" + orderLines +
-//                ", assignments=" + assignments +
-//                '}';
-//    }
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
 
     @Override
     public String toString() {
-        return "Order {\n" +
-                "  Id= '" + Id + "',\n" +
-                "  customerId= '" + customerId + "',\n" +
-                "  tableId= '" + tableId + "',\n" +
-                "  status= '" + status + "',\n" +
-                "  orderLines= " + formatList(orderLines) + ",\n" +
-                "  assignments= " + formatList(assignments) + "\n" +
-                "  payment method= " + paymentMethod + "\n" +
-                "}";
+        return "Order{" +
+                "id='" + id + '\'' +
+                ", customerId='" + customerId + '\'' +
+                ", tableId='" + tableId + '\'' +
+                ", status='" + status + '\'' +
+                ", orderLineIds=" + orderLineIds +
+                ", assignmentIds=" + assignmentIds +
+                ", paymentMethod='" + paymentMethod + '\'' +
+                '}';
     }
-
-    private String formatList(List<?> list) {
-        return list.stream()
-                .map(item -> "    " + item.toString())
-                .collect(Collectors.joining(",\n", "[\n", "\n  ]"));
-    }
-
 }

@@ -9,29 +9,29 @@ import java.util.List;
 @Service
 public class ChefService {
 
-    private final ChefRepository chefRepository;
+    private final ChefRepository repo;
 
-    public ChefService(ChefRepository chefRepository) {
-        this.chefRepository = chefRepository;
+    public ChefService(ChefRepository repo) {
+        this.repo = repo;
     }
 
     public void addChef(Chef chef) {
-        chefRepository.save(chef);
+        repo.add(chef);
+    }
+
+    public void updateChef(Chef chef) {
+        repo.update(chef);
     }
 
     public List<Chef> getAllChefs() {
-        return chefRepository.findAll();
+        return repo.getAll();
     }
 
     public Chef getChefById(String id) {
-        return chefRepository.findById(id);
+        return repo.getById(id);
     }
 
     public void deleteChef(String id) {
-        chefRepository.delete(id);
-    }
-
-    public void clearAll() {
-        chefRepository.clear();
+        repo.delete(id);
     }
 }

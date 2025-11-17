@@ -17,38 +17,37 @@ public class TableService {
     }
 
     public void add(Table table) {
-        repo.save(table);
+        repo.add(table);
+    }
+
+    public void update(Table table) {
+        repo.update(table);
     }
 
     public List<Table> getAll() {
-        return repo.findAll();
+        return repo.getAll();
     }
 
     public Table getById(String id) {
-        return repo.findById(id);
+        return repo.getById(id);
     }
 
     public void delete(String id) {
         repo.delete(id);
     }
 
-    public void clear() {
-        repo.clear();
-    }
-
     // Convenience helpers
     public List<Table> getFreeTables() {
-        return repo.findAll().stream()
-                .filter(t -> "Free".equalsIgnoreCase(t.getOccupiedStatus()))
+        return repo.getAll().stream()
+                .filter(t -> "free".equalsIgnoreCase(t.getOccupiedStatus()))
                 .collect(Collectors.toList());
     }
 
     public void setStatus(String id, String status) {
-        Table t = repo.findById(id);
+        Table t = repo.getById(id);
         if (t != null) {
             t.setOccupiedStatus(status);
-            repo.save(t);
+            repo.update(t);
         }
     }
 }
-

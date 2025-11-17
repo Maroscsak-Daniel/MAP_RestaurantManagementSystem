@@ -3,24 +3,28 @@ package com.example.restaurant.model;
 import java.util.ArrayList;
 
 public class Table {
-    private String Id;
+    private String id;
     private int number;
     private String occupiedStatus;
-    private ArrayList<Order> orders;
+    private ArrayList<String> orderIds;   // store ONLY order IDs
 
-    public Table(String id, int number, String occupiedStatus, ArrayList<Order> orders) {
-        Id = id;
+    public Table() {
+        // required for JSON deserialization
+    }
+
+    public Table(String id, int number, String occupiedStatus, ArrayList<String> orderIds) {
+        this.id = id;
         this.number = number;
         this.occupiedStatus = occupiedStatus;
-        this.orders = orders;
+        this.orderIds = orderIds;
     }
 
     public String getId() {
-        return Id;
+        return id;
     }
 
     public void setId(String id) {
-        Id = id;
+        this.id = id;
     }
 
     public int getNumber() {
@@ -39,21 +43,21 @@ public class Table {
         this.occupiedStatus = occupiedStatus;
     }
 
-    public ArrayList<Order> getOrders() {
-        return orders;
+    public ArrayList<String> getOrderIds() {
+        return orderIds;
     }
 
-    public void setOrders(ArrayList<Order> orders) {
-        this.orders = orders;
+    public void setOrderIds(ArrayList<String> orderIds) {
+        this.orderIds = orderIds;
     }
 
     @Override
     public String toString() {
         return "Table{" +
-                "Id='" + Id + '\'' +
+                "id='" + id + '\'' +
                 ", number=" + number +
                 ", occupiedStatus='" + occupiedStatus + '\'' +
-                ", orders=" + orders +
+                ", orderIds=" + orderIds +
                 '}';
     }
 }
