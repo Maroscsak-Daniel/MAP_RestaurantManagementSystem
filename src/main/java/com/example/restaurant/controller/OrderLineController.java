@@ -16,47 +16,59 @@ public class OrderLineController {
         this.orderLineService = orderLineService;
     }
 
-    // GET /orderlines - list all
+    // -------------------- LIST --------------------
     @GetMapping
     public String getAllOrderLines(Model model) {
         model.addAttribute("orderlines", orderLineService.getAllOrderLines());
         return "orderline/index";
     }
 
-    // GET /orderlines/new - create form
+    // -------------------- DETAILS --------------------
+    @GetMapping("/{id}")
+    public String getOrderLineDetails(@PathVariable String id, Model model) {
+        OrderLine line = orderLineService.getOrderLineById(id);
+        if (line == null)
+            return "redirect:/orderlines";
+
+        model.addAttribute("orderline", line);
+        return "orderline/details";
+    }
+
+    // -------------------- CREATE FORM --------------------
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("orderline", new OrderLine());
         return "orderline/form";
     }
 
-    // POST /orderlines - create
+    // -------------------- CREATE ACTION --------------------
     @PostMapping
     public String createOrderLine(@ModelAttribute OrderLine orderLine) {
         orderLineService.addOrderLine(orderLine);
         return "redirect:/orderlines";
     }
 
-    // GET /orderlines/{id}/edit - edit form
+    // -------------------- EDIT FORM --------------------
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable String id, Model model) {
         OrderLine orderLine = orderLineService.getOrderLineById(id);
-        if (orderLine == null) {
+        if (orderLine == null)
             return "redirect:/orderlines";
-        }
+
         model.addAttribute("orderline", orderLine);
         return "orderline/form";
     }
 
-    // POST /orderlines/{id} - update
+    // -------------------- UPDATE ACTION --------------------
     @PostMapping("/{id}")
     public String updateOrderLine(@PathVariable String id, @ModelAttribute OrderLine orderLine) {
-        orderLine.setId(id);
+
+        orderLine.setId(id); // keep ID
         orderLineService.updateOrderLine(orderLine);
         return "redirect:/orderlines";
     }
 
-    // POST /orderlines/{id}/delete - delete
+    // -------------------- DELETE --------------------
     @PostMapping("/{id}/delete")
     public String deleteOrderLine(@PathVariable String id) {
         orderLineService.deleteOrderLine(id);

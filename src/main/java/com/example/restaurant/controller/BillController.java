@@ -16,28 +16,39 @@ public class BillController {
         this.billService = billService;
     }
 
-    // GET /bills - list all
+    // LIST
     @GetMapping
     public String getAllBills(Model model) {
         model.addAttribute("bills", billService.getAll());
         return "bill/index";
     }
 
-    // GET /bills/new - create form
+    // DETAILS
+    @GetMapping("/{id}")
+    public String getBillDetails(@PathVariable String id, Model model) {
+        Bill bill = billService.getById(id);
+        if (bill == null) {
+            return "redirect:/bills";
+        }
+        model.addAttribute("bill", bill);
+        return "bill/details";
+    }
+
+    // CREATE FORM
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("bill", new Bill());
         return "bill/form";
     }
 
-    // POST /bills - create
+    // CREATE ACTION
     @PostMapping
     public String createBill(@ModelAttribute Bill bill) {
         billService.add(bill);
         return "redirect:/bills";
     }
 
-    // GET /bills/{id}/edit - edit form
+    // EDIT FORM
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable String id, Model model) {
         Bill bill = billService.getById(id);
@@ -48,7 +59,7 @@ public class BillController {
         return "bill/form";
     }
 
-    // POST /bills/{id} - update
+    // UPDATE ACTION
     @PostMapping("/{id}")
     public String updateBill(@PathVariable String id, @ModelAttribute Bill bill) {
         bill.setId(id);
@@ -56,7 +67,7 @@ public class BillController {
         return "redirect:/bills";
     }
 
-    // POST /bills/{id}/delete - delete
+    // DELETE
     @PostMapping("/{id}/delete")
     public String deleteBill(@PathVariable String id) {
         billService.delete(id);

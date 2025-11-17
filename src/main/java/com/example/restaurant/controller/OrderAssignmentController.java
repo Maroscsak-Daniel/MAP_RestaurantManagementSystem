@@ -16,48 +16,61 @@ public class OrderAssignmentController {
         this.orderAssignmentService = orderAssignmentService;
     }
 
-    // GET /assignments - list all
+    // -------------------- LIST --------------------
     @GetMapping
     public String getAllOrderAssignments(Model model) {
         model.addAttribute("assignments", orderAssignmentService.getAll());
         return "assignment/index";
     }
 
-    // GET /assignments/new - create form
+    // -------------------- DETAILS --------------------
+    @GetMapping("/{id}")
+    public String getAssignmentDetails(@PathVariable String id, Model model) {
+        OrderAssignment assignment = orderAssignmentService.getById(id);
+        if (assignment == null)
+            return "redirect:/assignments";
+
+        model.addAttribute("assignment", assignment);
+        return "assignment/details";
+    }
+
+    // -------------------- CREATE FORM --------------------
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("assignment", new OrderAssignment());
         return "assignment/form";
     }
 
-    // POST /assignments - create
+    // -------------------- CREATE ACTION --------------------
     @PostMapping
     public String createOrderAssignment(@ModelAttribute OrderAssignment assignment) {
         orderAssignmentService.add(assignment);
         return "redirect:/assignments";
     }
 
-    // GET /assignments/{id}/edit - edit form
+    // -------------------- EDIT FORM --------------------
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable String id, Model model) {
+
         OrderAssignment assignment = orderAssignmentService.getById(id);
-        if (assignment == null) {
+        if (assignment == null)
             return "redirect:/assignments";
-        }
+
         model.addAttribute("assignment", assignment);
         return "assignment/form";
     }
 
-    // POST /assignments/{id} - update
+    // -------------------- UPDATE ACTION --------------------
     @PostMapping("/{id}")
     public String updateOrderAssignment(@PathVariable String id,
                                         @ModelAttribute OrderAssignment assignment) {
+
         assignment.setId(id);
         orderAssignmentService.update(assignment);
         return "redirect:/assignments";
     }
 
-    // POST /assignments/{id}/delete - delete
+    // -------------------- DELETE --------------------
     @PostMapping("/{id}/delete")
     public String deleteOrderAssignment(@PathVariable String id) {
         orderAssignmentService.delete(id);

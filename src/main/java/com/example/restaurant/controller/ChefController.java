@@ -16,39 +16,50 @@ public class ChefController {
         this.chefService = chefService;
     }
 
-    // GET /chefs - list all
+    // -------------------- LIST --------------------
     @GetMapping
     public String getAllChefs(Model model) {
         model.addAttribute("chefs", chefService.getAllChefs());
         return "chef/index";
     }
 
-    // GET /chefs/new - create form
+    // -------------------- DETAILS --------------------
+    @GetMapping("/{id}")
+    public String getChefDetails(@PathVariable String id, Model model) {
+        Chef chef = chefService.getChefById(id);
+        if (chef == null)
+            return "redirect:/chefs";
+
+        model.addAttribute("chef", chef);
+        return "chef/details";
+    }
+
+    // -------------------- CREATE FORM --------------------
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("chef", new Chef());
         return "chef/form";
     }
 
-    // POST /chefs - create
+    // -------------------- CREATE ACTION --------------------
     @PostMapping
     public String createChef(@ModelAttribute Chef chef) {
         chefService.addChef(chef);
         return "redirect:/chefs";
     }
 
-    // GET /chefs/{id}/edit - edit form
+    // -------------------- EDIT FORM --------------------
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable String id, Model model) {
         Chef chef = chefService.getChefById(id);
-        if (chef == null) {
+        if (chef == null)
             return "redirect:/chefs";
-        }
+
         model.addAttribute("chef", chef);
         return "chef/form";
     }
 
-    // POST /chefs/{id} - update
+    // -------------------- UPDATE ACTION --------------------
     @PostMapping("/{id}")
     public String updateChef(@PathVariable String id, @ModelAttribute Chef chef) {
         chef.setId(id);
@@ -56,7 +67,7 @@ public class ChefController {
         return "redirect:/chefs";
     }
 
-    // POST /chefs/{id}/delete - delete
+    // -------------------- DELETE --------------------
     @PostMapping("/{id}/delete")
     public String deleteChef(@PathVariable String id) {
         chefService.deleteChef(id);

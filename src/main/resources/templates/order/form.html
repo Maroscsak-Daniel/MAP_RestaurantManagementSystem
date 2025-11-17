@@ -1,37 +1,78 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Add order</title>
+    <title th:text="${order.id == null} ? 'Add Order' : 'Edit Order'"></title>
 </head>
 <body>
-<h1>Add new order</h1>
-<form th:action="@{/orders}" th:object="${order}" method="post">
 
-    <label for="id">ID:</label>
-    <input type="text" id="id" th:field="*{id}" required/><br/><br/>
+<h1 th:text="${order.id == null} ? 'Add New Order' : 'Edit Order'"></h1>
 
-    <label for="customerId">Client ID:</label>
-    <input type="text" id="customerId" th:field="*{customerId}" required/><br/><br/>
+<!-- ---------------- CREATE ---------------- -->
+<form th:if="${order.id == null}"
+      th:action="@{/orders}"
+      th:object="${order}"
+      method="post">
 
-    <label for="tableId">Table ID:</label>
-    <input type="text" id="tableId" th:field="*{tableId}" required/><br/><br/>
+    <label>ID:</label>
+    <input type="text" th:field="*{id}" required/><br/><br/>
 
-    <label for="status">Status:</label>
-    <select id="status" th:field="*{status}">
+    <label>Customer ID:</label>
+    <input type="text" th:field="*{customerId}" required/><br/><br/>
+
+    <label>Table ID:</label>
+    <input type="text" th:field="*{tableId}" required/><br/><br/>
+
+    <label>Status:</label>
+    <select th:field="*{status}">
         <option value="Pending">Pending</option>
         <option value="Processing">Processing</option>
         <option value="Completed">Completed</option>
         <option value="Cancelled">Cancelled</option>
     </select><br/><br/>
 
-    <label for="paymentMethod">Payment method:</label>
-    <select id="paymentMethod" th:field="*{paymentMethod}">
+    <label>Payment Method:</label>
+    <select th:field="*{paymentMethod}">
         <option value="Cash">Cash</option>
         <option value="Card">Card</option>
     </select><br/><br/>
 
-    <button type="submit">Save order</button>
+    <button type="submit">Save Order</button>
 </form>
-<p><a th:href="@{/orders}">Back to the list</a></p>
+
+
+<!-- ---------------- UPDATE ---------------- -->
+<form th:if="${order.id != null}"
+      th:action="@{'/orders/' + ${order.id}}"
+      th:object="${order}"
+      method="post">
+
+    <input type="hidden" th:field="*{id}"/>
+
+    <label>Customer ID:</label>
+    <input type="text" th:field="*{customerId}" required/><br/><br/>
+
+    <label>Table ID:</label>
+    <input type="text" th:field="*{tableId}" required/><br/><br/>
+
+    <label>Status:</label>
+    <select th:field="*{status}">
+        <option value="Pending">Pending</option>
+        <option value="Processing">Processing</option>
+        <option value="Completed">Completed</option>
+        <option value="Cancelled">Cancelled</option>
+    </select><br/><br/>
+
+    <label>Payment Method:</label>
+    <select th:field="*{paymentMethod}">
+        <option value="Cash">Cash</option>
+        <option value="Card">Card</option>
+    </select><br/><br/>
+
+    <button type="submit">Update Order</button>
+
+</form>
+
+<p><a th:href="@{/orders}">Back to list</a></p>
+
 </body>
 </html>

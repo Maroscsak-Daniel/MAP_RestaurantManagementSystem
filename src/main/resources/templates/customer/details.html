@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Customer Details</title>
+</head>
+<body>
+
+<h1>Customer Details</h1>
+
+<p><strong>ID:</strong> <span th:text="${customer.id}"></span></p>
+<p><strong>Name:</strong> <span th:text="${customer.name}"></span></p>
+
+<!-- Order IDs -->
+<p><strong>Orders:</strong></p>
+
+<ul>
+    <li th:each="oid : ${customer.orderIds}"
+        th:text="${oid}">Order ID</li>
+
+    <!-- Dacă nu are comenzi -->
+    <li th:if="${customer.orderIds == null or #lists.isEmpty(customer.orderIds)}">
+        No orders found.
+    </li>
+</ul>
+
+<p><a th:href="@{/customers}">Back to list</a></p>
+
+</body>
+</html>

@@ -18,14 +18,30 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    // GET /orders - list all
+    // -------------------- LIST --------------------
     @GetMapping
     public String getAllOrders(Model model) {
         model.addAttribute("orders", orderService.getAll());
         return "order/index";
     }
 
-    // GET /orders/new - show create form
+    // -------------------- DETAILS --------------------
+    @GetMapping("/{id}")
+    public String getOrderDetails(@PathVariable String id, Model model) {
+        Order order = orderService.getById(id);
+        if (order == null)
+            return "redirect:/orders";
+
+        if (order.getOrderLineIds() == null)
+            order.setOrderLineIds(new ArrayList<>());
+        if (order.getAssignmentIds() == null)
+            order.setAssignmentIds(new ArrayList<>());
+
+        model.addAttribute("order", order);
+        return "order/details";
+    }
+
+    // -------------------- CREATE FORM --------------------
     @GetMapping("/new")
     public String showCreateForm(Model model) {
 
@@ -33,7 +49,6 @@ public class OrderController {
         order.setStatus("Pending");
         order.setPaymentMethod("Cash");
 
-        // IMPORTANT: ID LISTS MUST BE INITIALIZED
         order.setOrderLineIds(new ArrayList<>());
         order.setAssignmentIds(new ArrayList<>());
 
@@ -41,11 +56,10 @@ public class OrderController {
         return "order/form";
     }
 
-    // POST /orders - create
+    // -------------------- CREATE ACTION --------------------
     @PostMapping
     public String createOrder(@ModelAttribute Order order) {
 
-        // Make sure lists are never null
         if (order.getOrderLineIds() == null)
             order.setOrderLineIds(new ArrayList<>());
 
@@ -56,13 +70,14 @@ public class OrderController {
         return "redirect:/orders";
     }
 
-    // GET /orders/{id}/edit - form for editing
+    // -------------------- EDIT FORM --------------------
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable String id, Model model) {
-        Order order = orderService.getById(id);
-        if (order == null) return "redirect:/orders";
 
-        // Ensure non-null lists
+        Order order = orderService.getById(id);
+        if (order == null)
+            return "redirect:/orders";
+
         if (order.getOrderLineIds() == null)
             order.setOrderLineIds(new ArrayList<>());
         if (order.getAssignmentIds() == null)
@@ -72,11 +87,11 @@ public class OrderController {
         return "order/form";
     }
 
-    // POST /orders/{id} - update existing
+    // -------------------- UPDATE ACTION --------------------
     @PostMapping("/{id}")
     public String updateOrder(@PathVariable String id, @ModelAttribute Order order) {
 
-        order.setId(id); // Ensure ID remains consistent
+        order.setId(id);
 
         if (order.getOrderLineIds() == null)
             order.setOrderLineIds(new ArrayList<>());
@@ -87,7 +102,7 @@ public class OrderController {
         return "redirect:/orders";
     }
 
-    // POST /orders/{id}/delete - delete
+    // -------------------- DELETE --------------------
     @PostMapping("/{id}/delete")
     public String deleteOrder(@PathVariable String id) {
         orderService.delete(id);

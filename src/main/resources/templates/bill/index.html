@@ -5,6 +5,7 @@
 </head>
 <body>
 <h1>Bills list</h1>
+
 <p><a th:href="@{/bills/new}">Add new bill</a></p>
 
 <table border="1">
@@ -12,22 +13,29 @@
     <tr>
         <th>ID</th>
         <th>Order ID</th>
-        <th>Total Sum</th>
+        <th>Total Amount</th>
         <th>Actions</th>
     </tr>
     </thead>
+
     <tbody>
     <tr th:each="bill : ${bills}">
-        <td th:text="${bill.id}">B000</td>
-        <td th:text="${bill.orderId}">O000</td>
-        <td th:text="${#numbers.formatDecimal(bill.totalAmount, 0, 'COMMA', 2, 'POINT')}">0.00</td>
+        <td th:text="${bill.id}"></td>
+        <td th:text="${bill.orderId}"></td>
+        <td th:text="${bill.totalAmount}"></td>
+
         <td>
-            <form th:action="@{'/bills/' + ${bill.id} + '/delete'}" method="post">
+            <a th:href="@{'/bills/' + ${bill.id}}">Details</a> |
+            <a th:href="@{'/bills/' + ${bill.id} + '/edit'}">Edit</a> |
+
+            <form th:action="@{'/bills/' + ${bill.id} + '/delete'}"
+                  method="post" style="display:inline;">
                 <button type="submit">Delete</button>
             </form>
         </td>
     </tr>
     </tbody>
 </table>
+
 </body>
 </html>

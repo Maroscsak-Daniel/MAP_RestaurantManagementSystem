@@ -4,30 +4,39 @@
     <title>Assignments list</title>
 </head>
 <body>
+
 <h1>Assignment list</h1>
+
 <p><a th:href="@{/assignments/new}">Add new assignment</a></p>
 
 <table border="1">
     <thead>
     <tr>
-        <th>ID Asignare</th>
+        <th>ID</th>
         <th>Order ID</th>
         <th>Staff ID</th>
         <th>Actions</th>
     </tr>
     </thead>
+
     <tbody>
     <tr th:each="assignment : ${assignments}">
-        <td th:text="${assignment.id}">A000</td>
-        <td th:text="${assignment.orderId}">O000</td>
-        <td th:text="${assignment.staffId}">S000/CH00</td>
+        <td th:text="${assignment.id}"></td>
+        <td th:text="${assignment.orderId}"></td>
+        <td th:text="${assignment.staffId}"></td>
+
         <td>
-            <form th:action="@{'/assignments/' + ${assignment.id} + '/delete'}" method="post">
+            <a th:href="@{'/assignments/' + ${assignment.id}}">Details</a> |
+            <a th:href="@{'/assignments/' + ${assignment.id} + '/edit'}">Edit</a> |
+
+            <form th:action="@{'/assignments/' + ${assignment.id} + '/delete'}"
+                  method="post" style="display:inline;">
                 <button type="submit">Delete</button>
             </form>
         </td>
     </tr>
     </tbody>
 </table>
+
 </body>
 </html>

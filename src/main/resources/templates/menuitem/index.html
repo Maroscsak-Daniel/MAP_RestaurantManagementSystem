@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Menu item list</title>
+    <title>Menu Item List</title>
 </head>
 <body>
-<h1>Meniu item list</h1>
+
+<h1>Menu Item List</h1>
+
 <p><a th:href="@{/menuitems/new}">Add new menu item</a></p>
 
 <table border="1">
@@ -16,18 +18,25 @@
         <th>Actions</th>
     </tr>
     </thead>
+
     <tbody>
     <tr th:each="item : ${menuitems}">
-        <td th:text="${item.id}">M000</td>
-        <td th:text="${item.name}">Product name</td>
-        <td th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 2, 'POINT')}">0.00</td>
+        <td th:text="${item.id}"></td>
+        <td th:text="${item.name}"></td>
+        <td th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 2, 'POINT')}"></td>
+
         <td>
-            <form th:action="@{'/menuitems/' + ${item.id} + '/delete'}" method="post">
+            <a th:href="@{'/menuitems/' + ${item.id}}">Details</a> |
+            <a th:href="@{'/menuitems/' + ${item.id} + '/edit'}">Edit</a> |
+
+            <form th:action="@{'/menuitems/' + ${item.id} + '/delete'}"
+                  method="post" style="display:inline;">
                 <button type="submit">Delete</button>
             </form>
         </td>
     </tr>
     </tbody>
 </table>
+
 </body>
 </html>
