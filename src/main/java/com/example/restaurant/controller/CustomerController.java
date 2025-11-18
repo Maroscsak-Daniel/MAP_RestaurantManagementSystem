@@ -18,65 +18,91 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    // GET /customers - list all
+    // -------------------- LIST --------------------
     @GetMapping
     public String getAllCustomers(Model model) {
         model.addAttribute("customers", customerService.getAll());
         return "customer/index";
     }
 
-    // GET /customers/new - show form
+
+    // -------------------- DETAILS --------------------
+    @GetMapping("/{id}")
+    public String getCustomerDetails(@PathVariable String id, Model model) {
+        Customer customer = customerService.getById(id);
+        if (customer == null) {
+            return "redirect:/customers";
+        }
+
+        // ca să nu fie niciodată null
+        if (customer.getOrderIds() == null) {
+            customer.setOrderIds(new ArrayList<>());
+        }
+
+        model.addAttribute("customer", customer);
+        return "customer/details";
+    }
+
+
+    // -------------------- CREATE FORM --------------------
     @GetMapping("/new")
     public String showCreateForm(Model model) {
-
         Customer customer = new Customer();
-        customer.setOrderIds(new ArrayList<>());   // must NOT be null
+        customer.setOrderIds(new ArrayList<>()); // important să nu fie null
 
         model.addAttribute("customer", customer);
         return "customer/form";
     }
 
-    // POST /customers - create
+
+    // -------------------- CREATE ACTION --------------------
     @PostMapping
     public String createCustomer(@ModelAttribute Customer customer) {
 
-        if (customer.getOrderIds() == null)
+        if (customer.getOrderIds() == null) {
             customer.setOrderIds(new ArrayList<>());
+        }
 
         customerService.add(customer);
         return "redirect:/customers";
     }
 
-    // GET /customers/{id}/edit - show update form
+
+    // -------------------- EDIT FORM --------------------
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable String id, Model model) {
 
         Customer customer = customerService.getById(id);
-        if (customer == null)
+        if (customer == null) {
             return "redirect:/customers";
+        }
 
-        if (customer.getOrderIds() == null)
+        if (customer.getOrderIds() == null) {
             customer.setOrderIds(new ArrayList<>());
+        }
 
         model.addAttribute("customer", customer);
         return "customer/form";
     }
 
-    // POST /customers/{id} - update
+
+    // -------------------- UPDATE ACTION --------------------
     @PostMapping("/{id}")
     public String updateCustomer(@PathVariable String id,
                                  @ModelAttribute Customer customer) {
 
         customer.setId(id);
 
-        if (customer.getOrderIds() == null)
+        if (customer.getOrderIds() == null) {
             customer.setOrderIds(new ArrayList<>());
+        }
 
         customerService.update(customer);
         return "redirect:/customers";
     }
 
-    // POST /customers/{id}/delete
+
+    // -------------------- DELETE --------------------
     @PostMapping("/{id}/delete")
     public String deleteCustomer(@PathVariable String id) {
         customerService.delete(id);

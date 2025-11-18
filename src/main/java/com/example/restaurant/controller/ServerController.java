@@ -16,47 +16,60 @@ public class ServerController {
         this.serverService = serverService;
     }
 
-    // GET /servers - list all
+    // -------------------- LIST --------------------
     @GetMapping
     public String getAllServers(Model model) {
         model.addAttribute("servers", serverService.getAllServers());
         return "server/index";
     }
 
-    // GET /servers/new - create form
+    // -------------------- DETAILS --------------------
+    @GetMapping("/{id}")
+    public String getServerDetails(@PathVariable String id, Model model) {
+        Server server = serverService.getServerById(id);
+        if (server == null)
+            return "redirect:/servers";
+
+        model.addAttribute("server", server);
+        return "server/details";
+    }
+
+    // -------------------- CREATE FORM --------------------
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("server", new Server());
         return "server/form";
     }
 
-    // POST /servers - create
+    // -------------------- CREATE ACTION --------------------
     @PostMapping
     public String createServer(@ModelAttribute Server server) {
         serverService.addServer(server);
         return "redirect:/servers";
     }
 
-    // GET /servers/{id}/edit - edit form
+    // -------------------- EDIT FORM --------------------
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable String id, Model model) {
+
         Server server = serverService.getServerById(id);
-        if (server == null) {
+        if (server == null)
             return "redirect:/servers";
-        }
+
         model.addAttribute("server", server);
         return "server/form";
     }
 
-    // POST /servers/{id} - update
+    // -------------------- UPDATE ACTION --------------------
     @PostMapping("/{id}")
     public String updateServer(@PathVariable String id, @ModelAttribute Server server) {
+
         server.setId(id);
         serverService.updateServer(server);
         return "redirect:/servers";
     }
 
-    // POST /servers/{id}/delete - delete
+    // -------------------- DELETE --------------------
     @PostMapping("/{id}/delete")
     public String deleteServer(@PathVariable String id) {
         serverService.deleteServer(id);

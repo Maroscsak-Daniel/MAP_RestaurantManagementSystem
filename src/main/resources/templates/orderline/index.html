@@ -4,9 +4,10 @@
     <title>OrderLine list</title>
 </head>
 <body>
-<h1>Orderline list</h1>
 
-<p><a th:href="@{/orderlines/new}">Add new orderline</a></p>
+<h1>OrderLine list</h1>
+
+<p><a th:href="@{/orderlines/new}">Add new order line</a></p>
 
 <table border="1">
     <thead>
@@ -18,19 +19,26 @@
         <th>Actions</th>
     </tr>
     </thead>
+
     <tbody>
     <tr th:each="line : ${orderlines}">
-        <td th:text="${line.id}">L000</td>
-        <td th:text="${line.menuItemId}">M000</td>
-        <td th:text="${line.quantity}">1</td>
-        <td th:text="${line.allergens}">Allergens</td>
+        <td th:text="${line.id}"></td>
+        <td th:text="${line.menuItemId}"></td>
+        <td th:text="${line.quantity}"></td>
+        <td th:text="${line.allergens}"></td>
+
         <td>
-            <form th:action="@{'/orderlines/' + ${line.id} + '/delete'}" method="post">
+            <a th:href="@{'/orderlines/' + ${line.id}}">Details</a> |
+            <a th:href="@{'/orderlines/' + ${line.id} + '/edit'}">Edit</a> |
+
+            <form th:action="@{'/orderlines/' + ${line.id} + '/delete'}"
+                  method="post" style="display:inline;">
                 <button type="submit">Delete</button>
             </form>
         </td>
     </tr>
     </tbody>
 </table>
+
 </body>
 </html>

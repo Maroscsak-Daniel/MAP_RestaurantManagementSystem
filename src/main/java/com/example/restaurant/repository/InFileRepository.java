@@ -99,12 +99,20 @@ public abstract class InFileRepository<T> {
 
     public void update(T entity) {
         String id = getId(entity);
-
-        data.removeIf(x -> getId(x).equals(id));
-        data.add(entity);
-
+        int index = -1;
+        for (int i = 0; i < data.size(); i++) {
+            if (Objects.equals(getId(data.get(i)), id)) {
+                index = i;
+                break;
+            }
+        }
+        if (index == -1) {
+            throw new IllegalArgumentException("Cannot update: entity with id " + id + " does not exist");
+        }
+        data.set(index, entity);
         save();
     }
+
 
     public void delete(String id) {
         data.removeIf(x -> getId(x).equals(id));

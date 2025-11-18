@@ -4,7 +4,9 @@
     <title>Chefs list</title>
 </head>
 <body>
+
 <h1>Chefs list</h1>
+
 <p><a th:href="@{/chefs/new}">Add new chef</a></p>
 
 <table border="1">
@@ -17,19 +19,26 @@
         <th>Actions</th>
     </tr>
     </thead>
+
     <tbody>
     <tr th:each="chef : ${chefs}">
-        <td th:text="${chef.id}">CH00</td>
-        <td th:text="${chef.name}">Chef name</td>
-        <td th:text="${chef.experience}">Experience</td>
-        <td th:text="${chef.specialization}">Specialization</td>
+        <td th:text="${chef.id}"></td>
+        <td th:text="${chef.name}"></td>
+        <td th:text="${chef.experience}"></td>
+        <td th:text="${chef.specialization}"></td>
+
         <td>
-            <form th:action="@{'/chefs/' + ${chef.id} + '/delete'}" method="post">
+            <a th:href="@{'/chefs/' + ${chef.id}}">Details</a> |
+            <a th:href="@{'/chefs/' + ${chef.id} + '/edit'}">Edit</a> |
+
+            <form th:action="@{'/chefs/' + ${chef.id} + '/delete'}"
+                  method="post" style="display:inline;">
                 <button type="submit">Delete</button>
             </form>
         </td>
     </tr>
     </tbody>
 </table>
+
 </body>
 </html>
