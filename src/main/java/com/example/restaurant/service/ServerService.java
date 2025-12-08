@@ -15,23 +15,28 @@ public class ServerService {
         this.repo = repo;
     }
 
-    public void addServer(Server server) {
-        repo.add(server);
+    public List<Server> getAll() {
+        return repo.findAll();
     }
 
-    public void updateServer(Server server) {
-        repo.update(server);
+    public Server getById(Long id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Server not found: " + id));
     }
 
-    public List<Server> getAllServers() {
-        return repo.getAll();
+    public Server create(Server server) {
+        return repo.save(server);
     }
 
-    public Server getServerById(String id) {
-        return repo.getById(id);
+    public Server update(Long id, Server data) {
+        Server s = getById(id);
+        s.setName(data.getName());
+        s.setShift(data.getShift());
+        s.setExperienceYears(data.getExperienceYears());
+        return repo.save(s);
     }
 
-    public void deleteServer(String id) {
-        repo.delete(id);
+    public void delete(Long id) {
+        repo.deleteById(id);
     }
 }

@@ -1,12 +1,18 @@
 package com.example.restaurant.repository;
 
 import com.example.restaurant.model.OrderLine;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public class OrderLineRepository extends InFileRepository<OrderLine> {
+import java.util.List;
 
-    public OrderLineRepository() {
-        super("orderLines.json", OrderLine.class);
-    }
+@Repository
+public interface OrderLineRepository extends JpaRepository<OrderLine, Long> {
+
+    List<OrderLine> findByOrder_Id(Long orderId);
+
+    long countByOrder_Id(Long orderId);
+
+    long countByMenuItem_Id(Long menuItemId);
+
 }

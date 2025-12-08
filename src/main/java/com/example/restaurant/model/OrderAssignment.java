@@ -1,49 +1,34 @@
 package com.example.restaurant.model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "order_assignments")
 public class OrderAssignment {
-    private String id;
-    private String orderId;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String staffId;
 
-    public OrderAssignment() {
-    }
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
 
-    public OrderAssignment(String id, String orderId, String staffId) {
-        this.id = id;
-        this.orderId = orderId;
+    public OrderAssignment() {}
+
+    public OrderAssignment(String staffId) {
         this.staffId = staffId;
     }
 
-    public String getId() {
-        return id;
-    }
+    // Getters & setters
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    public Long getId() { return id; }
 
-    public String getOrderId() {
-        return orderId;
-    }
+    public String getStaffId() { return staffId; }
+    public void setStaffId(String staffId) { this.staffId = staffId; }
 
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
-
-    public String getStaffId() {
-        return staffId;
-    }
-
-    public void setStaffId(String staffId) {
-        this.staffId = staffId;
-    }
-
-    @Override
-    public String toString() {
-        return "OrderAssignment{" +
-                "id='" + id + '\'' +
-                ", orderId='" + orderId + '\'' +
-                ", staffId='" + staffId + '\'' +
-                '}';
-    }
+    public Order getOrder() { return order; }
+    public void setOrder(Order order) { this.order = order; }
 }

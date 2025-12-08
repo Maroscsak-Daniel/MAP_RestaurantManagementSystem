@@ -2,49 +2,57 @@ package com.example.restaurant.service;
 
 import com.example.restaurant.model.OrderAssignment;
 import com.example.restaurant.repository.OrderAssignmentRepository;
+import com.example.restaurant.model.Order;
+import com.example.restaurant.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class OrderAssignmentService {
-
     private final OrderAssignmentRepository repo;
+    private final OrderRepository orderRepository;
 
-    public OrderAssignmentService(OrderAssignmentRepository repo) {
+    public OrderAssignmentService(
+            OrderAssignmentRepository repo,
+            OrderRepository orderRepository
+    ) {
         this.repo = repo;
-    }
-
-    public void add(OrderAssignment assignment) {
-        repo.add(assignment);
-    }
-
-    public void update(OrderAssignment assignment) {
-        repo.update(assignment);
+        this.orderRepository = orderRepository;
     }
 
     public List<OrderAssignment> getAll() {
-        return repo.getAll();
+        return repo.findAll();
     }
 
-    public OrderAssignment getById(String id) {
-        return repo.getById(id);
+    public OrderAssignment getById(Long id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Assignment not found: " + id));
     }
 
-    public void delete(String id) {
-        repo.delete(id);
+    public OrderAssignment create(OrderAssignment a) {
+        return repo.save(a);
     }
 
-    public List<OrderAssignment> getByOrder(String orderId) {
-        return repo.getAll().stream()
-                .filter(a -> orderId.equals(a.getOrderId()))
-                .collect(Collectors.toList());
+    public void update(Long id, OrderAssignment data) {
+
+        OrderAssignment existing = getById(id);
+
+        // Validate order exists
+        Long newOrderId = data.getOrder().getId();
+        if (!orderRepository.existsById(newOrderId)) {
+            throw new IllegalArgumentException("Order ID " + newOrderId + " does not exist.");
+        }
+
+        // Do the update
+        existing.setOrder(orderRepository.findById(newOrderId).orElseThrow());
+        existing.setStaffId(data.getStaffId());
+
+        repo.save(existing);
     }
 
-    public List<OrderAssignment> getByStaff(String staffId) {
-        return repo.getAll().stream()
-                .filter(a -> staffId.equals(a.getStaffId()))
-                .collect(Collectors.toList());
+    public void delete(Long id) {
+        repo.deleteById(id);
     }
+
 }

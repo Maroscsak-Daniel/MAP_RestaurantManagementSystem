@@ -1,12 +1,7 @@
 package com.example.restaurant.repository;
 
 import com.example.restaurant.model.Order;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@Repository
-public class OrderRepository extends InFileRepository<Order> {
-
-    public OrderRepository() {
-        super("orders.json", Order.class);
-    }
+public interface OrderRepository extends JpaRepository<Order, Long> {
 }

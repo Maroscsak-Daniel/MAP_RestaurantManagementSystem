@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Menu Item Details</title></head>
+<body>
+
+<h1>Menu Item Details</h1>
+
+<p><strong>ID:</strong> <span th:text="${item.id}"></span></p>
+<p><strong>Name:</strong> <span th:text="${item.name}"></span></p>
+<p><strong>Description:</strong> <span th:text="${item.description}"></span></p>
+<p><strong>Category:</strong> <span th:text="${item.category}"></span></p>
+<p><strong>Price:</strong> <span th:text="${item.price}"></span></p>
+<p><strong>Allergens:</strong> <span th:text="${item.allergens}"></span></p>
+
+<p><a th:href="@{/menu}">Back</a></p>
+
+</body>
+</html>

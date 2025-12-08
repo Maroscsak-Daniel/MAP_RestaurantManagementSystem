@@ -1,9 +1,4 @@
 [ {
-  "id" : "chef1",
-  "name" : "Adrian Popescu",
-  "experience" : "5 years",
-  "specialization" : "Grill"
-}, {
   "id" : "chef2",
   "name" : "Mara Dumitrescu",
   "experience" : "8 years",

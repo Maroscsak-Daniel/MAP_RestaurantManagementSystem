@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Server</title></head>
+<body>
+
+<h1 th:text="${server.id == null ? 'Add Server' : 'Edit Server'}"></h1>
+
+<!-- CREATE FORM -->
+<form th:if="${server.id == null}"
+      th:action="@{/servers}"
+      th:object="${server}"
+      method="post">
+
+    <label>Name:</label>
+    <input type="text" th:field="*{name}" required/><br/><br/>
+
+    <label>Shift:</label>
+    <select th:field="*{shift}">
+        <option th:value="Morning" th:text="'Morning'"></option>
+        <option th:value="Evening" th:text="'Evening'"></option>
+        <option th:value="Night" th:text="'Night'"></option>
+    </select>
+    <br/><br/>
+
+    <label>Experience (years):</label>
+    <input type="number" th:field="*{experienceYears}" min="0" required/><br/><br/>
+
+    <button type="submit">Save</button>
+</form>
+
+<!-- UPDATE FORM -->
+<form th:if="${server.id != null}"
+      th:action="@{/servers/{id}(id=${server.id})}"
+      th:object="${server}"
+      method="post">
+
+    <label>Name:</label>
+    <input type="text" th:field="*{name}" required/><br/><br/>
+
+    <label>Shift:</label>
+    <select th:field="*{shift}">
+        <option th:value="Morning" th:text="'Morning'"></option>
+        <option th:value="Evening" th:text="'Evening'"></option>
+        <option th:value="Night" th:text="'Night'"></option>
+    </select><br/><br/>
+
+    <label>Experience (years):</label>
+    <input type="number" th:field="*{experienceYears}" min="0" required/><br/><br/>
+
+    <button type="submit">Save</button>
+</form>
+
+<p><a th:href="@{/servers}">Back</a></p>
+
+</body>
+</html>

@@ -1,12 +1,8 @@
 package com.example.restaurant.repository;
 
 import com.example.restaurant.model.Customer;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@Repository
-public class CustomerRepository extends InFileRepository<Customer> {
-
-    public CustomerRepository() {
-        super("customers.json", Customer.class);
-    }
+public interface CustomerRepository extends JpaRepository<Customer, Long> {
+//    public void deleteByName(String name);
 }

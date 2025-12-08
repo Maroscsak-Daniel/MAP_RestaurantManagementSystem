@@ -2,6 +2,7 @@ package com.example.restaurant.service;
 
 import com.example.restaurant.model.MenuItem;
 import com.example.restaurant.repository.MenuItemRepository;
+import com.example.restaurant.repository.OrderLineRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,29 +10,50 @@ import java.util.List;
 @Service
 public class MenuItemService {
 
-    private final MenuItemRepository repo;
+    private final MenuItemRepository menuItemRepository;
+    private final OrderLineRepository orderLineRepository;
 
-    public MenuItemService(MenuItemRepository repo) {
-        this.repo = repo;
+    public MenuItemService(MenuItemRepository menuItemRepository,
+                           OrderLineRepository orderLineRepository) {
+        this.menuItemRepository = menuItemRepository;
+        this.orderLineRepository = orderLineRepository;
     }
 
-    public void addMenuItem(MenuItem item) {
-        repo.add(item);
+    public List<MenuItem> getAll() {
+        return menuItemRepository.findAll();
     }
 
-    public void updateMenuItem(MenuItem item) {
-        repo.update(item);
+    public MenuItem getById(Long id) {
+        return menuItemRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Menu item not found: " + id));
     }
 
-    public List<MenuItem> getAllMenuItems() {
-        return repo.getAll();
+    public MenuItem create(MenuItem item) {
+        return menuItemRepository.save(item);
     }
 
-    public MenuItem getMenuItemById(String id) {
-        return repo.getById(id);
+    public MenuItem update(Long id, MenuItem data) {
+        MenuItem existing = getById(id);
+
+        existing.setName(data.getName());
+        existing.setDescription(data.getDescription());
+        existing.setPrice(data.getPrice());
+        existing.setCategory(data.getCategory());
+        existing.setAllergens(data.getAllergens());
+
+        return menuItemRepository.save(existing);
     }
 
-    public void deleteMenuItem(String id) {
-        repo.delete(id);
+    public void delete(Long id) {
+
+        long linkedLines = orderLineRepository.countByMenuItem_Id(id);
+        if (linkedLines > 0) {
+            throw new IllegalStateException(
+                    "Cannot delete menu item — it is used in " + linkedLines + " order lines."
+            );
+        }
+
+        menuItemRepository.deleteById(id);
     }
 }
+

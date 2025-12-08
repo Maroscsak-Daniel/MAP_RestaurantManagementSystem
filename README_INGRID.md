@@ -22,10 +22,10 @@ Business logic classes that connect the controllers with the repositories:
 
 - TableService: 
     getFreeTables(): Filters the repository to return only tables currently marked as "Free"
-    setStatus(id, status): Facilitates state transition (e.g., from ""Free"" to ""Occupied"") for a specific table
+    setStatus(id, status): Facilitates state transition (e.g., from ""Free"" to ""Occupied"") for a specific restaurantTable
 - OrderService
     getByStaff(staffId): Traverses the OrderAssignment relationship to retrieve all orders managed by a specific staff ID
-    getByTable(tableId): Retrieves all orders placed at a specific table.
+    getByTable(tableId): Retrieves all orders placed at a specific restaurantTable.
 - BillService
     getByOrder(orderId): Provides direct lookup of the final bill document using its associated order ID
 

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>OrderLines</title>
+</head>
+<body>
+
+<h1>OrderLines</h1>
+
+<div th:if="${error}"
+     style="color:red; background:#ffe5e5; padding:8px; margin-bottom:10px;">
+    <p th:text="${error}"></p>
+</div>
+
+<p><a href="/orderlines/new">Add New OrderLine</a></p>
+
+<table border="1" cellpadding="6" cellspacing="0">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Order</th>
+        <th>Menu Item</th>
+        <th>Quantity</th>
+        <th>Allergens</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="line : ${orderlines}">
+        <td th:text="${line.id}"></td>
+
+        <td th:text="${line.order != null ? line.order.id : 'N/A'}"></td>
+
+        <td th:text="${line.menuItem != null ? line.menuItem.name : 'None'}"></td>
+
+        <td th:text="${line.quantity}"></td>
+
+        <td th:text="${line.allergens}"></td>
+
+        <td>
+            <a th:href="@{/orderlines/{id}(id=${line.id})}">Details</a>
+            &nbsp;|&nbsp;
+            <a th:href="@{/orderlines/{id}/edit(id=${line.id})}">Edit</a>
+            &nbsp;|&nbsp;
+            <form th:action="@{/orderlines/{id}/delete(id=${line.id})}"
+                  method="post"
+                  style="display:inline;">
+                <button type="submit"
+                        onclick="return confirm('Delete this order line?');">
+                    Delete
+                </button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

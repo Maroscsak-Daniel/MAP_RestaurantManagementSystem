@@ -5,72 +5,65 @@ import com.example.restaurant.service.MenuItemService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping("/menuitems")
+@RequestMapping("/menu")
 public class MenuItemController {
 
-    private final MenuItemService menuItemService;
+    private final MenuItemService service;
 
-    public MenuItemController(MenuItemService menuItemService) {
-        this.menuItemService = menuItemService;
+    public MenuItemController(MenuItemService service) {
+        this.service = service;
     }
 
-    // -------------------- LIST --------------------
     @GetMapping
-    public String getAllMenuItems(Model model) {
-        model.addAttribute("menuitems", menuItemService.getAllMenuItems());
-        return "menuitem/index";
+    public String list(Model model) {
+        model.addAttribute("items", service.getAll());
+        return "menu/index";
     }
 
-    // -------------------- DETAILS --------------------
-    @GetMapping("/{id}")
-    public String getMenuItemDetails(@PathVariable String id, Model model) {
-        MenuItem item = menuItemService.getMenuItemById(id);
-        if (item == null)
-            return "redirect:/menuitems";
-
-        model.addAttribute("menuitem", item);
-        return "menuitem/details";
-    }
-
-    // -------------------- CREATE FORM --------------------
     @GetMapping("/new")
-    public String showCreateForm(Model model) {
-        model.addAttribute("menuitem", new MenuItem());
-        return "menuitem/form";
+    public String newForm(Model model) {
+        model.addAttribute("item", new MenuItem());
+        return "menu/form";
     }
 
-    // -------------------- CREATE ACTION --------------------
     @PostMapping
-    public String createMenuItem(@ModelAttribute MenuItem menuitem) {
-        menuItemService.addMenuItem(menuitem);
-        return "redirect:/menuitems";
+    public String create(@ModelAttribute MenuItem item) {
+        service.create(item);
+        return "redirect:/menu";
     }
 
-    // -------------------- EDIT FORM --------------------
+    @GetMapping("/{id}")
+    public String details(@PathVariable Long id, Model model) {
+        model.addAttribute("item", service.getById(id));
+        return "menu/details";
+    }
+
     @GetMapping("/{id}/edit")
-    public String showEditForm(@PathVariable String id, Model model) {
-        MenuItem item = menuItemService.getMenuItemById(id);
-        if (item == null)
-            return "redirect:/menuitems";
-
-        model.addAttribute("menuitem", item);
-        return "menuitem/form";
+    public String editForm(@PathVariable Long id, Model model) {
+        model.addAttribute("item", service.getById(id));
+        return "menu/form";
     }
 
-    // -------------------- UPDATE ACTION --------------------
     @PostMapping("/{id}")
-    public String updateMenuItem(@PathVariable String id, @ModelAttribute MenuItem menuitem) {
-        menuitem.setId(id);
-        menuItemService.updateMenuItem(menuitem);
-        return "redirect:/menuitems";
+    public String update(@PathVariable Long id, @ModelAttribute MenuItem item) {
+        service.update(id, item);
+        return "redirect:/menu";
     }
 
-    // -------------------- DELETE --------------------
     @PostMapping("/{id}/delete")
-    public String deleteMenuItem(@PathVariable String id) {
-        menuItemService.deleteMenuItem(id);
-        return "redirect:/menuitems";
+    public String deleteMenuItem(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            service.delete(id);
+            redirectAttributes.addFlashAttribute("success", "Item deleted successfully.");
+        } catch (IllegalStateException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+
+        return "redirect:/menu";
     }
+
+
 }

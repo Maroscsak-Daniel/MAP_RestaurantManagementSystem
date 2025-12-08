@@ -5,75 +5,67 @@ import com.example.restaurant.service.OrderAssignmentService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/assignments")
 public class OrderAssignmentController {
 
-    private final OrderAssignmentService orderAssignmentService;
+    private final OrderAssignmentService service;
 
-    public OrderAssignmentController(OrderAssignmentService orderAssignmentService) {
-        this.orderAssignmentService = orderAssignmentService;
+    public OrderAssignmentController(OrderAssignmentService service) {
+        this.service = service;
     }
 
-    // -------------------- LIST --------------------
     @GetMapping
-    public String getAllOrderAssignments(Model model) {
-        model.addAttribute("assignments", orderAssignmentService.getAll());
-        return "assignment/index";
+    public String list(Model model) {
+        model.addAttribute("assignments", service.getAll());
+        return "assignments/index";
     }
 
-    // -------------------- DETAILS --------------------
-    @GetMapping("/{id}")
-    public String getAssignmentDetails(@PathVariable String id, Model model) {
-        OrderAssignment assignment = orderAssignmentService.getById(id);
-        if (assignment == null)
-            return "redirect:/assignments";
-
-        model.addAttribute("assignment", assignment);
-        return "assignment/details";
-    }
-
-    // -------------------- CREATE FORM --------------------
     @GetMapping("/new")
-    public String showCreateForm(Model model) {
+    public String createForm(Model model) {
         model.addAttribute("assignment", new OrderAssignment());
-        return "assignment/form";
+        return "assignments/form";
     }
 
-    // -------------------- CREATE ACTION --------------------
     @PostMapping
-    public String createOrderAssignment(@ModelAttribute OrderAssignment assignment) {
-        orderAssignmentService.add(assignment);
+    public String create(@ModelAttribute OrderAssignment assignment) {
+        service.create(assignment);
         return "redirect:/assignments";
     }
 
-    // -------------------- EDIT FORM --------------------
+    @GetMapping("/{id}")
+    public String details(@PathVariable Long id, Model model) {
+        model.addAttribute("assignment", service.getById(id));
+        return "assignments/details";
+    }
+
     @GetMapping("/{id}/edit")
-    public String showEditForm(@PathVariable String id, Model model) {
-
-        OrderAssignment assignment = orderAssignmentService.getById(id);
-        if (assignment == null)
-            return "redirect:/assignments";
-
-        model.addAttribute("assignment", assignment);
-        return "assignment/form";
+    public String editForm(@PathVariable Long id, Model model) {
+        model.addAttribute("assignment", service.getById(id));
+        return "assignments/form";
     }
 
-    // -------------------- UPDATE ACTION --------------------
     @PostMapping("/{id}")
-    public String updateOrderAssignment(@PathVariable String id,
-                                        @ModelAttribute OrderAssignment assignment) {
+    public String update(
+            @PathVariable Long id,
+            @ModelAttribute("assignment") OrderAssignment assignment,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            service.update(id, assignment);
+            redirectAttributes.addFlashAttribute("success", "Assignment updated.");
+        } catch (IllegalArgumentException ex) {
+            redirectAttributes.addFlashAttribute("error", ex.getMessage());
+        }
 
-        assignment.setId(id);
-        orderAssignmentService.update(assignment);
         return "redirect:/assignments";
     }
 
-    // -------------------- DELETE --------------------
     @PostMapping("/{id}/delete")
-    public String deleteOrderAssignment(@PathVariable String id) {
-        orderAssignmentService.delete(id);
+    public String delete(@PathVariable Long id) {
+        service.delete(id);
         return "redirect:/assignments";
     }
 }

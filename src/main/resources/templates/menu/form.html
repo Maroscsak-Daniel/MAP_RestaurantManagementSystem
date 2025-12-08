@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Menu Item</title></head>
+<body>
+
+<h1 th:text="${item.id == null} ? 'Add Item' : 'Edit Item'"></h1>
+
+<!-- CREATE FORM -->
+<form th:if="${item.id == null}"
+      th:action="@{/menu}"
+      th:object="${item}"
+      method="post">
+
+    <label>Name:</label>
+    <input type="text" th:field="*{name}" required/><br/><br/>
+
+    <label>Description:</label>
+    <input type="text" th:field="*{description}" required/><br/><br/>
+
+    <label>Price:</label>
+    <input type="number" step="0.01" th:field="*{price}" required/><br/><br/>
+
+    <label>Category:</label>
+    <select th:field="*{category}">
+        <option value="Starter">Starter</option>
+        <option value="Main">Main</option>
+        <option value="Dessert">Dessert</option>
+        <option value="Drink">Drink</option>
+    </select><br/><br/>
+
+    <label>Allergens:</label>
+    <input type="text" th:field="*{allergens}" placeholder="gluten, nuts"/><br/><br/>
+
+    <button type="submit">Create</button>
+</form>
+
+
+<!-- UPDATE FORM -->
+<form th:if="${item.id != null}"
+      th:action="@{'/menu/' + ${item.id}}"
+      th:object="${item}"
+      method="post">
+
+    <input type="hidden" th:field="*{id}"/>
+
+    <label>Name:</label>
+    <input type="text" th:field="*{name}" required/><br/><br/>
+
+    <label>Description:</label>
+    <input type="text" th:field="*{description}" required/><br/><br/>
+
+    <label>Price:</label>
+    <input type="number" step="0.01" th:field="*{price}" required/><br/><br/>
+
+    <label>Category:</label>
+    <select th:field="*{category}">
+        <option value="Starter">Starter</option>
+        <option value="Main">Main</option>
+        <option value="Dessert">Dessert</option>
+        <option value="Drink">Drink</option>
+    </select><br/><br/>
+
+    <label>Allergens:</label>
+    <input type="text" th:field="*{allergens}" placeholder="gluten, nuts"/><br/><br/>
+
+    <button type="submit">Update</button>
+</form>
+
+
+<p><a th:href="@{/menu}">Back</a></p>
+
+</body>
+</html>

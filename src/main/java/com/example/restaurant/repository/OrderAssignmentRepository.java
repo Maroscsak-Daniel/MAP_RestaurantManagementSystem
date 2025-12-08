@@ -1,12 +1,11 @@
 package com.example.restaurant.repository;
 
 import com.example.restaurant.model.OrderAssignment;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class OrderAssignmentRepository extends InFileRepository<OrderAssignment> {
+public interface OrderAssignmentRepository extends JpaRepository<OrderAssignment, Long> {
 
-    public OrderAssignmentRepository() {
-        super("orderAssignments.json", OrderAssignment.class);
-    }
+    long countByOrder_Id(Long orderId);
 }

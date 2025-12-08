@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${customer.id == null} ? 'Add Customer' : 'Edit Customer'"></title>
+</head>
+<body>
+
+<h1 th:text="${customer.id == null} ? 'Add new customer' : 'Edit customer'"></h1>
+
+<form th:action="${customer.id == null} ? @{/customers} : @{|/customers/${customer.id}|}"
+      th:object="${customer}"
+      method="post">
+
+    <!-- NAME -->
+    <label>Name:</label>
+    <input type="text" th:field="*{name}"/>
+
+    <span style="color:red"
+          th:if="${#fields.hasErrors('name')}"
+          th:errors="*{name}">
+    </span>
+
+    <br/><br/>
+
+    <button type="submit" th:text="${customer.id == null} ? 'Save' : 'Update'"></button>
+
+</form>
+
+<p><a th:href="@{/customers}">Back to list</a></p>
+
+</body>
+</html>

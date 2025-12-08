@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Menu Items</title></head>
+<body>
+
+<h1>Menu</h1>
+
+<p><a th:href="@{/menu/new}">Add new item</a></p>
+
+<div th:if="${error}" style="color:red;">
+    <p th:text="${error}"></p>
+</div>
+
+<div th:if="${success}" style="color:green;">
+    <p th:text="${success}"></p>
+</div>
+
+
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th>Actions</th>
+    </tr>
+
+    <tr th:each="i : ${items}">
+        <td th:text="${i.id}"></td>
+        <td th:text="${i.name}"></td>
+        <td th:text="${i.category}"></td>
+        <td th:text="${i.price}"></td>
+
+        <td>
+            <a th:href="@{'/menu/' + ${i.id}}">Details</a> |
+            <a th:href="@{'/menu/' + ${i.id} + '/edit'}">Edit</a> |
+            <form th:action="@{'/menu/' + ${i.id} + '/delete'}"
+                  method="post" style="display:inline;">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+
+</table>
+
+</body>
+</html>

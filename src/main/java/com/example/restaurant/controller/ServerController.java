@@ -10,69 +10,51 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/servers")
 public class ServerController {
 
-    private final ServerService serverService;
+    private final ServerService service;
 
-    public ServerController(ServerService serverService) {
-        this.serverService = serverService;
+    public ServerController(ServerService service) {
+        this.service = service;
     }
 
-    // -------------------- LIST --------------------
     @GetMapping
-    public String getAllServers(Model model) {
-        model.addAttribute("servers", serverService.getAllServers());
-        return "server/index";
+    public String list(Model model) {
+        model.addAttribute("servers", service.getAll());
+        return "servers/index";
     }
 
-    // -------------------- DETAILS --------------------
-    @GetMapping("/{id}")
-    public String getServerDetails(@PathVariable String id, Model model) {
-        Server server = serverService.getServerById(id);
-        if (server == null)
-            return "redirect:/servers";
-
-        model.addAttribute("server", server);
-        return "server/details";
-    }
-
-    // -------------------- CREATE FORM --------------------
     @GetMapping("/new")
-    public String showCreateForm(Model model) {
+    public String createForm(Model model) {
         model.addAttribute("server", new Server());
-        return "server/form";
+        return "servers/form";
     }
 
-    // -------------------- CREATE ACTION --------------------
     @PostMapping
-    public String createServer(@ModelAttribute Server server) {
-        serverService.addServer(server);
+    public String create(@ModelAttribute Server server) {
+        service.create(server);
         return "redirect:/servers";
     }
 
-    // -------------------- EDIT FORM --------------------
+    @GetMapping("/{id}")
+    public String details(@PathVariable Long id, Model model) {
+        model.addAttribute("server", service.getById(id));
+        return "servers/details";
+    }
+
     @GetMapping("/{id}/edit")
-    public String showEditForm(@PathVariable String id, Model model) {
-
-        Server server = serverService.getServerById(id);
-        if (server == null)
-            return "redirect:/servers";
-
-        model.addAttribute("server", server);
-        return "server/form";
+    public String editForm(@PathVariable Long id, Model model) {
+        model.addAttribute("server", service.getById(id));
+        return "servers/form";
     }
 
-    // -------------------- UPDATE ACTION --------------------
     @PostMapping("/{id}")
-    public String updateServer(@PathVariable String id, @ModelAttribute Server server) {
-
-        server.setId(id);
-        serverService.updateServer(server);
+    public String update(@PathVariable Long id, @ModelAttribute Server server) {
+        service.update(id, server);
         return "redirect:/servers";
     }
 
-    // -------------------- DELETE --------------------
     @PostMapping("/{id}/delete")
-    public String deleteServer(@PathVariable String id) {
-        serverService.deleteServer(id);
+    public String delete(@PathVariable Long id) {
+        service.delete(id);
         return "redirect:/servers";
     }
 }
