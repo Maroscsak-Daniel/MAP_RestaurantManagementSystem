@@ -1,111 +1,97 @@
 package com.example.restaurant.controller;
 
 import com.example.restaurant.model.Order;
+import com.example.restaurant.service.CustomerService;
 import com.example.restaurant.service.OrderService;
+import com.example.restaurant.service.RestaurantTableService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 
 @Controller
 @RequestMapping("/orders")
 public class OrderController {
 
     private final OrderService orderService;
+    private final CustomerService customerService;
+    private final RestaurantTableService tableService;
 
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService,
+                           CustomerService customerService,
+                           RestaurantTableService tableService) {
         this.orderService = orderService;
+        this.customerService = customerService;
+        this.tableService = tableService;
     }
 
-    // -------------------- LIST --------------------
     @GetMapping
-    public String getAllOrders(Model model) {
+    public String index(Model model) {
         model.addAttribute("orders", orderService.getAll());
-        return "order/index";
+        return "orders/index";
     }
 
-    // -------------------- DETAILS --------------------
-    @GetMapping("/{id}")
-    public String getOrderDetails(@PathVariable String id, Model model) {
-        Order order = orderService.getById(id);
-        if (order == null)
-            return "redirect:/orders";
-
-        if (order.getOrderLineIds() == null)
-            order.setOrderLineIds(new ArrayList<>());
-        if (order.getAssignmentIds() == null)
-            order.setAssignmentIds(new ArrayList<>());
-
-        model.addAttribute("order", order);
-        return "order/details";
-    }
-
-    // -------------------- CREATE FORM --------------------
     @GetMapping("/new")
-    public String showCreateForm(Model model) {
-
-        Order order = new Order();
-        order.setStatus("Pending");
-        order.setPaymentMethod("Cash");
-
-        order.setOrderLineIds(new ArrayList<>());
-        order.setAssignmentIds(new ArrayList<>());
-
-        model.addAttribute("order", order);
-        return "order/form";
+    public String newForm(Model model) {
+        model.addAttribute("order", new Order());
+        model.addAttribute("customers", customerService.getAll());
+        model.addAttribute("tables", tableService.getAll());
+        return "orders/form";
     }
 
-    // -------------------- CREATE ACTION --------------------
     @PostMapping
-    public String createOrder(@ModelAttribute Order order) {
-
-        if (order.getOrderLineIds() == null)
-            order.setOrderLineIds(new ArrayList<>());
-
-        if (order.getAssignmentIds() == null)
-            order.setAssignmentIds(new ArrayList<>());
-
-        orderService.add(order);
-        return "redirect:/orders";
+    public String create(@ModelAttribute Order order, Model model) {
+        try {
+            orderService.create(order);
+            return "redirect:/orders";
+        } catch (Exception e) {
+            model.addAttribute("order", order);
+            model.addAttribute("customers", customerService.getAll());
+            model.addAttribute("tables", tableService.getAll());
+            model.addAttribute("error", e.getMessage());
+            return "orders/form";
+        }
     }
 
-    // -------------------- EDIT FORM --------------------
     @GetMapping("/{id}/edit")
-    public String showEditForm(@PathVariable String id, Model model) {
+    public String editForm(@PathVariable Long id, Model model) {
+        model.addAttribute("order", orderService.getById(id));
+        model.addAttribute("customers", customerService.getAll());
+        model.addAttribute("tables", tableService.getAll());
+        return "orders/form";
+    }
 
-        Order order = orderService.getById(id);
-        if (order == null)
+    @PostMapping("/{id}")
+    public String update(@PathVariable Long id,
+                         @ModelAttribute Order order,
+                         Model model) {
+        try {
+            orderService.update(id, order);
+            return "redirect:/orders";
+        } catch (Exception e) {
+            model.addAttribute("order", order);
+            model.addAttribute("customers", customerService.getAll());
+            model.addAttribute("tables", tableService.getAll());
+            model.addAttribute("error", e.getMessage());
+            return "orders/form";
+        }
+    }
+
+    @PostMapping("/{id}/delete")
+    public String delete(@PathVariable Long id, Model model) {
+        try {
+            orderService.delete(id);
             return "redirect:/orders";
 
-        if (order.getOrderLineIds() == null)
-            order.setOrderLineIds(new ArrayList<>());
-        if (order.getAssignmentIds() == null)
-            order.setAssignmentIds(new ArrayList<>());
+        } catch (Exception e) {
 
-        model.addAttribute("order", order);
-        return "order/form";
+            model.addAttribute("orders", orderService.getAll());
+            model.addAttribute("error",
+                    "Cannot delete this order because it has a bill or other linked data.");
+
+            // IMPORTANT: forward, NOT redirect
+            return "orders/index";
+        }
     }
 
-    // -------------------- UPDATE ACTION --------------------
-    @PostMapping("/{id}")
-    public String updateOrder(@PathVariable String id, @ModelAttribute Order order) {
 
-        order.setId(id);
-
-        if (order.getOrderLineIds() == null)
-            order.setOrderLineIds(new ArrayList<>());
-        if (order.getAssignmentIds() == null)
-            order.setAssignmentIds(new ArrayList<>());
-
-        orderService.update(order);
-        return "redirect:/orders";
-    }
-
-    // -------------------- DELETE --------------------
-    @PostMapping("/{id}/delete")
-    public String deleteOrder(@PathVariable String id) {
-        orderService.delete(id);
-        return "redirect:/orders";
-    }
 }

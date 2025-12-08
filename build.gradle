@@ -15,19 +15,15 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+    // REQUIRED FOR LAB 4
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
-
-
-//dependencies {
-//    // Alte dependențe existente (Spring Boot, etc.)
-//
-//    // Adaugă dependența Thymeleaf
-//    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-//
-//    // Dependințe de testare, etc.
-//}

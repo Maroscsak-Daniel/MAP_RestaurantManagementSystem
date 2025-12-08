@@ -5,7 +5,6 @@ import com.example.restaurant.repository.BillRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class BillService {
@@ -16,29 +15,34 @@ public class BillService {
         this.repo = repo;
     }
 
-    public void add(Bill bill) {
-        repo.add(bill);
-    }
-
-    public void update(Bill bill) {
-        repo.update(bill);
-    }
-
     public List<Bill> getAll() {
-        return repo.getAll();
+        return repo.findAll();
     }
 
-    public Bill getById(String id) {
-        return repo.getById(id);
+    public Bill getById(Long id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Bill not found: " + id));
     }
 
-    public void delete(String id) {
-        repo.delete(id);
+    public Bill create(Bill bill) {
+        return repo.save(bill);
     }
 
-    public List<Bill> getByOrderId(String orderId) {
-        return repo.getAll().stream()
-                .filter(b -> orderId.equals(b.getOrderId()))
-                .collect(Collectors.toList());
+    public void delete(Long id) {
+        repo.deleteById(id);
+    }
+
+    // ---- TOGGLE PAYMENT STATUS ----
+    public void togglePaymentStatus(Long id) {
+        Bill bill = getById(id);
+
+        String current = bill.getPaymentStatus();
+        if ("Paid".equalsIgnoreCase(current)) {
+            bill.setPaymentStatus("Unpaid");
+        } else {
+            bill.setPaymentStatus("Paid");
+        }
+
+        repo.save(bill);
     }
 }

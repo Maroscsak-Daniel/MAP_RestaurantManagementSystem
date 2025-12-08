@@ -1,27 +1,41 @@
 package com.example.restaurant.model;
 
-import java.util.ArrayList;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "customers")
 public class Customer {
 
-    private String id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotBlank(message = "Name is required")
+    @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
     private String name;
-    private ArrayList<String> orderIds;   // IDs only
 
-    public Customer() {
-    }
+    // One customer -> many orders
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Order> orders = new ArrayList<>();
 
-    public Customer(String id, String name, ArrayList<String> orderIds) {
-        this.id = id;
+    public Customer() {}
+
+    public Customer(String name) {
         this.name = name;
-        this.orderIds = orderIds;
     }
 
-    public String getId() {
+    // --- getters and setters ---
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -33,20 +47,11 @@ public class Customer {
         this.name = name;
     }
 
-    public ArrayList<String> getOrderIds() {
-        return orderIds;
+    public List<Order> getOrders() {
+        return orders;
     }
 
-    public void setOrderIds(ArrayList<String> orderIds) {
-        this.orderIds = orderIds;
-    }
-
-    @Override
-    public String toString() {
-        return "Customer{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", orderIds=" + orderIds +
-                '}';
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
 }

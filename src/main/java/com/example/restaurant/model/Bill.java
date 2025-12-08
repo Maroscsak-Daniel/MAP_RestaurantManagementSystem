@@ -1,50 +1,40 @@
 package com.example.restaurant.model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "bills")
 public class Bill {
-    private String id;
-    private String orderId;
-    private double totalAmount;
 
-    public Bill() {
-        // required for JSON deserialization
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    // Each bill belongs to one order
+    @OneToOne
+    @JoinColumn(name = "order_id", nullable = false, unique = true)
+    private Order order;
+
+    private double totalPrice;
+
+    private String paymentStatus; // Paid / Unpaid
+
+    public Bill() {}
+
+    public Bill(Order order, double totalPrice, String paymentStatus) {
+        this.order = order;
+        this.totalPrice = totalPrice;
+        this.paymentStatus = paymentStatus;
     }
 
-    public Bill(String id, String orderId, double totalAmount) {
-        this.id = id;
-        this.orderId = orderId;
-        this.totalAmount = totalAmount;
-    }
+    public Long getId() { return id; }
 
-    public String getId() {
-        return id;
-    }
+    public Order getOrder() { return order; }
+    public void setOrder(Order order) { this.order = order; }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    public double getTotalPrice() { return totalPrice; }
+    public void setTotalPrice(double totalPrice) { this.totalPrice = totalPrice; }
 
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
-
-    public double getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(double totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
-    @Override
-    public String toString() {
-        return "Bill{" +
-                "id='" + id + '\'' +
-                ", orderId='" + orderId + '\'' +
-                ", totalAmount=" + totalAmount +
-                '}';
-    }
+    public String getPaymentStatus() { return paymentStatus; }
+    public void setPaymentStatus(String paymentStatus) { this.paymentStatus = paymentStatus; }
 }

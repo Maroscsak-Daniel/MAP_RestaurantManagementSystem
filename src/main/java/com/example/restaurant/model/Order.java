@@ -1,101 +1,57 @@
 package com.example.restaurant.model;
 
+import jakarta.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 
+@Entity
+@Table(name = "orders")
 public class Order {
 
-    private String id;
-    private String customerId;
-    private String tableId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
+
+    @ManyToOne
+    @JoinColumn(name = "table_id")
+    private RestaurantTable restaurantTable;
+
     private String status;
 
-    private ArrayList<String> orderLineIds;      // ✔ only IDs
-    private ArrayList<String> assignmentIds;     // ✔ only IDs
+    // KEEP THEM AS JSON-backed lists, NOT JPA RELATIONS
+    @Transient
+    private List<OrderLine> orderLines = new ArrayList<>();
+
+    @Transient
+    private List<OrderAssignment> assignments = new ArrayList<>();
 
     private String paymentMethod;
 
-    public Order() {
-    }
+    public Order() {}
 
-    public Order(String id, String customerId, String tableId, String status,
-                 ArrayList<String> orderLineIds,
-                 ArrayList<String> assignmentIds,
-                 String paymentMethod) {
-        this.id = id;
-        this.customerId = customerId;
-        this.tableId = tableId;
-        this.status = status;
-        this.orderLineIds = orderLineIds;
-        this.assignmentIds = assignmentIds;
-        this.paymentMethod = paymentMethod;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public String getId() {
-        return id;
-    }
+    public Customer getCustomer() { return customer; }
+    public void setCustomer(Customer customer) { this.customer = customer; }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    public RestaurantTable getTable() { return restaurantTable; }
+    public void setTable(RestaurantTable restaurantTable) { this.restaurantTable = restaurantTable; }
 
-    public String getCustomerId() {
-        return customerId;
-    }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
-    }
+    public List<OrderLine> getOrderLines() { return orderLines; }
+    public void setOrderLines(List<OrderLine> orderLines) { this.orderLines = orderLines; }
 
-    public String getTableId() {
-        return tableId;
-    }
+    public List<OrderAssignment> getAssignments() { return assignments; }
+    public void setAssignments(List<OrderAssignment> assignments) { this.assignments = assignments; }
 
-    public void setTableId(String tableId) {
-        this.tableId = tableId;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public ArrayList<String> getOrderLineIds() {
-        return orderLineIds;
-    }
-
-    public void setOrderLineIds(ArrayList<String> orderLineIds) {
-        this.orderLineIds = orderLineIds;
-    }
-
-    public ArrayList<String> getAssignmentIds() {
-        return assignmentIds;
-    }
-
-    public void setAssignmentIds(ArrayList<String> assignmentIds) {
-        this.assignmentIds = assignmentIds;
-    }
-
-    public String getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    public void setPaymentMethod(String paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-
-    @Override
-    public String toString() {
-        return "Order{" +
-                "id='" + id + '\'' +
-                ", customerId='" + customerId + '\'' +
-                ", tableId='" + tableId + '\'' +
-                ", status='" + status + '\'' +
-                ", orderLineIds=" + orderLineIds +
-                ", assignmentIds=" + assignmentIds +
-                ", paymentMethod='" + paymentMethod + '\'' +
-                '}';
-    }
+    public String getPaymentMethod() { return paymentMethod; }
+    public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
 }
+

@@ -15,23 +15,27 @@ public class ChefService {
         this.repo = repo;
     }
 
-    public void addChef(Chef chef) {
-        repo.add(chef);
+    public List<Chef> getAll() {
+        return repo.findAll();
     }
 
-    public void updateChef(Chef chef) {
-        repo.update(chef);
+    public Chef getById(Long id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Chef not found: " + id));
     }
 
-    public List<Chef> getAllChefs() {
-        return repo.getAll();
+    public Chef create(Chef c) {
+        return repo.save(c);
     }
 
-    public Chef getChefById(String id) {
-        return repo.getById(id);
+    public Chef update(Long id, Chef data) {
+        Chef c = getById(id);
+        c.setName(data.getName());
+        c.setRank(data.getRank());
+        return repo.save(c);
     }
 
-    public void deleteChef(String id) {
-        repo.delete(id);
+    public void delete(Long id) {
+        repo.deleteById(id);
     }
 }

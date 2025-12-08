@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${orderline.id == null ? 'Add OrderLine' : 'Edit OrderLine'}"></title>
+</head>
+<body>
+
+<h1 th:text="${orderline.id == null ? 'Add OrderLine' : 'Edit OrderLine'}"></h1>
+
+<div th:if="${error}"
+     style="color: red; background:#ffe5e5; padding:8px; margin-bottom:10px;">
+    <p th:text="${error}"></p>
+</div>
+
+<form th:action="${orderline.id == null}
+        ? @{/orderlines}
+        : @{/orderlines/{id}(id=${orderline.id})}"
+      method="post">
+
+    <label>Quantity:</label>
+    <input type="number" name="quantity"
+           th:value="${orderline.quantity}"
+           required>
+    <br><br>
+
+    <label>Allergens:</label>
+    <input type="text" name="allergens"
+           th:value="${orderline.allergens}">
+    <br><br>
+
+    <label>Order:</label>
+    <select name="orderId" required>
+        <option th:each="o : ${orders}"
+                th:value="${o.id}"
+                th:text="${'Order ' + o.id}"
+                th:selected="${o.id == orderline.orderId}">
+        </option>
+    </select>
+    <br><br>
+
+    <label>Menu Item:</label>
+    <select name="menuItemId">
+        <option value="">None</option>
+        <option th:each="m : ${menuItems}"
+                th:value="${m.id}"
+                th:text="${m.name}"
+                th:selected="${m.id == orderline.menuItemId}">
+        </option>
+    </select>
+
+    <br><br>
+
+    <button type="submit">Save</button>
+</form>
+
+<br>
+<a href="/orderlines">Back</a>
+
+</body>
+</html>
