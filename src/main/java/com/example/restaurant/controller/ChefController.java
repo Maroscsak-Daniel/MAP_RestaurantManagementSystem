@@ -10,67 +10,51 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/chefs")
 public class ChefController {
 
-    private final ChefService chefService;
+    private final ChefService service;
 
-    public ChefController(ChefService chefService) {
-        this.chefService = chefService;
+    public ChefController(ChefService service) {
+        this.service = service;
     }
 
-    // -------------------- LIST --------------------
     @GetMapping
-    public String getAllChefs(Model model) {
-        model.addAttribute("chefs", chefService.getAllChefs());
-        return "chef/index";
+    public String list(Model model) {
+        model.addAttribute("chefs", service.getAll());
+        return "chefs/index";
     }
 
-    // -------------------- DETAILS --------------------
-    @GetMapping("/{id}")
-    public String getChefDetails(@PathVariable String id, Model model) {
-        Chef chef = chefService.getChefById(id);
-        if (chef == null)
-            return "redirect:/chefs";
-
-        model.addAttribute("chef", chef);
-        return "chef/details";
-    }
-
-    // -------------------- CREATE FORM --------------------
     @GetMapping("/new")
-    public String showCreateForm(Model model) {
+    public String createForm(Model model) {
         model.addAttribute("chef", new Chef());
-        return "chef/form";
+        return "chefs/form";
     }
 
-    // -------------------- CREATE ACTION --------------------
     @PostMapping
-    public String createChef(@ModelAttribute Chef chef) {
-        chefService.addChef(chef);
+    public String create(@ModelAttribute Chef chef) {
+        service.create(chef);
         return "redirect:/chefs";
     }
 
-    // -------------------- EDIT FORM --------------------
+    @GetMapping("/{id}")
+    public String details(@PathVariable Long id, Model model) {
+        model.addAttribute("chef", service.getById(id));
+        return "chefs/details";
+    }
+
     @GetMapping("/{id}/edit")
-    public String showEditForm(@PathVariable String id, Model model) {
-        Chef chef = chefService.getChefById(id);
-        if (chef == null)
-            return "redirect:/chefs";
-
-        model.addAttribute("chef", chef);
-        return "chef/form";
+    public String editForm(@PathVariable Long id, Model model) {
+        model.addAttribute("chef", service.getById(id));
+        return "chefs/form";
     }
 
-    // -------------------- UPDATE ACTION --------------------
     @PostMapping("/{id}")
-    public String updateChef(@PathVariable String id, @ModelAttribute Chef chef) {
-        chef.setId(id);
-        chefService.updateChef(chef);
+    public String update(@PathVariable Long id, @ModelAttribute Chef chef) {
+        service.update(id, chef);
         return "redirect:/chefs";
     }
 
-    // -------------------- DELETE --------------------
     @PostMapping("/{id}/delete")
-    public String deleteChef(@PathVariable String id) {
-        chefService.deleteChef(id);
+    public String delete(@PathVariable Long id) {
+        service.delete(id);
         return "redirect:/chefs";
     }
 }

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Chefs</title></head>
+<body>
+
+<h1>Chefs</h1>
+
+<p><a th:href="@{/chefs/new}">Add new chef</a></p>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Rank</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="c : ${chefs}">
+        <td th:text="${c.id}"></td>
+        <td th:text="${c.name}"></td>
+        <td th:text="${c.rank}"></td>
+
+        <td>
+            <a th:href="@{'/chefs/' + ${c.id}}">Details</a> |
+            <a th:href="@{'/chefs/' + ${c.id} + '/edit'}">Edit</a> |
+            <form th:action="@{'/chefs/' + ${c.id} + '/delete'}"
+                  method="post" style="display:inline;">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

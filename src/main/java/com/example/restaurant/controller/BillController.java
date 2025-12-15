@@ -18,58 +18,29 @@ public class BillController {
 
     // LIST
     @GetMapping
-    public String getAllBills(Model model) {
+    public String listBills(Model model) {
         model.addAttribute("bills", billService.getAll());
-        return "bill/index";
+        return "bills/index";
     }
 
     // DETAILS
     @GetMapping("/{id}")
-    public String getBillDetails(@PathVariable String id, Model model) {
+    public String billDetails(@PathVariable Long id, Model model) {
         Bill bill = billService.getById(id);
-        if (bill == null) {
-            return "redirect:/bills";
-        }
         model.addAttribute("bill", bill);
-        return "bill/details";
+        return "bills/details";
     }
 
-    // CREATE FORM
-    @GetMapping("/new")
-    public String showCreateForm(Model model) {
-        model.addAttribute("bill", new Bill());
-        return "bill/form";
+    // TOGGLE PAYMENT STATUS
+    @PostMapping("/{id}/toggle")
+    public String toggleBill(@PathVariable Long id) {
+        billService.togglePaymentStatus(id);
+        return "redirect:/bills/" + id;
     }
 
-    // CREATE ACTION
-    @PostMapping
-    public String createBill(@ModelAttribute Bill bill) {
-        billService.add(bill);
-        return "redirect:/bills";
-    }
-
-    // EDIT FORM
-    @GetMapping("/{id}/edit")
-    public String showEditForm(@PathVariable String id, Model model) {
-        Bill bill = billService.getById(id);
-        if (bill == null) {
-            return "redirect:/bills";
-        }
-        model.addAttribute("bill", bill);
-        return "bill/form";
-    }
-
-    // UPDATE ACTION
-    @PostMapping("/{id}")
-    public String updateBill(@PathVariable String id, @ModelAttribute Bill bill) {
-        bill.setId(id);
-        billService.update(bill);
-        return "redirect:/bills";
-    }
-
-    // DELETE
+    // DELETE (ONLY allowed if order is deleted)
     @PostMapping("/{id}/delete")
-    public String deleteBill(@PathVariable String id) {
+    public String deleteBill(@PathVariable Long id) {
         billService.delete(id);
         return "redirect:/bills";
     }

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${table.id == null} ? 'Add Table' : 'Edit Table'"></title>
+</head>
+<body>
+
+<h1 th:text="${table.id == null} ? 'Add Table' : 'Edit Table'"></h1>
+
+<form th:action="${table.id == null} ? @{/tables} : @{|/tables/${table.id}|}"
+      th:object="${table}"
+      method="post">
+
+    <!-- ID is auto-generated → no input -->
+
+    <label>Number:</label>
+    <input type="number" th:field="*{number}" required/><br/><br/>
+
+    <label>Status:</label>
+    <select th:field="*{occupiedStatus}">
+        <option value="free">Free</option>
+        <option value="occupied">Occupied</option>
+    </select><br/><br/>
+
+    <button type="submit" th:text="${table.id == null} ? 'Save' : 'Update'"></button>
+</form>
+
+<p><a th:href="@{/tables}">Back to list</a></p>
+
+</body>
+</html>

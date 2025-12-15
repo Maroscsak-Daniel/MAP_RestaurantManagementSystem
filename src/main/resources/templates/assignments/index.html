@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Assignments list</title>
+</head>
+<body>
+
+<h1>Assignment list</h1>
+
+<p><a th:href="@{/assignments/new}">Add new assignment</a></p>
+
+<div th:if="${error}" style="color:red; font-weight:bold;">
+    <p th:text="${error}"></p>
+</div>
+
+<div th:if="${success}" style="color:green; font-weight:bold;">
+    <p th:text="${success}"></p>
+</div>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Order ID</th>
+        <th>Staff ID</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="a : ${assignments}">
+        <td th:text="${a.id}"></td>
+        <td th:text="${a.order != null ? a.order.id : 'N/A'}"></td>
+        <td th:text="${a.staffId}"></td>
+
+        <td>
+            <a th:href="@{'/assignments/' + ${a.id}}">Details</a> |
+            <a th:href="@{'/assignments/' + ${a.id} + '/edit'}">Edit</a> |
+
+            <form th:action="@{'/assignments/' + ${a.id} + '/delete'}"
+                  method="post" style="display:inline;">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

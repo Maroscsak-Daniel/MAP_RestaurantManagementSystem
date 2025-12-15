@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Orders</title>
+</head>
+<body>
+
+<h1>Orders</h1>
+
+<div th:if="${error}"
+     style="color:red; background:#ffe5e5; padding:10px; margin-bottom:15px;">
+    <p th:text="${error}"></p>
+</div>
+
+<p><a href="/orders/new">Add New Order</a></p>
+
+<table border="1" cellpadding="6" cellspacing="0">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Customer</th>
+        <th>Table</th>
+        <th>Status</th>
+        <th>Payment Method</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="o : ${orders}">
+        <td th:text="${o.id}"></td>
+        <td th:text="${o.customer != null ? o.customer.name : 'N/A'}"></td>
+        <td th:text="${o.table != null ? o.table.number : 'N/A'}"></td>
+        <td th:text="${o.status}"></td>
+        <td th:text="${o.paymentMethod}"></td>
+
+        <td>
+            <a th:href="@{/orders/{id}/edit(id=${o.id})}">Edit</a>
+            &nbsp;|&nbsp;
+
+            <form th:action="@{/orders/{id}/delete(id=${o.id})}"
+                  method="post"
+                  style="display:inline;">
+                <button type="submit"
+                        onclick="return confirm('Delete this order?');">
+                    Delete
+                </button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

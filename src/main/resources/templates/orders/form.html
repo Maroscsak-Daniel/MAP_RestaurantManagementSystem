@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Order</title>
+</head>
+<body>
+
+<h1 th:text="${order.id == null ? 'Add Order' : 'Edit Order'}"></h1>
+
+<div th:if="${error}"
+     style="color:red; background:#ffe5e5; padding:10px; margin-bottom:15px;">
+    <p th:text="${error}"></p>
+</div>
+
+
+<!-- ========================================================== -->
+<!-- CREATE FORM -->
+<!-- ========================================================== -->
+<form th:if="${order.id == null}"
+      th:object="${order}"
+      th:action="@{/orders}"
+      method="post">
+
+    <label>Status:</label>
+    <input type="text" th:field="*{status}" required/><br/><br/>
+
+    <label>Payment Method:</label>
+    <input type="text" th:field="*{paymentMethod}" required/><br/><br/>
+
+    <label>Customer:</label>
+    <select th:field="*{customer.id}" required>
+        <option value="">Select customer</option>
+        <option th:each="c : ${customers}"
+                th:value="${c.id}"
+                th:text="${c.name}">
+        </option>
+    </select><br/><br/>
+
+    <label>Table:</label>
+    <select th:field="*{table.id}" required>
+        <option value="">Select table</option>
+        <option th:each="t : ${tables}"
+                th:value="${t.id}"
+                th:text="${'Table ' + t.number}">
+        </option>
+    </select><br/><br/>
+
+    <button type="submit">Save</button>
+</form>
+
+
+<!-- ========================================================== -->
+<!-- UPDATE FORM -->
+<!-- ========================================================== -->
+<form th:if="${order.id != null}"
+      th:object="${order}"
+      th:action="@{/orders/{id}(id=${order.id})}"
+      method="post">
+
+    <label>Status:</label>
+    <input type="text" th:field="*{status}" required/><br/><br/>
+
+    <label>Payment Method:</label>
+    <input type="text" th:field="*{paymentMethod}" required/><br/><br/>
+
+    <label>Customer:</label>
+    <select th:field="*{customer.id}" required>
+        <option value="">Select customer</option>
+        <option th:each="c : ${customers}"
+                th:value="${c.id}"
+                th:selected="${c.id == order.customer.id}"
+                th:text="${c.name}">
+        </option>
+    </select><br/><br/>
+
+    <label>Table:</label>
+    <select th:field="*{table.id}" required>
+        <option value="">Select table</option>
+        <option th:each="t : ${tables}"
+                th:value="${t.id}"
+                th:selected="${t.id == order.table.id}"
+                th:text="${'Table ' + t.number}">
+        </option>
+    </select><br/><br/>
+
+    <button type="submit">Save</button>
+</form>
+
+
+<p><a th:href="@{/orders}">Back</a></p>
+
+</body>
+</html>

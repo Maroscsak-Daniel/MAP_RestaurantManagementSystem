@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Chef</title></head>
+<body>
+
+<h1 th:text="${chef.id == null} ? 'Add Chef' : 'Edit Chef'"></h1>
+
+<form th:action="${chef.id == null} ? @{/chefs} : @{'/chefs/' + ${chef.id}}"
+      th:object="${chef}"
+      method="post">
+
+    <label>Name:</label>
+    <input type="text" th:field="*{name}" required/><br/><br/>
+
+    <label>Rank:</label>
+    <input type="text" th:field="*{rank}" required/><br/><br/>
+
+    <button type="submit">Save</button>
+</form>
+
+<p><a th:href="@{/chefs}">Back</a></p>
+
+</body>
+</html>

@@ -1,12 +1,8 @@
 package com.example.restaurant.repository;
 
 import com.example.restaurant.model.MenuItem;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@Repository
-public class MenuItemRepository extends InFileRepository<MenuItem> {
+public interface MenuItemRepository extends JpaRepository<MenuItem, Long> {
 
-    public MenuItemRepository() {
-        super("menuItems.json", MenuItem.class);
-    }
 }

@@ -2,6 +2,8 @@ package com.example.restaurant.controller;
 
 import com.example.restaurant.model.OrderLine;
 import com.example.restaurant.service.OrderLineService;
+import com.example.restaurant.service.OrderService;
+import com.example.restaurant.service.MenuItemService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,67 +13,90 @@ import org.springframework.web.bind.annotation.*;
 public class OrderLineController {
 
     private final OrderLineService orderLineService;
+    private final OrderService orderService;
+    private final MenuItemService menuItemService;
 
-    public OrderLineController(OrderLineService orderLineService) {
-        this.orderLineService = orderLineService;
+    public OrderLineController(OrderLineService ols,
+                               OrderService os,
+                               MenuItemService mis) {
+        this.orderLineService = ols;
+        this.orderService = os;
+        this.menuItemService = mis;
     }
 
-    // -------------------- LIST --------------------
     @GetMapping
-    public String getAllOrderLines(Model model) {
-        model.addAttribute("orderlines", orderLineService.getAllOrderLines());
-        return "orderline/index";
+    public String index(Model model) {
+        model.addAttribute("orderlines", orderLineService.getAll());
+        return "orderlines/index";
     }
 
-    // -------------------- DETAILS --------------------
-    @GetMapping("/{id}")
-    public String getOrderLineDetails(@PathVariable String id, Model model) {
-        OrderLine line = orderLineService.getOrderLineById(id);
-        if (line == null)
-            return "redirect:/orderlines";
-
-        model.addAttribute("orderline", line);
-        return "orderline/details";
-    }
-
-    // -------------------- CREATE FORM --------------------
     @GetMapping("/new")
-    public String showCreateForm(Model model) {
+    public String newForm(Model model) {
         model.addAttribute("orderline", new OrderLine());
-        return "orderline/form";
+        model.addAttribute("orders", orderService.getAll());
+        model.addAttribute("menuItems", menuItemService.getAll());
+        return "orderlines/form";
     }
 
-    // -------------------- CREATE ACTION --------------------
     @PostMapping
-    public String createOrderLine(@ModelAttribute OrderLine orderLine) {
-        orderLineService.addOrderLine(orderLine);
-        return "redirect:/orderlines";
-    }
-
-    // -------------------- EDIT FORM --------------------
-    @GetMapping("/{id}/edit")
-    public String showEditForm(@PathVariable String id, Model model) {
-        OrderLine orderLine = orderLineService.getOrderLineById(id);
-        if (orderLine == null)
+    public String create(@ModelAttribute OrderLine orderLine, Model model) {
+        try {
+            orderLineService.create(orderLine);
             return "redirect:/orderlines";
-
-        model.addAttribute("orderline", orderLine);
-        return "orderline/form";
+        } catch (Exception e) {
+            model.addAttribute("orderline", orderLine);
+            model.addAttribute("orders", orderService.getAll());
+            model.addAttribute("menuItems", menuItemService.getAll());
+            model.addAttribute("error", e.getMessage());
+            return "orderlines/form";
+        }
     }
 
-    // -------------------- UPDATE ACTION --------------------
+    @GetMapping("/{id}")
+    public String details(@PathVariable Long id, Model model) {
+        model.addAttribute("orderline", orderLineService.getById(id));
+        return "orderlines/details";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String editForm(@PathVariable Long id, Model model) {
+        OrderLine ol = orderLineService.getById(id);
+
+        ol.setOrderId(ol.getOrder().getId());
+        if (ol.getMenuItem() != null)
+            ol.setMenuItemId(ol.getMenuItem().getId());
+
+        model.addAttribute("orderline", ol);
+        model.addAttribute("orders", orderService.getAll());
+        model.addAttribute("menuItems", menuItemService.getAll());
+        return "orderlines/form";
+    }
+
     @PostMapping("/{id}")
-    public String updateOrderLine(@PathVariable String id, @ModelAttribute OrderLine orderLine) {
-
-        orderLine.setId(id); // keep ID
-        orderLineService.updateOrderLine(orderLine);
-        return "redirect:/orderlines";
+    public String update(@PathVariable Long id,
+                         @ModelAttribute OrderLine orderLine,
+                         Model model) {
+        try {
+            orderLineService.update(id, orderLine);
+            return "redirect:/orderlines";
+        } catch (Exception e) {
+            model.addAttribute("orderline", orderLine);
+            model.addAttribute("orders", orderService.getAll());
+            model.addAttribute("menuItems", menuItemService.getAll());
+            model.addAttribute("error", e.getMessage());
+            return "orderlines/form";
+        }
     }
 
-    // -------------------- DELETE --------------------
     @PostMapping("/{id}/delete")
-    public String deleteOrderLine(@PathVariable String id) {
-        orderLineService.deleteOrderLine(id);
-        return "redirect:/orderlines";
+    public String delete(@PathVariable Long id, Model model) {
+        try {
+            orderLineService.delete(id);
+            return "redirect:/orderlines";
+        } catch (Exception e) {
+            model.addAttribute("orderlines", orderLineService.getAll());
+            model.addAttribute("error", e.getMessage());
+            return "orderlines/index";
+        }
     }
 }

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Customers</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            margin-top: 15px;
+            width: 60%;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+        }
+        th {
+            background: #f2f2f2;
+        }
+        .actions a, .actions form {
+            display: inline-block;
+            margin-right: 6px;
+        }
+        .error {
+            color: white;
+            background: #c0392b;
+            padding: 10px;
+            font-weight: bold;
+            width: fit-content;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Customers</h1>
+
+<!-- ERROR MESSAGE -->
+<div th:if="${errorMessage}" class="error">
+    <span th:text="${errorMessage}"></span>
+</div>
+
+<p><a th:href="@{/customers/new}">Add new customer</a></p>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Total Orders</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="c : ${customers}">
+        <td th:text="${c.id}"></td>
+        <td th:text="${c.name}"></td>
+        <td th:text="${#lists.size(c.orders)}"></td>
+
+        <td class="actions">
+
+            <a th:href="@{'/customers/' + ${c.id}}">Details</a>
+
+            <a th:href="@{'/customers/' + ${c.id} + '/edit'}">Edit</a>
+
+            <form th:action="@{'/customers/' + ${c.id} + '/delete'}"
+                  method="post"
+                  onsubmit="return confirm('Delete this customer?');">
+                <button type="submit">Delete</button>
+            </form>
+
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

@@ -1,49 +1,92 @@
-[ {
-  "id" : "o1",
-  "customerId" : "c1",
-  "tableId" : "t1",
-  "status" : "preparing",
-  "orderLineIds" : [ "ol1", "ol2" ],
-  "assignmentIds" : [ "oa1", "oa2" ],
-  "paymentMethod" : "cash"
-}, {
-  "id" : "o2",
-  "customerId" : "c1",
-  "tableId" : "t1",
-  "status" : "served",
-  "orderLineIds" : [ "ol3" ],
-  "assignmentIds" : [ "oa3" ],
-  "paymentMethod" : "card"
-}, {
-  "id" : "o3",
-  "customerId" : "c2",
-  "tableId" : "t2",
-  "status" : "preparing",
-  "orderLineIds" : [ "ol4", "ol5" ],
-  "assignmentIds" : [ "oa4" ],
-  "paymentMethod" : "cash"
-}, {
-  "id" : "o4",
-  "customerId" : "c3",
-  "tableId" : "t4",
-  "status" : "served",
-  "orderLineIds" : [ "ol6" ],
-  "assignmentIds" : [ "oa7", "oa8" ],
-  "paymentMethod" : "card"
-}, {
-  "id" : "o5",
-  "customerId" : "c4",
-  "tableId" : "t6",
-  "status" : "preparing",
-  "orderLineIds" : [ "ol7", "ol8", "ol9" ],
-  "assignmentIds" : [ "oa9" ],
-  "paymentMethod" : "cash"
-}, {
-  "id" : "o6",
-  "customerId" : "c5",
-  "tableId" : "t9",
-  "status" : "served",
-  "orderLineIds" : [ "ol10" ],
-  "assignmentIds" : [ "oa10" ],
-  "paymentMethod" : "card"
-} ]
+[
+  {
+    "id": "o1",
+    "customerId": "c1",
+    "tableId": "t1",
+    "status": "preparing",
+    "orderLineIds": ["ol1", "ol2"],
+    "assignmentIds": ["oa1", "oa2"],
+    "paymentMethod": "cash"
+  },
+  {
+    "id": "o2",
+    "customerId": "c1",
+    "tableId": "t1",
+    "status": "served",
+    "orderLineIds": ["ol3"],
+    "assignmentIds": ["oa3"],
+    "paymentMethod": "card"
+  },
+  {
+    "id": "o3",
+    "customerId": "c2",
+    "tableId": "t2",
+    "status": "preparing",
+    "orderLineIds": ["ol4", "ol5"],
+    "assignmentIds": ["oa4"],
+    "paymentMethod": "cash"
+  },
+  {
+    "id": "o4",
+    "customerId": "c3",
+    "tableId": "t4",
+    "status": "served",
+    "orderLineIds": ["ol6"],
+    "assignmentIds": ["oa7", "oa8"],
+    "paymentMethod": "card"
+  },
+  {
+    "id": "o5",
+    "customerId": "c4",
+    "tableId": "t6",
+    "status": "preparing",
+    "orderLineIds": ["ol7", "ol8", "ol9"],
+    "assignmentIds": ["oa9"],
+    "paymentMethod": "cash"
+  },
+  {
+    "id": "o6",
+    "customerId": "c5",
+    "tableId": "t9",
+    "status": "served",
+    "orderLineIds": ["ol10"],
+    "assignmentIds": ["oa10"],
+    "paymentMethod": "card"
+  },
+  {
+    "id": "o7",
+    "customerId": "c6",
+    "tableId": "t3",
+    "status": "preparing",
+    "orderLineIds": ["ol11", "ol12"],
+    "assignmentIds": ["oa11"],
+    "paymentMethod": "cash"
+  },
+  {
+    "id": "o8",
+    "customerId": "c7",
+    "tableId": "t5",
+    "status": "served",
+    "orderLineIds": ["ol13"],
+    "assignmentIds": ["oa12", "oa13"],
+    "paymentMethod": "card"
+  },
+  {
+    "id": "o9",
+    "customerId": "c8",
+    "tableId": "t2",
+    "status": "pending",
+    "orderLineIds": ["ol14", "ol15"],
+    "assignmentIds": ["oa14"],
+    "paymentMethod": "cash"
+  },
+  {
+    "id": "o10",
+    "customerId": "c9",
+    "tableId": "t8",
+    "status": "completed",
+    "orderLineIds": ["ol16"],
+    "assignmentIds": ["oa15"],
+    "paymentMethod": "card"
+  }
+]

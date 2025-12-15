@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Server Details</title></head>
+<body>
+
+<h1>Server Details</h1>
+
+<p><strong>ID:</strong> <span th:text="${server.id}"></span></p>
+<p><strong>Name:</strong> <span th:text="${server.name}"></span></p>
+<p><strong>Shift:</strong> <span th:text="${server.shift}"></span></p>
+<p><strong>Experience:</strong> <span th:text="${server.experienceYears}"></span> years</p>
+
+<p><a th:href="@{/servers}">Back</a></p>
+
+</body>
+</html>

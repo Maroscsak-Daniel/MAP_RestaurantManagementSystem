@@ -15,23 +15,32 @@ public class CustomerService {
         this.repo = repo;
     }
 
-    public void add(Customer customer) {
-        repo.add(customer);   // JSON ADD
-    }
-
-    public void update(Customer customer) {
-        repo.update(customer); // JSON UPDATE (if editing customers)
-    }
-
     public List<Customer> getAll() {
-        return repo.getAll();  // JSON GET ALL
+        return repo.findAll();
     }
 
-    public Customer getById(String id) {
-        return repo.getById(id);  // JSON GET BY ID
+    public Customer getById(Long id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Customer not found: " + id));
     }
 
-    public void delete(String id) {
-        repo.delete(id);      // JSON DELETE
+    public Customer create(Customer customer) {
+        return repo.save(customer);
+    }
+
+    public Customer update(Long id, Customer data) {
+        Customer existing = getById(id);
+        existing.setName(data.getName());
+        return repo.save(existing);
+    }
+
+    public void delete(Long id) {
+        Customer c = getById(id);
+
+        if (!c.getOrders().isEmpty()) {
+            throw new IllegalStateException("Cannot delete customer with existing orders.");
+        }
+
+        repo.delete(c);
     }
 }
