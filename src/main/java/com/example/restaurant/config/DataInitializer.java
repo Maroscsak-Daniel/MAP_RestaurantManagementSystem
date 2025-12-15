@@ -108,7 +108,8 @@ public class    DataInitializer implements CommandLineRunner {
             order.setCustomer(c);
             order.setTable(t);
             order.setStatus(i % 2 == 0 ? OrderStatus.PENDING : OrderStatus.COMPLETED);
-            order.setPaymentMethod(i % 2 == 0 ? "Cash" : "Card");
+            // Use enum for payment method (PaymentMethod)
+            order.setPaymentMethod(i % 2 == 0 ? com.example.restaurant.model.PaymentMethod.CASH : com.example.restaurant.model.PaymentMethod.CARD);
 
             orders.add(orderService.create(order));
         }

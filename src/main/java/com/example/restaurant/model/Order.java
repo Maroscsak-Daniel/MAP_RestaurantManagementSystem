@@ -25,14 +25,16 @@ public class Order {
     @Column(nullable = false)
     private OrderStatus status;
 
+    // PAYMENT METHOD as enum
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
+
     // KEEP THEM AS JSON-backed lists, NOT JPA RELATIONS
     @Transient
     private List<OrderLine> orderLines = new ArrayList<>();
 
     @Transient
     private List<OrderAssignment> assignments = new ArrayList<>();
-
-    private String paymentMethod;
 
     public Order() {}
 
@@ -54,6 +56,6 @@ public class Order {
     public List<OrderAssignment> getAssignments() { return assignments; }
     public void setAssignments(List<OrderAssignment> assignments) { this.assignments = assignments; }
 
-    public String getPaymentMethod() { return paymentMethod; }
-    public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
+    public PaymentMethod getPaymentMethod() { return paymentMethod; }
+    public void setPaymentMethod(PaymentMethod paymentMethod) { this.paymentMethod = paymentMethod; }
 }

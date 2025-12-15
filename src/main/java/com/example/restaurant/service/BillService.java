@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,7 +43,13 @@ public class BillService {
     // New: server-side filter + paging
     public Page<Bill> getAll(String status, Double min, Double max, String sortBy, String dir, Pageable pageable) {
         Specification<Bill> spec = buildSpecification(status, min, max);
-        // apply sort from pageable if present; pageable may already have sort
+        // if sortBy provided, apply it (override pageable sort)
+        if (sortBy != null && !sortBy.isEmpty()) {
+            org.springframework.data.domain.Sort s = "desc".equalsIgnoreCase(dir) ? org.springframework.data.domain.Sort.by(sortBy).descending() : org.springframework.data.domain.Sort.by(sortBy).ascending();
+            int page = pageable == null ? 0 : pageable.getPageNumber();
+            int size = pageable == null ? 10 : pageable.getPageSize();
+            pageable = PageRequest.of(page, size, s);
+        }
         return repo.findAll(spec, pageable);
     }
 

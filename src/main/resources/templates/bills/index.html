@@ -17,7 +17,6 @@
     <div class="container">
         <a class="navbar-brand text-dark" th:href="@{/}">Restaurant</a>
         <div class="ml-auto">
-            <a class="btn btn-sm btn-outline-secondary btn-pill" th:href="@{/}">Home</a>
             <a class="btn btn-sm btn-brand btn-pill ml-2" th:href="@{/bills}">Bills</a>
         </div>
     </div>
@@ -126,13 +125,13 @@
         <nav th:if="${page != null}">
             <ul class="pagination">
                 <li class="page-item" th:classappend="${page.first} ? ' disabled'">
-                    <a class="page-link" th:href="@{/bills(page=${page.number-1}, size=${page.size}, sort=${currentSort}, dir=${currentDir}, status=${currentStatus}, min=${currentMin}, max=${currentMax})}">Previous</a>
+                    <a class="page-link" th:href="@{/bills(page=${page.number - 1}, size=${page.size}, sort=${currentSort}, dir=${currentDir}, status=${currentStatus}, min=${currentMin}, max=${currentMax})}">Previous</a>
                 </li>
                 <li class="page-item" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}" th:classappend="${i == page.number} ? ' active'">
                     <a class="page-link" th:href="@{/bills(page=${i}, size=${page.size}, sort=${currentSort}, dir=${currentDir}, status=${currentStatus}, min=${currentMin}, max=${currentMax})}" th:text="${i + 1}"></a>
                 </li>
                 <li class="page-item" th:classappend="${page.last} ? ' disabled'">
-                    <a class="page-link" th:href="@{/bills(page=${page.number+1}, size=${page.size}, sort=${currentSort}, dir=${currentDir}, status=${currentStatus}, min=${currentMin}, max=${currentMax})}">Next</a>
+                    <a class="page-link" th:href="@{/bills(page=${page.number + 1}, size=${page.size}, sort=${currentSort}, dir=${currentDir}, status=${currentStatus}, min=${currentMin}, max=${currentMax})}">Next</a>
                 </li>
             </ul>
         </nav>

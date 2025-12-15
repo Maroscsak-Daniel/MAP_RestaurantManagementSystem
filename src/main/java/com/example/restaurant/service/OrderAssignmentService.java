@@ -30,9 +30,34 @@ public class OrderAssignmentService {
         return repo.findAll();
     }
 
+    // Paged & filtered retrieval for index with optional orderId and staff filter
+    public org.springframework.data.domain.Page<com.example.restaurant.model.OrderAssignment> getAllPaged(Long orderId, String staffFilter, String sortBy, String dir, org.springframework.data.domain.Pageable pageable) {
+        org.springframework.data.domain.Sort sort = org.springframework.data.domain.Sort.by(org.springframework.data.domain.Sort.Direction.fromString(dir == null ? "ASC" : dir), sortBy == null ? "id" : sortBy);
+        org.springframework.data.domain.Pageable p = org.springframework.data.domain.PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+
+        if (orderId != null && staffFilter != null && !staffFilter.isEmpty()) {
+            return repo.findByOrder_IdAndStaffIdContainingIgnoreCase(orderId, staffFilter, p);
+        } else if (orderId != null) {
+            return repo.findByOrder_Id(orderId, p);
+        } else if (staffFilter != null && !staffFilter.isEmpty()) {
+            return repo.findByStaffIdContainingIgnoreCase(staffFilter, p);
+        } else {
+            return repo.findAll(p);
+        }
+    }
+
+    // Helper to provide orders for the assignment form (lightweight)
+    public List<com.example.restaurant.model.Order> getAllOrdersForSelection() {
+        return orderRepository.findAll();
+    }
+
     public OrderAssignment getById(Long id) {
         return repo.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Assignment not found: " + id));
+    }
+
+    public List<OrderAssignment> getByOrder(Long orderId) {
+        return repo.findByOrder_Id(orderId);
     }
 
     public OrderAssignment create(OrderAssignment a) {
@@ -86,9 +111,10 @@ public class OrderAssignmentService {
         OrderAssignment existing = getById(id);
         if (existing.getOrder() != null) {
             Long orderId = existing.getOrder().getId();
-            var bill = billRepository.findByOrder_Id(orderId);
-            if (bill != null && bill.getPaymentStatus() == PaymentStatus.PAID) {
-                throw new IllegalStateException("Cannot delete assignment because the order has a PAID bill.");
+            // Block deletion if the related order is COMPLETED
+            com.example.restaurant.model.Order ord = orderRepository.findById(orderId).orElse(null);
+            if (ord != null && ord.getStatus() == com.example.restaurant.model.OrderStatus.COMPLETED) {
+                throw new IllegalStateException("Cannot delete assignment because the order is COMPLETED.");
             }
         }
 
