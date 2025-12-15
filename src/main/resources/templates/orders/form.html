@@ -22,7 +22,14 @@
       method="post">
 
     <label>Status:</label>
-    <input type="text" th:field="*{status}" required/><br/><br/>
+    <select th:field="*{status}" required>
+        <option value="">Select status</option>
+        <option th:each="s : ${T(com.example.restaurant.model.OrderStatus).values()}"
+                th:value="${s}"
+                th:text="${s}">
+        </option>
+    </select>
+    <br/><br/>
 
     <label>Payment Method:</label>
     <input type="text" th:field="*{paymentMethod}" required/><br/><br/>
@@ -58,7 +65,13 @@
       method="post">
 
     <label>Status:</label>
-    <input type="text" th:field="*{status}" required/><br/><br/>
+    <select th:field="*{status}" required>
+        <option th:each="s : ${T(com.example.restaurant.model.OrderStatus).values()}"
+                th:value="${s}"
+                th:text="${s}">
+        </option>
+    </select>
+    <br/><br/>
 
     <label>Payment Method:</label>
     <input type="text" th:field="*{paymentMethod}" required/><br/><br/>

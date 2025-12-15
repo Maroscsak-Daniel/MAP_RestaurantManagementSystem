@@ -107,7 +107,7 @@ public class    DataInitializer implements CommandLineRunner {
             Order order = new Order();
             order.setCustomer(c);
             order.setTable(t);
-            order.setStatus(i % 2 == 0 ? "Pending" : "Completed");
+            order.setStatus(i % 2 == 0 ? OrderStatus.PENDING : OrderStatus.COMPLETED);
             order.setPaymentMethod(i % 2 == 0 ? "Cash" : "Card");
 
             orders.add(orderService.create(order));
@@ -150,7 +150,12 @@ public class    DataInitializer implements CommandLineRunner {
                 total += line.getMenuItem().getPrice() * line.getQuantity();
             }
 
-            Bill bill = new Bill(o, total, o.getStatus().equals("Completed") ? "Paid" : "Unpaid");
+            // Use enum-based status
+            com.example.restaurant.model.PaymentStatus ps = o.getStatus() == com.example.restaurant.model.OrderStatus.COMPLETED
+                    ? com.example.restaurant.model.PaymentStatus.PAID
+                    : com.example.restaurant.model.PaymentStatus.UNPAID;
+
+            Bill bill = new Bill(o, total, ps);
 
             billService.create(bill);
         }

@@ -1,6 +1,8 @@
 package com.example.restaurant.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 
 @Entity
 @Table(name = "bills")
@@ -13,15 +15,19 @@ public class Bill {
     // Each bill belongs to one order
     @OneToOne
     @JoinColumn(name = "order_id", nullable = false, unique = true)
+    @NotNull
     private Order order;
 
+    @PositiveOrZero
     private double totalPrice;
 
-    private String paymentStatus; // Paid / Unpaid
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus; // PAID / UNPAID
 
     public Bill() {}
 
-    public Bill(Order order, double totalPrice, String paymentStatus) {
+    public Bill(Order order, double totalPrice, PaymentStatus paymentStatus) {
         this.order = order;
         this.totalPrice = totalPrice;
         this.paymentStatus = paymentStatus;
@@ -35,6 +41,6 @@ public class Bill {
     public double getTotalPrice() { return totalPrice; }
     public void setTotalPrice(double totalPrice) { this.totalPrice = totalPrice; }
 
-    public String getPaymentStatus() { return paymentStatus; }
-    public void setPaymentStatus(String paymentStatus) { this.paymentStatus = paymentStatus; }
+    public PaymentStatus getPaymentStatus() { return paymentStatus; }
+    public void setPaymentStatus(PaymentStatus paymentStatus) { this.paymentStatus = paymentStatus; }
 }

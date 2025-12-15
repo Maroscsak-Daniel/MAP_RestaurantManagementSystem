@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bill Form</title>
+    <link th:href="@{'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'}" rel="stylesheet" crossorigin="anonymous" />
+    <link th:href="@{/css/app.css}" rel="stylesheet" />
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-white" style="border-bottom:1px solid #e9ecef;">
+    <div class="container">
+        <a class="navbar-brand text-dark" th:href="@{/}">Restaurant</a>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h4 th:text="${bill.id} == null ? 'Create Bill' : 'Edit Bill'">Form</h4>
+        </div>
+        <div class="card-body">
+
+            <div th:if="${param.error}" class="alert alert-danger" th:text="${param.error}"></div>
+
+            <form method="post"
+                  th:action="${bill.id} == null ? @{/bills} : @{/bills/{id}(id=${bill.id})}"
+                  th:object="${bill}">
+
+                <div class="form-group">
+                    <label for="orderSelect">Order</label>
+                    <select id="orderSelect" th:field="*{order.id}" class="form-control" th:classappend="${#fields.hasErrors('order')} ? ' is-invalid' : ''">
+                        <option value="">-- select order --</option>
+                        <option th:each="o : ${orders}"
+                                th:value="${o.id}"
+                                th:text="${o.id}">
+                        </option>
+                    </select>
+                    <div class="text-danger small" th:if="${#fields.hasErrors('order')}" th:errors="*{order}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="totalPrice">Total Price</label>
+                    <input id="totalPrice" type="number" step="0.01" th:field="*{totalPrice}" class="form-control" th:classappend="${#fields.hasErrors('totalPrice')} ? ' is-invalid' : ''" />
+                    <div class="text-danger small" th:if="${#fields.hasErrors('totalPrice')}" th:errors="*{totalPrice}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="paymentStatusEdit">Payment Status</label>
+                    <select id="paymentStatusEdit" th:field="*{paymentStatus}" class="form-control" th:classappend="${#fields.hasErrors('paymentStatus')} ? ' is-invalid' : ''">
+                        <option th:each="s : ${paymentStatuses}"
+                                th:value="${s}"
+                                th:text="${s.name()}">
+                        </option>
+                    </select>
+                    <small class="form-text text-muted">Set payment status (PAID only allowed when order is COMPLETED)</small>
+                    <div class="text-danger small" th:if="${#fields.hasErrors('paymentStatus')}" th:errors="*{paymentStatus}"></div>
+                </div>
+
+                <button type="submit" class="btn btn-brand btn-pill" th:text="${bill.id} == null ? 'Save' : 'Save'"></button>
+                <a th:href="@{/bills}" class="btn btn-outline-secondary btn-pill">Cancel</a>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script th:src="@{'https://code.jquery.com/jquery-3.5.1.slim.min.js'}"></script>
+<script th:src="@{'https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js'}"></script>
+<script th:src="@{'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js'}"></script>
+</body>
+</html>
