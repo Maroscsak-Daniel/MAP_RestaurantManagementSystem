@@ -3,6 +3,7 @@ package com.example.restaurant.controller;
 import com.example.restaurant.model.Customer;
 import com.example.restaurant.service.CustomerService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,8 +21,21 @@ public class CustomerController {
 
     // -------------------- LIST --------------------
     @GetMapping
-    public String listCustomers(Model model) {
-        model.addAttribute("customers", customerService.getAll());
+    public String listCustomers(@RequestParam(required = false) String name,
+                                @RequestParam(required = false) Integer minOrders,
+                                @RequestParam(required = false, name = "sort") String sortBy,
+                                @RequestParam(required = false, name = "dir") String dir,
+                                Pageable pageable,
+                                Model model) {
+        var page = customerService.getAllPaged(name, minOrders, sortBy == null ? "id" : sortBy, dir == null ? "asc" : dir, pageable);
+        model.addAttribute("page", page);
+        model.addAttribute("customers", page.getContent());
+
+        model.addAttribute("currentSort", sortBy == null ? "id" : sortBy);
+        model.addAttribute("currentDir", dir == null ? "asc" : dir);
+        model.addAttribute("name", name == null ? "" : name);
+        model.addAttribute("minOrders", minOrders == null ? "" : minOrders);
+
         return "customers/index";
     }
 
@@ -85,7 +99,13 @@ public class CustomerController {
             return "redirect:/customers";
         } catch (IllegalStateException e) {
             model.addAttribute("errorMessage", e.getMessage());
-            model.addAttribute("customers", customerService.getAll());
+            var page = customerService.getAllPaged(null, null, "id", "asc", org.springframework.data.domain.PageRequest.of(0, 20));
+            model.addAttribute("page", page);
+            model.addAttribute("customers", page.getContent());
+            model.addAttribute("currentSort", "id");
+            model.addAttribute("currentDir", "asc");
+            model.addAttribute("name", "");
+            model.addAttribute("minOrders", "");
             return "customers/index";
         }
     }

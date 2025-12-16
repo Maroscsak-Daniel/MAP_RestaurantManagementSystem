@@ -3,7 +3,7 @@
 ## Overview
 This document describes the part of the project implemented by **Daniel Maroscsak** as part of the Restaurant Management System assignment (Spring Boot Project 1).
 
-The purpose of this phase was to build an **in-memory version** of the system, structured according to the **Model – Repository – Service – Controller** architecture.  
+The purpose of this phase was to build an **in-memory version** of the system, structured according to the **Model – Repository – Service – Controller** architecture.
 All data is stored using Java collections (Lists), without any database.
 
 ---
@@ -62,7 +62,7 @@ Copy code
 ---
 
 ## Testing
-Testing was done through a `CommandLineRunner` inside  
+Testing was done through a `CommandLineRunner` inside
 `RestaurantManagementSystemApplication.java`, which automatically runs at startup.
 
 ### Example console output
@@ -93,5 +93,6 @@ Copy code
 ---
 
 ## Summary
-This part of the project covers the implementation of five model classes and their corresponding repository, service, and controller layers.  
+This part of the project covers the implementation of five model classes and their corresponding repository, service, and controller layers.
 It establishes the complete application structure for in-memory data management and prepares the system for later integration with persistent storage and extended business logic.
+

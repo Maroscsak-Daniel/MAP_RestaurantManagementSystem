@@ -8,6 +8,8 @@ import com.example.restaurant.repository.OrderLineRepository;
 import com.example.restaurant.repository.OrderRepository;
 import com.example.restaurant.repository.MenuItemRepository;
 import com.example.restaurant.repository.BillRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -123,5 +125,20 @@ public class OrderLineService {
 
     public List<OrderLine> getByOrder(Long orderId) {
         return repo.findByOrder_Id(orderId);
+    }
+
+    public Page<OrderLine> getAllPaged(Long orderId, String menuName, String sortBy, String dir, Pageable pageable) {
+        org.springframework.data.domain.Sort sort = org.springframework.data.domain.Sort.by(org.springframework.data.domain.Sort.Direction.fromString(dir == null ? "ASC" : dir), sortBy == null ? "id" : sortBy);
+        Pageable p = org.springframework.data.domain.PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+
+        if (orderId != null && menuName != null && !menuName.isEmpty()) {
+            return repo.findByOrder_IdAndMenuItem_NameContainingIgnoreCase(orderId, menuName, p);
+        } else if (orderId != null) {
+            return repo.findByOrder_Id(orderId, p);
+        } else if (menuName != null && !menuName.isEmpty()) {
+            return repo.findByMenuItem_NameContainingIgnoreCase(menuName, p);
+        } else {
+            return repo.findAll(p);
+        }
     }
 }

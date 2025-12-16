@@ -1,73 +1,114 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head><title>Menu Item</title></head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title th:text="${item.id == null} ? 'Add Item' : 'Edit Item'"></title>
+    <link th:href="@{'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'}" rel="stylesheet" crossorigin="anonymous" />
+    <link th:href="@{/css/app.css}" rel="stylesheet" />
+</head>
 <body>
+<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top" style="border-bottom:1px solid #e9ecef;">
+    <div class="container"><a class="navbar-brand text-dark" th:href="@{/}">Restaurant</a></div>
+</nav>
 
-<h1 th:text="${item.id == null} ? 'Add Item' : 'Edit Item'"></h1>
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h4 th:text="${item.id == null} ? 'Create Item' : 'Edit Item'">Form</h4>
+        </div>
+        <div class="card-body">
+            <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
-<!-- CREATE FORM -->
-<form th:if="${item.id == null}"
-      th:action="@{/menu}"
-      th:object="${item}"
-      method="post">
+            <!-- Create form -->
+            <form th:if="${item.id == null}" method="post" th:action="@{/menu}" th:object="${item}">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input id="name" type="text" th:field="*{name}" class="form-control" required />
+                    <div class="text-danger small" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                </div>
 
-    <label>Name:</label>
-    <input type="text" th:field="*{name}" required/><br/><br/>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <input id="description" type="text" th:field="*{description}" class="form-control" />
+                    <div class="text-danger small" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+                </div>
 
-    <label>Description:</label>
-    <input type="text" th:field="*{description}" required/><br/><br/>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="price">Price</label>
+                        <input id="price" type="number" step="0.01" th:field="*{price}" class="form-control" required />
+                        <div class="text-danger small" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="category">Category</label>
+                        <select id="category" th:field="*{category}" class="form-control">
+                            <option value="Starter">Starter</option>
+                            <option value="Main">Main</option>
+                            <option value="Dessert">Dessert</option>
+                            <option value="Drink">Drink</option>
+                        </select>
+                        <div class="text-danger small" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="allergens">Allergens</label>
+                        <input id="allergens" type="text" th:field="*{allergens}" class="form-control" placeholder="gluten, nuts" />
+                        <div class="text-danger small" th:if="${#fields.hasErrors('allergens')}" th:errors="*{allergens}"></div>
+                    </div>
+                </div>
 
-    <label>Price:</label>
-    <input type="number" step="0.01" th:field="*{price}" required/><br/><br/>
+                <button type="submit" class="btn btn-brand btn-pill">Create</button>
+                <a th:href="@{/menu}" class="btn btn-outline-secondary btn-pill">Cancel</a>
+            </form>
 
-    <label>Category:</label>
-    <select th:field="*{category}">
-        <option value="Starter">Starter</option>
-        <option value="Main">Main</option>
-        <option value="Dessert">Dessert</option>
-        <option value="Drink">Drink</option>
-    </select><br/><br/>
+            <!-- Edit form -->
+            <form th:if="${item.id != null}" method="post" th:action="@{/menu/{id}(id=${item.id})}" th:object="${item}">
+                <input type="hidden" th:field="*{id}" />
 
-    <label>Allergens:</label>
-    <input type="text" th:field="*{allergens}" placeholder="gluten, nuts"/><br/><br/>
+                <div class="form-group">
+                    <label for="nameEdit">Name</label>
+                    <input id="nameEdit" type="text" th:field="*{name}" class="form-control" required />
+                    <div class="text-danger small" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                </div>
 
-    <button type="submit">Create</button>
-</form>
+                <div class="form-group">
+                    <label for="descriptionEdit">Description</label>
+                    <input id="descriptionEdit" type="text" th:field="*{description}" class="form-control" />
+                    <div class="text-danger small" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+                </div>
 
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="priceEdit">Price</label>
+                        <input id="priceEdit" type="number" step="0.01" th:field="*{price}" class="form-control" required />
+                        <div class="text-danger small" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="categoryEdit">Category</label>
+                        <select id="categoryEdit" th:field="*{category}" class="form-control">
+                            <option value="Starter">Starter</option>
+                            <option value="Main">Main</option>
+                            <option value="Dessert">Dessert</option>
+                            <option value="Drink">Drink</option>
+                        </select>
+                        <div class="text-danger small" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="allergensEdit">Allergens</label>
+                        <input id="allergensEdit" type="text" th:field="*{allergens}" class="form-control" placeholder="gluten, nuts" />
+                        <div class="text-danger small" th:if="${#fields.hasErrors('allergens')}" th:errors="*{allergens}"></div>
+                    </div>
+                </div>
 
-<!-- UPDATE FORM -->
-<form th:if="${item.id != null}"
-      th:action="@{'/menu/' + ${item.id}}"
-      th:object="${item}"
-      method="post">
+                <button type="submit" class="btn btn-brand btn-pill">Save</button>
+                <a th:href="@{/menu}" class="btn btn-outline-secondary btn-pill">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
 
-    <input type="hidden" th:field="*{id}"/>
-
-    <label>Name:</label>
-    <input type="text" th:field="*{name}" required/><br/><br/>
-
-    <label>Description:</label>
-    <input type="text" th:field="*{description}" required/><br/><br/>
-
-    <label>Price:</label>
-    <input type="number" step="0.01" th:field="*{price}" required/><br/><br/>
-
-    <label>Category:</label>
-    <select th:field="*{category}">
-        <option value="Starter">Starter</option>
-        <option value="Main">Main</option>
-        <option value="Dessert">Dessert</option>
-        <option value="Drink">Drink</option>
-    </select><br/><br/>
-
-    <label>Allergens:</label>
-    <input type="text" th:field="*{allergens}" placeholder="gluten, nuts"/><br/><br/>
-
-    <button type="submit">Update</button>
-</form>
-
-
-<p><a th:href="@{/menu}">Back</a></p>
-
+<script th:src="@{'https://code.jquery.com/jquery-3.5.1.slim.min.js'}"></script>
+<script th:src="@{'https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js'}"></script>
+<script th:src="@{'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js'}"></script>
 </body>
 </html>

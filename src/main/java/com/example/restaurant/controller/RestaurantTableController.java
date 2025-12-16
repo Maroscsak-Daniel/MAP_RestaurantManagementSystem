@@ -2,9 +2,11 @@ package com.example.restaurant.controller;
 
 import com.example.restaurant.model.RestaurantTable;
 import com.example.restaurant.service.RestaurantTableService;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/tables")
@@ -18,9 +20,23 @@ public class RestaurantTableController {
 
     // -------------------- LIST --------------------
     @GetMapping
-    public String list(Model model) {
-        model.addAttribute("tables", service.getAll());
-        return "tables/index";  // templates/tables/index.html
+    public String list(@RequestParam(required = false) Integer number,
+                       @RequestParam(required = false) String status,
+                       @RequestParam(required = false, name = "sort") String sortBy,
+                       @RequestParam(required = false, name = "dir") String dir,
+                       Pageable pageable,
+                       Model model) {
+
+        var page = service.getAllPaged(number, status, sortBy == null ? "id" : sortBy, dir == null ? "asc" : dir, pageable);
+        model.addAttribute("page", page);
+        model.addAttribute("tables", page.getContent());
+
+        model.addAttribute("currentSort", sortBy == null ? "id" : sortBy);
+        model.addAttribute("currentDir", dir == null ? "asc" : dir);
+        model.addAttribute("number", number == null ? "" : number);
+        model.addAttribute("status", status == null ? "" : status);
+
+        return "tables/index";
     }
 
     // -------------------- CREATE: FORM --------------------
@@ -32,52 +48,51 @@ public class RestaurantTableController {
 
     // -------------------- CREATE: ACTION --------------------
     @PostMapping
-    public String create(@ModelAttribute("table") RestaurantTable table) {
-        service.create(table);
-        return "redirect:/tables";
+    public String create(@ModelAttribute RestaurantTable table, RedirectAttributes redirectAttributes, Model model) {
+        try {
+            service.create(table);
+            redirectAttributes.addFlashAttribute("success", "Table created.");
+            return "redirect:/tables";
+        } catch (Exception e) {
+            model.addAttribute("table", table);
+            model.addAttribute("error", e.getMessage());
+            return "tables/form";
+        }
+    }
+
+    // -------------------- DETAILS --------------------
+    @GetMapping("/{id}")
+    public String details(@PathVariable Long id, Model model) {
+        model.addAttribute("table", service.getById(id));
+        return "tables/details";
     }
 
     // -------------------- EDIT: FORM --------------------
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
-        RestaurantTable table = service.getById(id);
-        model.addAttribute("table", table);
+        model.addAttribute("table", service.getById(id));
         return "tables/form";
     }
 
     // -------------------- EDIT: ACTION --------------------
     @PostMapping("/{id}")
-    public String update(
-            @PathVariable Long id,
-            @ModelAttribute("table") RestaurantTable table
-    ) {
-        service.update(id, table);
-        return "redirect:/tables";
-    }
-
-    // -------------------- DETAILS --------------------
-    @GetMapping("/{id}")
-    public String showDetails(@PathVariable Long id, Model model) {
-        RestaurantTable table = service.getById(id);
-        model.addAttribute("table", table);
-        return "tables/details";
+    public String update(@PathVariable Long id, @ModelAttribute RestaurantTable table, RedirectAttributes redirectAttributes, Model model) {
+        try {
+            service.update(id, table);
+            redirectAttributes.addFlashAttribute("success", "Table updated.");
+            return "redirect:/tables";
+        } catch (Exception e) {
+            model.addAttribute("table", table);
+            model.addAttribute("error", e.getMessage());
+            return "tables/form";
+        }
     }
 
     // -------------------- DELETE --------------------
     @PostMapping("/{id}/delete")
-    public String delete(@PathVariable Long id, Model model) {
-        try {
-            service.delete(id);
-            return "redirect:/tables";
-
-        } catch (Exception e) {
-            model.addAttribute("tables", service.getAll());
-            model.addAttribute("error",
-                    "Cannot delete this table because it is linked to existing orders or data.");
-
-            // Stay on the tables page (NO redirect)
-            return "tables/index";
-        }
+    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        service.delete(id);
+        redirectAttributes.addFlashAttribute("success", "Table deleted.");
+        return "redirect:/tables";
     }
-
 }

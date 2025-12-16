@@ -55,5 +55,21 @@ public class MenuItemService {
 
         menuItemRepository.deleteById(id);
     }
-}
 
+    public org.springframework.data.domain.Page<MenuItem> getAllPaged(String name, String category, Double minPrice, Double maxPrice, String sortBy, String dir, org.springframework.data.domain.Pageable pageable) {
+        org.springframework.data.domain.Sort sort = org.springframework.data.domain.Sort.by(org.springframework.data.domain.Sort.Direction.fromString(dir == null ? "ASC" : dir), sortBy == null ? "id" : sortBy);
+        org.springframework.data.domain.Pageable p = org.springframework.data.domain.PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+
+        if ((name != null && !name.isEmpty()) && (category != null && !category.isEmpty())) {
+            return menuItemRepository.findByNameContainingIgnoreCaseAndCategoryContainingIgnoreCase(name, category, p);
+        } else if (name != null && !name.isEmpty()) {
+            return menuItemRepository.findByNameContainingIgnoreCase(name, p);
+        } else if (category != null && !category.isEmpty()) {
+            return menuItemRepository.findByCategoryContainingIgnoreCase(category, p);
+        } else if (minPrice != null && maxPrice != null) {
+            return menuItemRepository.findByPriceBetween(minPrice, maxPrice, p);
+        } else {
+            return menuItemRepository.findAll(p);
+        }
+    }
+}

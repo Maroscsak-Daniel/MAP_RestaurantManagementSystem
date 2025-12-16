@@ -1,32 +1,54 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title th:text="${customer.id == null} ? 'Add Customer' : 'Edit Customer'"></title>
+    <link th:href="@{'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'}" rel="stylesheet" crossorigin="anonymous" />
+    <link th:href="@{/css/app.css}" rel="stylesheet" />
 </head>
 <body>
+<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top" style="border-bottom:1px solid #e9ecef;">
+    <div class="container"><a class="navbar-brand text-dark" th:href="@{/}">Restaurant</a></div>
+</nav>
 
-<h1 th:text="${customer.id == null} ? 'Add new customer' : 'Edit customer'"></h1>
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h4 th:text="${customer.id == null} ? 'Create Customer' : 'Edit Customer'">Form</h4>
+        </div>
+        <div class="card-body">
+            <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
 
-<form th:action="${customer.id == null} ? @{/customers} : @{|/customers/${customer.id}|}"
-      th:object="${customer}"
-      method="post">
+            <!-- Create form -->
+            <form th:if="${customer.id == null}" method="post" th:action="@{/customers}" th:object="${customer}">
+                <div class="form-group">
+                    <label for="nameCreate">Name</label>
+                    <input id="nameCreate" type="text" th:field="*{name}" class="form-control" required />
+                    <div class="text-danger small" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                </div>
 
-    <!-- NAME -->
-    <label>Name:</label>
-    <input type="text" th:field="*{name}"/>
+                <button type="submit" class="btn btn-brand btn-pill">Create</button>
+                <a th:href="@{/customers}" class="btn btn-outline-secondary btn-pill">Cancel</a>
+            </form>
 
-    <span style="color:red"
-          th:if="${#fields.hasErrors('name')}"
-          th:errors="*{name}">
-    </span>
+            <!-- Edit form -->
+            <form th:if="${customer.id != null}" method="post" th:action="@{/customers/{id}(id=${customer.id})}" th:object="${customer}">
+                <div class="form-group">
+                    <label for="nameEdit">Name</label>
+                    <input id="nameEdit" type="text" th:field="*{name}" class="form-control" required />
+                    <div class="text-danger small" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                </div>
 
-    <br/><br/>
+                <button type="submit" class="btn btn-brand btn-pill">Save</button>
+                <a th:href="@{/customers}" class="btn btn-outline-secondary btn-pill">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
 
-    <button type="submit" th:text="${customer.id == null} ? 'Save' : 'Update'"></button>
-
-</form>
-
-<p><a th:href="@{/customers}">Back to list</a></p>
-
+<script th:src="@{'https://code.jquery.com/jquery-3.5.1.slim.min.js'}"></script>
+<script th:src="@{'https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js'}"></script>
+<script th:src="@{'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js'}"></script>
 </body>
 </html>

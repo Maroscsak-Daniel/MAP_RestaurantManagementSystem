@@ -2,9 +2,11 @@ package com.example.restaurant.controller;
 
 import com.example.restaurant.model.Server;
 import com.example.restaurant.service.ServerService;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/servers")
@@ -17,8 +19,22 @@ public class ServerController {
     }
 
     @GetMapping
-    public String list(Model model) {
-        model.addAttribute("servers", service.getAll());
+    public String list(@RequestParam(required = false) String shift,
+                       @RequestParam(required = false) Integer minExp,
+                       @RequestParam(required = false, name = "sort") String sortBy,
+                       @RequestParam(required = false, name = "dir") String dir,
+                       Pageable pageable,
+                       Model model) {
+
+        var page = service.getAllPaged(shift, minExp, sortBy == null ? "id" : sortBy, dir == null ? "asc" : dir, pageable);
+        model.addAttribute("page", page);
+        model.addAttribute("servers", page.getContent());
+
+        model.addAttribute("currentSort", sortBy == null ? "id" : sortBy);
+        model.addAttribute("currentDir", dir == null ? "asc" : dir);
+        model.addAttribute("shift", shift == null ? "" : shift);
+        model.addAttribute("minExp", minExp == null ? "" : minExp);
+
         return "servers/index";
     }
 
@@ -29,9 +45,16 @@ public class ServerController {
     }
 
     @PostMapping
-    public String create(@ModelAttribute Server server) {
-        service.create(server);
-        return "redirect:/servers";
+    public String create(@ModelAttribute Server server, RedirectAttributes redirectAttributes, Model model) {
+        try {
+            service.create(server);
+            redirectAttributes.addFlashAttribute("success", "Server created.");
+            return "redirect:/servers";
+        } catch (Exception e) {
+            model.addAttribute("server", server);
+            model.addAttribute("error", e.getMessage());
+            return "servers/form";
+        }
     }
 
     @GetMapping("/{id}")
@@ -47,14 +70,22 @@ public class ServerController {
     }
 
     @PostMapping("/{id}")
-    public String update(@PathVariable Long id, @ModelAttribute Server server) {
-        service.update(id, server);
-        return "redirect:/servers";
+    public String update(@PathVariable Long id, @ModelAttribute Server server, RedirectAttributes redirectAttributes, Model model) {
+        try {
+            service.update(id, server);
+            redirectAttributes.addFlashAttribute("success", "Server updated.");
+            return "redirect:/servers";
+        } catch (Exception e) {
+            model.addAttribute("server", server);
+            model.addAttribute("error", e.getMessage());
+            return "servers/form";
+        }
     }
 
     @PostMapping("/{id}/delete")
-    public String delete(@PathVariable Long id) {
+    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         service.delete(id);
+        redirectAttributes.addFlashAttribute("success", "Server deleted.");
         return "redirect:/servers";
     }
 }
