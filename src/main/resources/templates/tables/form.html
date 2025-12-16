@@ -1,31 +1,68 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title th:text="${table.id == null} ? 'Add Table' : 'Edit Table'"></title>
+    <link th:href="@{'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'}" rel="stylesheet" crossorigin="anonymous" />
+    <link th:href="@{/css/app.css}" rel="stylesheet" />
 </head>
 <body>
+<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top" style="border-bottom:1px solid #e9ecef;">
+    <div class="container"><a class="navbar-brand text-dark" th:href="@{/}">Restaurant</a></div>
+</nav>
 
-<h1 th:text="${table.id == null} ? 'Add Table' : 'Edit Table'"></h1>
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h4 th:text="${table.id == null} ? 'Create Table' : 'Edit Table'">Form</h4>
+        </div>
+        <div class="card-body">
 
-<form th:action="${table.id == null} ? @{/tables} : @{|/tables/${table.id}|}"
-      th:object="${table}"
-      method="post">
+            <!-- Create form -->
+            <form th:if="${table.id == null}" method="post" th:action="@{/tables}" th:object="${table}">
+                <div class="form-group">
+                    <label for="numberCreate">Number</label>
+                    <input id="numberCreate" type="number" th:field="*{number}" class="form-control" required />
+                </div>
 
-    <!-- ID is auto-generated → no input -->
+                <div class="form-group">
+                    <label for="statusCreate">Status</label>
+                    <select id="statusCreate" th:field="*{occupiedStatus}" class="form-control">
+                        <option value="free">Free</option>
+                        <option value="occupied">Occupied</option>
+                    </select>
+                </div>
 
-    <label>Number:</label>
-    <input type="number" th:field="*{number}" required/><br/><br/>
+                <button type="submit" class="btn btn-brand btn-pill">Save</button>
+                <a th:href="@{/tables}" class="btn btn-outline-secondary btn-pill">Cancel</a>
+            </form>
 
-    <label>Status:</label>
-    <select th:field="*{occupiedStatus}">
-        <option value="free">Free</option>
-        <option value="occupied">Occupied</option>
-    </select><br/><br/>
+            <!-- Edit form -->
+            <form th:if="${table.id != null}" method="post" th:action="@{/tables/{id}(id=${table.id})}" th:object="${table}">
+                <div class="form-group">
+                    <label for="numberEdit">Number</label>
+                    <input id="numberEdit" type="number" th:field="*{number}" class="form-control" required />
+                </div>
 
-    <button type="submit" th:text="${table.id == null} ? 'Save' : 'Update'"></button>
-</form>
+                <div class="form-group">
+                    <label for="statusEdit">Status</label>
+                    <select id="statusEdit" th:field="*{occupiedStatus}" class="form-control">
+                        <option value="free">Free</option>
+                        <option value="occupied">Occupied</option>
+                    </select>
+                </div>
 
-<p><a th:href="@{/tables}">Back to list</a></p>
+                <button type="submit" class="btn btn-brand btn-pill">Update</button>
+                <a th:href="@{/tables}" class="btn btn-outline-secondary btn-pill">Cancel</a>
+            </form>
 
+        </div>
+    </div>
+</div>
+
+<script th:src="@{'https://code.jquery.com/jquery-3.5.1.slim.min.js'}"></script>
+<script th:src="@{'https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js'}"></script>
+<script th:src="@{'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js'}"></script>
 </body>
 </html>

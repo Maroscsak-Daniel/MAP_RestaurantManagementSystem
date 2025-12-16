@@ -1,39 +1,120 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head><title>Chefs</title></head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chefs</title>
+    <link th:href="@{'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'}" rel="stylesheet" crossorigin="anonymous" />
+    <link th:href="@{/css/app.css}" rel="stylesheet" />
+</head>
 <body>
+<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top" style="border-bottom:1px solid #e9ecef;">
+    <div class="container">
+        <a class="navbar-brand text-dark" th:href="@{/}">Restaurant</a>
+        <div class="ml-auto">
+            <a class="btn btn-sm btn-brand btn-pill ml-2" th:href="@{/chefs}">Chefs</a>
+        </div>
+    </div>
+</nav>
 
-<h1>Chefs</h1>
+<div class="container mt-4">
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
-<p><a th:href="@{/chefs/new}">Add new chef</a></p>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h1 class="h4 mb-0">Chefs</h1>
+            <div class="text-muted small">Manage kitchen staff</div>
+        </div>
+        <div class="text-right">
+            <div class="mb-2">
+                <a class="btn btn-sm btn-outline-primary btn-pill" th:href="@{/chefs/new}">Add Chef</a>
+            </div>
+            <div class="text-muted small">Results</div>
+            <div class="h5" th:text="${#lists.size(chefs)}">0</div>
+        </div>
+    </div>
 
-<table border="1">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Rank</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
+    <div class="card mb-3 filter-card">
+        <div class="card-body">
+            <form method="get" class="form-inline filter-row">
+                <label for="name" class="mr-2">Name</label>
+                <input id="name" name="name" class="form-control mr-3" placeholder="Name" th:value="${name}" />
 
-    <tbody>
-    <tr th:each="c : ${chefs}">
-        <td th:text="${c.id}"></td>
-        <td th:text="${c.name}"></td>
-        <td th:text="${c.rank}"></td>
+                <label for="rank" class="mr-2">Rank</label>
+                <input id="rank" name="rank" class="form-control mr-3" placeholder="Rank" th:value="${rank}" />
 
-        <td>
-            <a th:href="@{'/chefs/' + ${c.id}}">Details</a> |
-            <a th:href="@{'/chefs/' + ${c.id} + '/edit'}">Edit</a> |
-            <form th:action="@{'/chefs/' + ${c.id} + '/delete'}"
-                  method="post" style="display:inline;">
-                <button type="submit">Delete</button>
+                <label for="sortSelect" class="mr-2">Sort</label>
+                <select id="sortSelect" name="sort" class="form-control mr-2">
+                    <option value="id" th:selected="${currentSort == 'id'}">ID</option>
+                    <option value="name" th:selected="${currentSort == 'name'}">Name</option>
+                </select>
+
+                <select name="dir" id="dirSelect" class="form-control mr-3">
+                    <option value="asc" th:selected="${currentDir == 'asc'}">ASC</option>
+                    <option value="desc" th:selected="${currentDir == 'desc'}">DESC</option>
+                </select>
+
+                <button type="submit" class="btn btn-brand btn-pill mr-2">Apply</button>
+                <a th:href="@{/chefs}" class="btn btn-outline-secondary btn-pill">Reset</a>
             </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+        </div>
+    </div>
 
+    <div class="table-responsive">
+        <table class="table table-hover bg-white">
+            <thead>
+            <tr>
+                <th><a th:href="@{/chefs(sort='id', dir=${currentSort=='id' && currentDir=='asc' ? 'desc' : 'asc'}, name=${name}, rank=${rank})}">ID
+                    <span th:if="${currentSort=='id'}" th:text="${currentDir=='asc' ? '▲' : '▼'}"></span>
+                </a></th>
+                <th><a th:href="@{/chefs(sort='name', dir=${currentSort=='name' && currentDir=='asc' ? 'desc' : 'asc'}, name=${name}, rank=${rank})}">Name
+                    <span th:if="${currentSort=='name'}" th:text="${currentDir=='asc' ? '▲' : '▼'}"></span>
+                </a></th>
+                <th>Rank</th>
+                <th class="text-center">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="c : ${chefs}">
+                <td th:text="${c.id}"></td>
+                <td th:text="${c.name}"></td>
+                <td th:text="${c.rank}"></td>
+                <td class="table-actions text-right">
+                    <a class="btn btn-sm btn-outline-primary btn-pill" th:href="@{/chefs/{id}(id=${c.id})}">Details</a>
+                    <a class="btn btn-sm btn-outline-secondary btn-pill" th:href="@{/chefs/{id}/edit(id=${c.id})}">Edit</a>
+                    <form th:action="@{/chefs/{id}/delete(id=${c.id})}" method="post" style="display:inline-block;">
+                        <button type="submit" class="btn btn-sm btn-danger btn-pill">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(chefs)}">
+                <td colspan="4" class="text-center text-muted">No chefs found.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-3">
+        <nav th:if="${page != null}">
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${page.first} ? ' disabled'">
+                    <a class="page-link" th:href="@{/chefs(page=${page.number - 1}, size=${page.size}, sort=${currentSort}, dir=${currentDir}, name=${name}, rank=${rank})}">Previous</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}" th:classappend="${i == page.number} ? ' active'">
+                    <a class="page-link" th:href="@{/chefs(page=${i}, size=${page.size}, sort=${currentSort}, dir=${currentDir}, name=${name}, rank=${rank})}" th:text="${i + 1}"></a>
+                </li>
+                <li class="page-item" th:classappend="${page.last} ? ' disabled'">
+                    <a class="page-link" th:href="@{/chefs(page=${page.number + 1}, size=${page.size}, sort=${currentSort}, dir=${currentDir}, name=${name}, rank=${rank})}">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+</div>
+
+<script th:src="@{'https://code.jquery.com/jquery-3.5.1.slim.min.js'}"></script>
+<script th:src="@{'https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js'}"></script>
+<script th:src="@{'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js'}"></script>
 </body>
 </html>

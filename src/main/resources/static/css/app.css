@@ -1,0 +1,32 @@
+/* App-specific styles for presentation-ready UI */
+:root{
+  --brand:#007bff;
+  --accent:#6f42c1;
+  --muted:#6c757d;
+  --card-bg:#ffffff;
+  --card-border:#e9ecef;
+}
+body{
+  /* ensure pages don't hide content under a fixed navbar */
+  padding-top: 90px;
+  background: linear-gradient(180deg,#f7f9fb 0%, #eef3f8 100%);
+  color:#343a40;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial;
+}
+.navbar-brand { font-weight:700; letter-spacing:0.4px; }
+.card { border:1px solid var(--card-border); border-radius:0.5rem; box-shadow: 0 6px 18px rgba(18,38,63,0.06); }
+.filter-card { background: linear-gradient(90deg, rgba(111,66,193,0.06), rgba(0,123,255,0.04)); }
+.filter-row .form-control { min-width: 140px; }
+.table thead th a { color: #212529; text-decoration:none; }
+.table thead th a:hover { text-decoration:underline; }
+.btn-brand { background: linear-gradient(90deg,var(--brand), #0056b3); color:white; border:none; }
+.btn-primary, .btn-brand { box-shadow: 0 3px 8px rgba(0,123,255,0.12); }
+.btn-pill { border-radius: 999px; padding-left: 14px; padding-right: 14px; }
+.status-badge { padding:6px 10px; border-radius: 999px; font-weight:600; }
+.status-paid { background:#e6ffed; color:#138a3d; border:1px solid #bde7c9; }
+.status-unpaid { background:#fff4e6; color:#b35a00; border:1px solid #ffdcb3; }
+.table-actions .btn { margin-bottom:4px; }
+@media (max-width:767px){
+  .filter-row { display:block; }
+  .filter-row .form-control { width:100% !important; margin-bottom:8px; }
+}

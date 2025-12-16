@@ -2,6 +2,8 @@ package com.example.restaurant.service;
 
 import com.example.restaurant.model.RestaurantTable;
 import com.example.restaurant.repository.RestaurantTableRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,15 +41,18 @@ public class RestaurantTableService {
         repo.deleteById(id);
     }
 
-    public List<RestaurantTable> getFreeTables() {
-        return repo.findAll().stream()
-                .filter(t -> "free".equalsIgnoreCase(t.getOccupiedStatus()))
-                .toList();
-    }
+    public Page<RestaurantTable> getAllPaged(Integer number, String status, String sortBy, String dir, Pageable pageable) {
+        org.springframework.data.domain.Sort sort = org.springframework.data.domain.Sort.by(org.springframework.data.domain.Sort.Direction.fromString(dir == null ? "ASC" : dir), sortBy == null ? "id" : sortBy);
+        Pageable p = org.springframework.data.domain.PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
 
-    public void setStatus(Long id, String status) {
-        RestaurantTable t = getById(id);
-        t.setOccupiedStatus(status);
-        repo.save(t);
+        if (number != null && status != null && !status.isEmpty()) {
+            return repo.findByNumberAndOccupiedStatusContainingIgnoreCase(number, status, p);
+        } else if (number != null) {
+            return repo.findByNumber(number, p);
+        } else if (status != null && !status.isEmpty()) {
+            return repo.findByOccupiedStatusContainingIgnoreCase(status, p);
+        } else {
+            return repo.findAll(p);
+        }
     }
 }

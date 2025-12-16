@@ -20,7 +20,14 @@ public class Order {
     @JoinColumn(name = "table_id")
     private RestaurantTable restaurantTable;
 
-    private String status;
+    // ENUM-ul înlocuiește String-ul
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private OrderStatus status;
+
+    // PAYMENT METHOD as enum
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
 
     // KEEP THEM AS JSON-backed lists, NOT JPA RELATIONS
     @Transient
@@ -28,8 +35,6 @@ public class Order {
 
     @Transient
     private List<OrderAssignment> assignments = new ArrayList<>();
-
-    private String paymentMethod;
 
     public Order() {}
 
@@ -42,8 +47,8 @@ public class Order {
     public RestaurantTable getTable() { return restaurantTable; }
     public void setTable(RestaurantTable restaurantTable) { this.restaurantTable = restaurantTable; }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public OrderStatus getStatus() { return status; }
+    public void setStatus(OrderStatus status) { this.status = status; }
 
     public List<OrderLine> getOrderLines() { return orderLines; }
     public void setOrderLines(List<OrderLine> orderLines) { this.orderLines = orderLines; }
@@ -51,7 +56,6 @@ public class Order {
     public List<OrderAssignment> getAssignments() { return assignments; }
     public void setAssignments(List<OrderAssignment> assignments) { this.assignments = assignments; }
 
-    public String getPaymentMethod() { return paymentMethod; }
-    public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
+    public PaymentMethod getPaymentMethod() { return paymentMethod; }
+    public void setPaymentMethod(PaymentMethod paymentMethod) { this.paymentMethod = paymentMethod; }
 }
-

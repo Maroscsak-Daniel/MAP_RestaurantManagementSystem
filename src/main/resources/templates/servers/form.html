@@ -1,56 +1,52 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head><title>Server</title></head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Server Form</title>
+    <link th:href="@{'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'}" rel="stylesheet" crossorigin="anonymous" />
+    <link th:href="@{/css/app.css}" rel="stylesheet" />
+</head>
 <body>
+<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top" style="border-bottom:1px solid #e9ecef;">
+    <div class="container"><a class="navbar-brand text-dark" th:href="@{/}">Restaurant</a></div>
+</nav>
 
-<h1 th:text="${server.id == null ? 'Add Server' : 'Edit Server'}"></h1>
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h4 th:text="${server.id == null} ? 'Create Server' : 'Edit Server'">Form</h4>
+        </div>
+        <div class="card-body">
+            <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
-<!-- CREATE FORM -->
-<form th:if="${server.id == null}"
-      th:action="@{/servers}"
-      th:object="${server}"
-      method="post">
+            <form method="post" th:action="${server.id == null} ? @{/servers} : @{/servers/{id}(id=${server.id})}" th:object="${server}">
 
-    <label>Name:</label>
-    <input type="text" th:field="*{name}" required/><br/><br/>
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input id="name" type="text" th:field="*{name}" class="form-control" required />
+                    <div class="text-danger small" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                </div>
 
-    <label>Shift:</label>
-    <select th:field="*{shift}">
-        <option th:value="Morning" th:text="'Morning'"></option>
-        <option th:value="Evening" th:text="'Evening'"></option>
-        <option th:value="Night" th:text="'Night'"></option>
-    </select>
-    <br/><br/>
+                <div class="form-group">
+                    <label for="shift">Shift</label>
+                    <input id="shift" type="text" th:field="*{shift}" class="form-control" />
+                </div>
 
-    <label>Experience (years):</label>
-    <input type="number" th:field="*{experienceYears}" min="0" required/><br/><br/>
+                <div class="form-group">
+                    <label for="experienceYears">Experience (years)</label>
+                    <input id="experienceYears" type="number" th:field="*{experienceYears}" class="form-control" min="0" />
+                </div>
 
-    <button type="submit">Save</button>
-</form>
+                <button type="submit" class="btn btn-brand btn-pill" th:text="${server.id == null} ? 'Create' : 'Save'"></button>
+                <a th:href="@{/servers}" class="btn btn-outline-secondary btn-pill">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
 
-<!-- UPDATE FORM -->
-<form th:if="${server.id != null}"
-      th:action="@{/servers/{id}(id=${server.id})}"
-      th:object="${server}"
-      method="post">
-
-    <label>Name:</label>
-    <input type="text" th:field="*{name}" required/><br/><br/>
-
-    <label>Shift:</label>
-    <select th:field="*{shift}">
-        <option th:value="Morning" th:text="'Morning'"></option>
-        <option th:value="Evening" th:text="'Evening'"></option>
-        <option th:value="Night" th:text="'Night'"></option>
-    </select><br/><br/>
-
-    <label>Experience (years):</label>
-    <input type="number" th:field="*{experienceYears}" min="0" required/><br/><br/>
-
-    <button type="submit">Save</button>
-</form>
-
-<p><a th:href="@{/servers}">Back</a></p>
-
+<script th:src="@{'https://code.jquery.com/jquery-3.5.1.slim.min.js'}"></script>
+<script th:src="@{'https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js'}"></script>
+<script th:src="@{'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js'}"></script>
 </body>
 </html>

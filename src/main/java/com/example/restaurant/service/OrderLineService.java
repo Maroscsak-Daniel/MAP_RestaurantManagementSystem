@@ -3,11 +3,15 @@ package com.example.restaurant.service;
 import com.example.restaurant.model.Order;
 import com.example.restaurant.model.OrderLine;
 import com.example.restaurant.model.MenuItem;
+import com.example.restaurant.model.PaymentStatus;
 import com.example.restaurant.repository.OrderLineRepository;
 import com.example.restaurant.repository.OrderRepository;
 import com.example.restaurant.repository.MenuItemRepository;
 import com.example.restaurant.repository.BillRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -38,8 +42,8 @@ public class OrderLineService {
                 .orElseThrow(() -> new IllegalArgumentException("OrderLine not found: " + id));
     }
 
+    @Transactional
     public OrderLine create(OrderLine line) {
-
         if (line.getOrderId() == null) {
             throw new IllegalArgumentException("Order ID cannot be null.");
         }
@@ -47,8 +51,10 @@ public class OrderLineService {
         Order order = orderRepo.findById(line.getOrderId())
                 .orElseThrow(() -> new IllegalArgumentException("Order does not exist: " + line.getOrderId()));
 
-        if (billRepo.existsByOrder_Id(order.getId())) {
-            throw new IllegalStateException("Cannot modify order lines because the order already has a bill.");
+        // Only prevent modification if there's a PAID bill for the order
+        var bill = billRepo.findByOrder_Id(order.getId());
+        if (bill != null && bill.getPaymentStatus() == PaymentStatus.PAID) {
+            throw new IllegalStateException("Cannot modify order lines because the order has a PAID bill.");
         }
 
         MenuItem menu = null;
@@ -63,7 +69,13 @@ public class OrderLineService {
         return repo.save(line);
     }
 
+    @Transactional
     public OrderLine update(Long id, OrderLine data) {
+        // perform update transactionally
+        return updateInternal(id, data);
+    }
+
+    protected OrderLine updateInternal(Long id, OrderLine data) {
         OrderLine existing = getById(id);
 
         Long orderId = data.getOrderId();
@@ -73,8 +85,10 @@ public class OrderLineService {
         Order order = orderRepo.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Order does not exist: " + orderId));
 
-        if (billRepo.existsByOrder_Id(orderId))
-            throw new IllegalStateException("Cannot modify this order line because the order already has a bill.");
+        var bill = billRepo.findByOrder_Id(orderId);
+        if (bill != null && bill.getPaymentStatus() == PaymentStatus.PAID) {
+            throw new IllegalStateException("Cannot modify this order line because the order has a PAID bill.");
+        }
 
         MenuItem menu = null;
         if (data.getMenuItemId() != null) {
@@ -90,19 +104,41 @@ public class OrderLineService {
         return repo.save(existing);
     }
 
+    @Transactional
     public void delete(Long id) {
+        deleteInternal(id);
+    }
+
+    protected void deleteInternal(Long id) {
         OrderLine line = getById(id);
         Long orderId = line.getOrder().getId();
 
-        if (billRepo.existsByOrder_Id(orderId)) {
+        var bill = billRepo.findByOrder_Id(orderId);
+        if (bill != null && bill.getPaymentStatus() == PaymentStatus.PAID) {
             throw new IllegalStateException(
-                    "Cannot delete this order line because the order already has a bill."
+                    "Cannot delete this order line because the order has a PAID bill."
             );
         }
 
         repo.delete(line);
     }
+
     public List<OrderLine> getByOrder(Long orderId) {
         return repo.findByOrder_Id(orderId);
+    }
+
+    public Page<OrderLine> getAllPaged(Long orderId, String menuName, String sortBy, String dir, Pageable pageable) {
+        org.springframework.data.domain.Sort sort = org.springframework.data.domain.Sort.by(org.springframework.data.domain.Sort.Direction.fromString(dir == null ? "ASC" : dir), sortBy == null ? "id" : sortBy);
+        Pageable p = org.springframework.data.domain.PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+
+        if (orderId != null && menuName != null && !menuName.isEmpty()) {
+            return repo.findByOrder_IdAndMenuItem_NameContainingIgnoreCase(orderId, menuName, p);
+        } else if (orderId != null) {
+            return repo.findByOrder_Id(orderId, p);
+        } else if (menuName != null && !menuName.isEmpty()) {
+            return repo.findByMenuItem_NameContainingIgnoreCase(menuName, p);
+        } else {
+            return repo.findAll(p);
+        }
     }
 }

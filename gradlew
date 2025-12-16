@@ -1,4 +1,0 @@
-#!/usr/bin/env sh
-# Simple Gradle Wrapper Script
-DIR="$( cd "$( dirname "$0" )" && pwd )"
-exec "$DIR/gradle/wrapper/gradle-wrapper.jar" "$@"
