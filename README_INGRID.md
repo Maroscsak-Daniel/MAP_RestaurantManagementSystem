@@ -227,13 +227,3 @@ How services interact with the database
 Final notes
 -----------
 - This README documents how each requirement from the supplied list is satisfied and how the code implements sorting, filtering, validation, persistence and UI integration.
-- If you want I can also generate a short presentation script (in German) that highlights the requirements, entities and shows the demo steps you can present in ~7 minutes as required by the assignment.
-
----
-
-If you want, I will:
-- run the test suite here and paste the results,
-- start the app on a non-conflicting port and run a small end-to-end smoke test,
-- or generate the German presentation script.
-
-Tell me which of the three you'd like next and I'll execute it.
