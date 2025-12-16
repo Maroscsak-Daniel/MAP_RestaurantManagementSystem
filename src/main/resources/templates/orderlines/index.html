@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Order Lines</title>
+    <link th:href="@{'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'}" rel="stylesheet" crossorigin="anonymous" />
+    <link th:href="@{/css/app.css}" rel="stylesheet" />
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top" style="border-bottom:1px solid #e9ecef;">
+    <div class="container">
+        <a class="navbar-brand text-dark" th:href="@{/}">Restaurant</a>
+        <div class="ml-auto">
+            <a class="btn btn-sm btn-brand btn-pill ml-2" th:href="@{/orderlines}">OrderLines</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h1 class="h4 mb-0">Order Lines</h1>
+            <div class="text-muted small">Manage items within orders</div>
+        </div>
+        <div class="text-right">
+            <div class="mb-2">
+                <a class="btn btn-sm btn-outline-primary btn-pill" th:href="@{/orderlines/new}">Add OrderLine</a>
+            </div>
+            <div class="text-muted small">Results</div>
+            <div class="h5" th:text="${#lists.size(orderlines)}">0</div>
+        </div>
+    </div>
+
+    <div class="card mb-3 filter-card">
+        <div class="card-body">
+            <form method="get" class="form-inline filter-row">
+                <label for="orderId" class="mr-2">Order ID</label>
+                <input id="orderId" name="orderId" type="number" inputmode="numeric" min="1" step="1" class="form-control mr-3" th:value="${orderId}" placeholder="Order id" />
+                <div th:if="${filterError}" class="text-danger small ml-2" th:text="${filterError}"></div>
+
+                <label for="menuName" class="mr-2">Menu item</label>
+                <input id="menuName" name="menuName" class="form-control mr-3" th:value="${menuName}" placeholder="Item name" />
+
+                <label for="sortSelect" class="mr-2">Sort</label>
+                <select id="sortSelect" name="sort" class="form-control mr-2">
+                    <option value="id" th:selected="${currentSort == 'id'}">ID</option>
+                    <option value="quantity" th:selected="${currentSort == 'quantity'}">Quantity</option>
+                </select>
+
+                <select name="dir" id="dirSelect" class="form-control mr-3">
+                    <option value="asc" th:selected="${currentDir == 'asc'}">ASC</option>
+                    <option value="desc" th:selected="${currentDir == 'desc'}">DESC</option>
+                </select>
+
+                <button type="submit" class="btn btn-brand btn-pill mr-2">Apply</button>
+                <a th:href="@{/orderlines}" class="btn btn-outline-secondary btn-pill">Reset</a>
+            </form>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover bg-white">
+            <thead>
+            <tr>
+                <th><a th:href="@{/orderlines(sort='id', dir=${currentSort=='id' && currentDir=='asc' ? 'desc' : 'asc'}, orderId=${orderId}, menuName=${menuName})}">ID
+                    <span th:if="${currentSort=='id'}" th:text="${currentDir=='asc' ? '▲' : '▼'}"></span>
+                </a></th>
+                <th>Order</th>
+                <th>Menu Item</th>
+                <th><a th:href="@{/orderlines(sort='quantity', dir=${currentSort=='quantity' && currentDir=='asc' ? 'desc' : 'asc'}, orderId=${orderId}, menuName=${menuName})}">Qty
+                    <span th:if="${currentSort=='quantity'}" th:text="${currentDir=='asc' ? '▲' : '▼'}"></span>
+                </a></th>
+                <th>Allergens</th>
+                <th class="text-center">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="line : ${orderlines}">
+                <td th:text="${line.id}"></td>
+                <td th:text="${line.order != null ? line.order.id : 'N/A'}"></td>
+                <td th:text="${line.menuItem != null ? line.menuItem.name : 'None'}"></td>
+                <td th:text="${line.quantity}"></td>
+                <td th:text="${line.allergens}"></td>
+                <td class="table-actions text-right">
+                    <a class="btn btn-sm btn-outline-primary btn-pill" th:href="@{/orderlines/{id}(id=${line.id})}">Details</a>
+                    <span th:if="${lineEditableMap[line.id]}">
+                        <a class="btn btn-sm btn-outline-secondary btn-pill" th:href="@{/orderlines/{id}/edit(id=${line.id})}">Edit</a>
+                        <form th:action="@{/orderlines/{id}/delete(id=${line.id})}" method="post" style="display:inline-block;">
+                            <button type="submit" class="btn btn-sm btn-danger btn-pill">Delete</button>
+                        </form>
+                    </span>
+                    <span th:if="${!lineEditableMap[line.id]}">
+                        <button class="btn btn-sm btn-outline-secondary btn-pill" disabled>Edit</button>
+                        <button class="btn btn-sm btn-danger btn-pill" disabled>Delete</button>
+                    </span>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(orderlines)}">
+                <td colspan="6" class="text-center text-muted">No order lines found.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-3">
+        <nav th:if="${page != null}">
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${page.first} ? ' disabled'">
+                    <a class="page-link" th:href="@{/orderlines(page=${page.number - 1}, size=${page.size}, sort=${currentSort}, dir=${currentDir}, orderId=${orderId}, menuName=${menuName})}">Previous</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}" th:classappend="${i == page.number} ? ' active'">
+                    <a class="page-link" th:href="@{/orderlines(page=${i}, size=${page.size}, sort=${currentSort}, dir=${currentDir}, orderId=${orderId}, menuName=${menuName})}" th:text="${i + 1}"></a>
+                </li>
+                <li class="page-item" th:classappend="${page.last} ? ' disabled'">
+                    <a class="page-link" th:href="@{/orderlines(page=${page.number + 1}, size=${page.size}, sort=${currentSort}, dir=${currentDir}, orderId=${orderId}, menuName=${menuName})}">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+</div>
+
+<script th:src="@{'https://code.jquery.com/jquery-3.5.1.slim.min.js'}"></script>
+<script th:src="@{'https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js'}"></script>
+<script th:src="@{'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js'}"></script>
+</body>
+</html>

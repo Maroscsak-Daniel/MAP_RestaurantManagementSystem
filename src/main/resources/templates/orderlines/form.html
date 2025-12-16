@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title th:text="${orderline.id == null} ? 'Add OrderLine' : 'Edit OrderLine'"></title>
+    <link th:href="@{'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'}" rel="stylesheet" crossorigin="anonymous" />
+    <link th:href="@{/css/app.css}" rel="stylesheet" />
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top" style="border-bottom:1px solid #e9ecef;">
+    <div class="container"><a class="navbar-brand text-dark" th:href="@{/}">Restaurant</a></div>
+</nav>
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h4 th:text="${orderline.id == null} ? 'Create OrderLine' : 'Edit OrderLine'">Form</h4>
+        </div>
+        <div class="card-body">
+            <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+            <form th:if="${orderline.id == null}" method="post" th:action="@{/orderlines}" th:object="${orderline}">
+                <div class="form-group">
+                    <label for="quantityCreate">Quantity</label>
+                    <input id="quantityCreate" type="number" th:field="*{quantity}" class="form-control" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="allergensCreate">Allergens</label>
+                    <input id="allergensCreate" type="text" th:field="*{allergens}" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label for="orderSelectCreate">Order</label>
+                    <select id="orderSelectCreate" name="orderId" class="form-control" required>
+                        <option value="">-- select order --</option>
+                        <option th:each="o : ${orders}" th:value="${o.id}" th:text="${'Order ' + o.id}" th:selected="${orderline.order != null and o.id == orderline.order.id}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="menuSelectCreate">Menu Item</label>
+                    <select id="menuSelectCreate" name="menuItemId" class="form-control">
+                        <option value="">None</option>
+                        <option th:each="m : ${menuItems}" th:value="${m.id}" th:text="${m.name}" th:selected="${orderline.menuItem != null and m.id == orderline.menuItem.id}"></option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-brand btn-pill">Create</button>
+                <a th:href="@{/orderlines}" class="btn btn-outline-secondary btn-pill">Cancel</a>
+            </form>
+
+            <form th:if="${orderline.id != null}" method="post" th:action="@{/orderlines/{id}(id=${orderline.id})}" th:object="${orderline}">
+                <input type="hidden" th:field="*{id}" />
+
+                <div class="form-group">
+                    <label for="quantityEdit">Quantity</label>
+                    <input id="quantityEdit" type="number" th:field="*{quantity}" class="form-control" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="allergensEdit">Allergens</label>
+                    <input id="allergensEdit" type="text" th:field="*{allergens}" class="form-control" />
+                </div>
+
+
+                <button type="submit" class="btn btn-brand btn-pill" th:disabled="${editDisabled}">Save</button>
+                <a th:href="@{/orderlines}" class="btn btn-outline-secondary btn-pill">Cancel</a>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script th:src="@{'https://code.jquery.com/jquery-3.5.1.slim.min.js'}"></script>
+<script th:src="@{'https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js'}"></script>
+<script th:src="@{'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js'}"></script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bills</title>
+    <!-- Bootstrap CSS CDN -->
+    <link th:href="@{'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'}" rel="stylesheet" integrity="" crossorigin="anonymous" />
+    <link th:href="@{/css/app.css}" rel="stylesheet" />
+    <style>
+        /* keep tiny tweaks local */
+        body { padding-top: 66px; }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top" style="border-bottom:1px solid #e9ecef;">
+    <div class="container">
+        <a class="navbar-brand text-dark" th:href="@{/}">Restaurant</a>
+        <div class="ml-auto">
+            <a class="btn btn-sm btn-brand btn-pill ml-2" th:href="@{/bills}">Bills</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+    <div th:if="${param.error}" class="alert alert-danger" th:text="${param.error}"></div>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h1 class="h4 mb-0">Bills</h1>
+            <div class="text-muted small">Manage invoices and payments</div>
+        </div>
+        <div class="text-right">
+            <div class="mb-2">
+                <a class="btn btn-sm btn-outline-primary btn-pill" th:href="@{/bills/new}">Add Bill</a>
+            </div>
+            <div class="text-muted small">Results</div>
+            <div class="h5" th:text="${#lists.size(bills)}">0</div>
+        </div>
+    </div>
+
+    <div class="card mb-3 filter-card">
+        <div class="card-body">
+            <form method="get" class="form-inline filter-row">
+                <label for="statusSelect" class="mr-2">Status</label>
+                <select id="statusSelect" name="status" class="form-control mr-3">
+                    <option value="">All</option>
+                    <option th:each="s : ${statuses}"
+                            th:value="${s}"
+                            th:text="${s}"
+                            th:selected="${s == currentStatus}">
+                    </option>
+                </select>
+
+                <label for="minPrice" class="mr-2">Price</label>
+                <input id="minPrice" placeholder="min" type="number" step="0.01" name="min" class="form-control mr-1" th:value="${currentMin}"/>
+                <input id="maxPrice" placeholder="max" type="number" step="0.01" name="max" class="form-control mr-3" th:value="${currentMax}"/>
+
+                <label for="sortSelect" class="mr-2">Sort</label>
+                <select id="sortSelect" name="sort" class="form-control mr-2">
+                    <option value="id" th:selected="${currentSort == 'id'}">ID</option>
+                    <option value="totalPrice" th:selected="${currentSort == 'totalPrice'}">Total Price</option>
+                    <option value="paymentStatus" th:selected="${currentSort == 'paymentStatus'}">Status</option>
+                </select>
+
+                <select name="dir" id="dirSelect" class="form-control mr-3">
+                    <option value="asc" th:selected="${currentDir == 'asc'}">ASC</option>
+                    <option value="desc" th:selected="${currentDir == 'desc'}">DESC</option>
+                </select>
+
+                <button type="submit" class="btn btn-brand btn-pill mr-2">Apply</button>
+                <a th:href="@{/bills}" class="btn btn-outline-secondary btn-pill">Reset</a>
+            </form>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover bg-white">
+            <thead>
+            <tr>
+                <th><a th:href="@{/bills(sort='id', dir=${currentSort=='id' && currentDir=='asc' ? 'desc' : 'asc'}, status=${currentStatus}, min=${currentMin}, max=${currentMax})}">ID
+                    <span th:if="${currentSort=='id'}" th:text="${currentDir=='asc' ? '▲' : '▼'}"></span>
+                </a></th>
+                <th>Order</th>
+                <th><a th:href="@{/bills(sort='totalPrice', dir=${currentSort=='totalPrice' && currentDir=='asc' ? 'desc' : 'asc'}, status=${currentStatus}, min=${currentMin}, max=${currentMax})}">Total
+                    <span th:if="${currentSort=='totalPrice'}" th:text="${currentDir=='asc' ? '▲' : '▼'}"></span>
+                </a></th>
+                <th><a th:href="@{/bills(sort='paymentStatus', dir=${currentSort=='paymentStatus' && currentDir=='asc' ? 'desc' : 'asc'}, status=${currentStatus}, min=${currentMin}, max=${currentMax})}">Status
+                    <span th:if="${currentSort=='paymentStatus'}" th:text="${currentDir=='asc' ? '▲' : '▼'}"></span>
+                </a></th>
+                <th class="text-center">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="b : ${bills}">
+                <td th:text="${b.id}"></td>
+                <td>
+                    <a class="text-dark" th:href="@{/orders/{id}(id=${b.order.id})}" th:text="${b.order.id}"></a>
+                </td>
+                <td th:text="${#numbers.formatDecimal(b.totalPrice, 1, 'COMMA', 2, 'POINT')}"></td>
+                <td>
+                    <span class="status-badge" th:classappend="${b.paymentStatus.name() == 'PAID' ? ' status-paid' : ' status-unpaid'}" th:text="${b.paymentStatus.name()}"></span>
+                </td>
+                <td class="table-actions text-right">
+                    <a class="btn btn-sm btn-outline-primary btn-pill" th:href="@{/bills/{id}(id=${b.id})}">View</a>
+                    <a class="btn btn-sm btn-outline-secondary btn-pill" th:href="@{/bills/{id}/edit(id=${b.id})}">Edit</a>
+
+                    <!-- payment toggle removed: use Edit form to set PAID/UNPAID -->
+
+                    <form th:action="@{/bills/{id}/delete(id=${b.id})}" method="post" style="display:inline-block;">
+                        <button type="submit" class="btn btn-sm btn-danger btn-pill">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(bills)}">
+                <td colspan="5" class="text-center text-muted">No bills found.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="mt-3">
+        <nav th:if="${page != null}">
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${page.first} ? ' disabled'">
+                    <a class="page-link" th:href="@{/bills(page=${page.number - 1}, size=${page.size}, sort=${currentSort}, dir=${currentDir}, status=${currentStatus}, min=${currentMin}, max=${currentMax})}">Previous</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}" th:classappend="${i == page.number} ? ' active'">
+                    <a class="page-link" th:href="@{/bills(page=${i}, size=${page.size}, sort=${currentSort}, dir=${currentDir}, status=${currentStatus}, min=${currentMin}, max=${currentMax})}" th:text="${i + 1}"></a>
+                </li>
+                <li class="page-item" th:classappend="${page.last} ? ' disabled'">
+                    <a class="page-link" th:href="@{/bills(page=${page.number + 1}, size=${page.size}, sort=${currentSort}, dir=${currentDir}, status=${currentStatus}, min=${currentMin}, max=${currentMax})}">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<!-- Bootstrap JS (optional) -->
+<script th:src="@{'https://code.jquery.com/jquery-3.5.1.slim.min.js'}"></script>
+<script th:src="@{'https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js'}"></script>
+<script th:src="@{'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js'}"></script>
+
+</body>
+</html>

@@ -2,54 +2,90 @@ package com.example.restaurant.controller;
 
 import com.example.restaurant.model.Chef;
 import com.example.restaurant.service.ChefService;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/chefs")
 public class ChefController {
 
-    private final ChefService chefService;
+    private final ChefService service;
 
-    public ChefController(ChefService chefService) {
-        this.chefService = chefService;
-        // Date inițiale pentru testare
-        if (chefService.getAllChefs().isEmpty()) {
-            chefService.addChef(new Chef("CH01", "Ion Popescu", "10 ani", "Patiserie"));
-            chefService.addChef(new Chef("CH02", "Maria Dobre", "5 ani", "Bucătărie Caldă"));
+    public ChefController(ChefService service) {
+        this.service = service;
+    }
+
+    @GetMapping
+    public String list(@RequestParam(required = false) String name,
+                       @RequestParam(required = false) String rank,
+                       @RequestParam(required = false, name = "sort") String sortBy,
+                       @RequestParam(required = false, name = "dir") String dir,
+                       Pageable pageable,
+                       Model model) {
+
+        var page = service.getAllPaged(name, rank, sortBy == null ? "id" : sortBy, dir == null ? "asc" : dir, pageable);
+        model.addAttribute("page", page);
+        model.addAttribute("chefs", page.getContent());
+
+        model.addAttribute("currentSort", sortBy == null ? "id" : sortBy);
+        model.addAttribute("currentDir", dir == null ? "asc" : dir);
+        model.addAttribute("name", name == null ? "" : name);
+        model.addAttribute("rank", rank == null ? "" : rank);
+
+        return "chefs/index";
+    }
+
+    @GetMapping("/new")
+    public String createForm(Model model) {
+        model.addAttribute("chef", new Chef());
+        return "chefs/form";
+    }
+
+    @PostMapping
+    public String create(@ModelAttribute Chef chef, RedirectAttributes redirectAttributes, Model model) {
+        try {
+            service.create(chef);
+            redirectAttributes.addFlashAttribute("success", "Chef created.");
+            return "redirect:/chefs";
+        } catch (Exception e) {
+            model.addAttribute("chef", chef);
+            model.addAttribute("error", e.getMessage());
+            return "chefs/form";
         }
     }
 
-    //[cite_start]// GET /chefs - Afișează lista completă (GET all) [cite: 51, 64]
-    @GetMapping
-    public String getAllChefs(Model model) {
-        model.addAttribute("chefs", chefService.getAllChefs());
-        // Returnează templates/chef/index.html
-        return "chef/index";
+    @GetMapping("/{id}")
+    public String details(@PathVariable Long id, Model model) {
+        model.addAttribute("chef", service.getById(id));
+        return "chefs/details";
     }
 
-    //[cite_start]// GET /chefs/new - Afișează formularul de creare [cite: 52, 66]
-    @GetMapping("/new")
-    public String showCreateForm(Model model) {
-        // Obiect Chef gol, gata să primească date
-        model.addAttribute("chef", new Chef());
-        // Returnează templates/chef/form.html
-        return "chef/form";
+    @GetMapping("/{id}/edit")
+    public String editForm(@PathVariable Long id, Model model) {
+        model.addAttribute("chef", service.getById(id));
+        return "chefs/form";
     }
 
-    //[cite_start]// POST /chefs - Procesează formularul și creează obiectul (CREATE) [cite: 66]
-    @PostMapping
-    public String createChef(@ModelAttribute Chef chef) {
-        //[cite_start]// Controllerul apelează Service-ul (respectă SRP și MVC) [cite: 130, 131, 134]
-        chefService.addChef(chef);
-        return "redirect:/chefs";
+    @PostMapping("/{id}")
+    public String update(@PathVariable Long id, @ModelAttribute Chef chef, RedirectAttributes redirectAttributes, Model model) {
+        try {
+            service.update(id, chef);
+            redirectAttributes.addFlashAttribute("success", "Chef updated.");
+            return "redirect:/chefs";
+        } catch (Exception e) {
+            model.addAttribute("chef", chef);
+            model.addAttribute("error", e.getMessage());
+            return "chefs/form";
+        }
     }
 
-    //[cite_start]// POST /chefs/{id}/delete - Șterge obiectul [cite: 53, 67]
     @PostMapping("/{id}/delete")
-    public String deleteChef(@PathVariable String id) {
-        chefService.deleteChef(id);
+    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        service.delete(id);
+        redirectAttributes.addFlashAttribute("success", "Chef deleted.");
         return "redirect:/chefs";
     }
 }

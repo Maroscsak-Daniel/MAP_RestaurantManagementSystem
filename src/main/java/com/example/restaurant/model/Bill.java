@@ -1,48 +1,46 @@
 package com.example.restaurant.model;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+
+@Entity
+@Table(name = "bills")
 public class Bill {
-    private String Id;
-    private String orderId;
-    double totalAmount;
 
-    public Bill(String id, String orderId, double totalAmount) {
-        Id = id;
-        this.orderId = orderId;
-        this.totalAmount = totalAmount;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    // Each bill belongs to one order
+    @OneToOne
+    @JoinColumn(name = "order_id", nullable = false, unique = true)
+    @NotNull
+    private Order order;
+
+    @PositiveOrZero
+    private double totalPrice;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus; // PAID / UNPAID
+
+    public Bill() {}
+
+    public Bill(Order order, double totalPrice, PaymentStatus paymentStatus) {
+        this.order = order;
+        this.totalPrice = totalPrice;
+        this.paymentStatus = paymentStatus;
     }
 
-    public String getId() {
-        return Id;
-    }
+    public Long getId() { return id; }
 
-    public void setId(String id) {
-        Id = id;
-    }
+    public Order getOrder() { return order; }
+    public void setOrder(Order order) { this.order = order; }
 
-    public String getOrderId() {
-        return orderId;
-    }
+    public double getTotalPrice() { return totalPrice; }
+    public void setTotalPrice(double totalPrice) { this.totalPrice = totalPrice; }
 
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
-
-    public double getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(double totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
-    @Override
-    public String toString() {
-        return "Bill{" +
-                "Id='" + Id + '\'' +
-                ", orderId='" + orderId + '\'' +
-                ", totalAmount=" + totalAmount +
-                '}';
-    }
-
-
+    public PaymentStatus getPaymentStatus() { return paymentStatus; }
+    public void setPaymentStatus(PaymentStatus paymentStatus) { this.paymentStatus = paymentStatus; }
 }

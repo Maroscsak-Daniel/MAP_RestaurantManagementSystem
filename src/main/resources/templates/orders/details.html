@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Order Details</title>
+    <link th:href="@{'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'}" rel="stylesheet" crossorigin="anonymous" />
+    <link th:href="@{/css/app.css}" rel="stylesheet" />
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-white" style="border-bottom:1px solid #e9ecef;">
+    <div class="container">
+        <a class="navbar-brand text-dark" th:href="@{/}">Restaurant</a>
+    </div>
+</nav>
+<div class="container mt-4">
+    <div class="card mb-3">
+        <div class="card-header">
+            <h4>Order Details <small th:text="${order.id}"></small></h4>
+        </div>
+        <div class="card-body">
+            <p><strong>Customer:</strong> <span th:text="${order.customer != null ? order.customer.name : 'N/A'}"></span></p>
+            <p><strong>Status:</strong> <span th:text="${order.status}"></span></p>
+            <p><strong>Payment:</strong> <span th:text="${order.paymentMethod}"></span></p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h5>Order Lines</h5>
+            <ul class="list-group">
+                <li th:each="l : ${orderLines}" class="list-group-item">
+                    ID: <span th:text="${l.id}"></span> - MenuItem ID: <span th:text="${l.menuItem != null ? l.menuItem.id : 'N/A'}"></span>
+                </li>
+                <li th:if="${#lists.isEmpty(orderLines)}" class="list-group-item text-muted">No order lines.</li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <h5>Assignments</h5>
+            <ul class="list-group">
+                <li th:each="a : ${assignments}" class="list-group-item">
+                    ID: <span th:text="${a.id}"></span> - Staff ID: <span th:text="${a.staffId}"></span>
+                </li>
+                <li th:if="${#lists.isEmpty(assignments)}" class="list-group-item text-muted">No assignments.</li>
+            </ul>
+        </div>
+    </div>
+
+    <p class="mt-3"><a th:href="@{/orders}" class="btn btn-outline-secondary btn-pill">Back</a></p>
+</div>
+</body>
+</html>

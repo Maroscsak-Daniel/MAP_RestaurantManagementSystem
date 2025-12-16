@@ -1,53 +1,45 @@
 package com.example.restaurant.model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "menu_items")
 public class MenuItem {
 
-    private String id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String name;
+    private String description;
     private double price;
+    private String category;   // Starter / Main / Dessert / Drink
+    private String allergens;  // comma-separated
 
-    // Constructors
-    public MenuItem(String id, String name, double price) {
-        this.id = id;
+    public MenuItem() {}
+
+    public MenuItem(String name, String description, double price, String category, String allergens) {
         this.name = name;
+        this.description = description;
         this.price = price;
+        this.category = category;
+        this.allergens = allergens;
     }
 
-    public MenuItem() {
-    }
+    public Long getId() { return id; }
 
-    // Getters and Setters
-    public String getId() {
-        return id;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
-    public String getName() {
-        return name;
-    }
+    public double getPrice() { return price; }
+    public void setPrice(double price) { this.price = price; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
 
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    // Optional helper
-    @Override
-    public String toString() {
-        return "MenuItem{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                '}';
-    }
+    public String getAllergens() { return allergens; }
+    public void setAllergens(String allergens) { this.allergens = allergens; }
 }

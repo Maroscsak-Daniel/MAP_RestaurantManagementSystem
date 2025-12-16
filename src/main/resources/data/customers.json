@@ -1,0 +1,41 @@
+[ {
+  "id" : "c1",
+  "name" : "Andrei Stan",
+  "orderIds" : [ "o1", "o2" ]
+}, {
+  "id" : "c2",
+  "name" : "Mara Ionescu",
+  "orderIds" : [ "o3" ]
+}, {
+  "id" : "c3",
+  "name" : "Victor Pop",
+  "orderIds" : [ "o4" ]
+}, {
+  "id" : "c4",
+  "name" : "Ioana David",
+  "orderIds" : [ "o5" ]
+}, {
+  "id" : "c5",
+  "name" : "Rares Mihalcea",
+  "orderIds" : [ "o6" ]
+}, {
+  "id" : "c6",
+  "name" : "Elena Luca",
+  "orderIds" : [ ]
+}, {
+  "id" : "c7",
+  "name" : "George Filip",
+  "orderIds" : [ ]
+}, {
+  "id" : "c8",
+  "name" : "Anca Pavel",
+  "orderIds" : [ ]
+}, {
+  "id" : "c9",
+  "name" : "Stefan Radu",
+  "orderIds" : [ ]
+}, {
+  "id" : "c10",
+  "name" : "Alina Teodorescu",
+  "orderIds" : [ ]
+} ]

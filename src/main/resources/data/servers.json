@@ -1,0 +1,51 @@
+[ {
+  "id" : "server1",
+  "name" : "Diana Pop",
+  "experience" : "1 year",
+  "designation" : "Junior Server"
+}, {
+  "id" : "server2",
+  "name" : "Cristi Barbu",
+  "experience" : "2 years",
+  "designation" : "Junior Server"
+}, {
+  "id" : "server3",
+  "name" : "Alex Istrate",
+  "experience" : "3 years",
+  "designation" : "Senior Server"
+}, {
+  "id" : "server4",
+  "name" : "Ioana Lup",
+  "experience" : "4 years",
+  "designation" : "Shift Leader"
+}, {
+  "id" : "server5",
+  "name" : "George Mihalache",
+  "experience" : "1 year",
+  "designation" : "Server"
+}, {
+  "id" : "server6",
+  "name" : "Laura Rusu",
+  "experience" : "2 years",
+  "designation" : "Server"
+}, {
+  "id" : "server7",
+  "name" : "Robert Mureșan",
+  "experience" : "5 years",
+  "designation" : "Senior Server"
+}, {
+  "id" : "server8",
+  "name" : "Elena Pavel",
+  "experience" : "6 years",
+  "designation" : "Shift Leader"
+}, {
+  "id" : "server9",
+  "name" : "Matei Andrei",
+  "experience" : "3 years",
+  "designation" : "Server"
+}, {
+  "id" : "server10",
+  "name" : "Carmen Pintea",
+  "experience" : "2 years",
+  "designation" : "Server"
+} ]

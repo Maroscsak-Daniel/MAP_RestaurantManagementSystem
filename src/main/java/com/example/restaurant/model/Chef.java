@@ -1,33 +1,34 @@
 package com.example.restaurant.model;
 
-public class Chef extends Staff {
+import jakarta.persistence.*;
 
-    private String specialization;
-    private String experience;
+@Entity
+@Table(name = "chefs")
+public class Chef {
 
-    public Chef(String id, String name, String specialization, String experience) {
-        super(id, name); // calls Staff constructor
-        this.specialization = specialization;
-        this.experience = experience;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+
+    @Column(name = "chef_rank")
+    private String rank; // "Junior", "Senior", "Head Chef", etc.
+
+    public Chef() {}
+
+    public Chef(String name, String rank) {
+        this.name = name;
+        this.rank = rank;
     }
 
-    public Chef() {
-    }
+    // GETTERS / SETTERS
 
-    public String getSpecialization() {
-        return specialization;
-    }
+    public Long getId() { return id; }
 
-    public void setSpecialization(String specialization) {
-        this.specialization = specialization;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    @Override
-    public String toString() {
-        return "Chef{" +
-                "id='" + getId() + '\'' +
-                ", name='" + getName() + '\'' +
-                ", specialization='" + specialization + '\'' +
-                '}';
-    }
+    public String getRank() { return rank; }
+    public void setRank(String rank) { this.rank = rank; }
 }

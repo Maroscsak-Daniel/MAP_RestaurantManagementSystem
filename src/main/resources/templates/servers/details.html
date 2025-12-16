@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Server Details</title>
+    <link th:href="@{'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'}" rel="stylesheet" crossorigin="anonymous" />
+    <link th:href="@{/css/app.css}" rel="stylesheet" />
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top" style="border-bottom:1px solid #e9ecef;">
+    <div class="container"><a class="navbar-brand text-dark" th:href="@{/}">Restaurant</a></div>
+</nav>
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h4>Server Details <small th:text="${server.id}"></small></h4>
+        </div>
+        <div class="card-body">
+            <p><strong>ID:</strong> <span th:text="${server.id}"></span></p>
+            <p><strong>Name:</strong> <span th:text="${server.name}"></span></p>
+            <p><strong>Shift:</strong> <span th:text="${server.shift}"></span></p>
+            <p><strong>Experience:</strong> <span th:text="${server.experienceYears}"></span> years</p>
+
+            <div class="mt-3">
+                <a th:href="@{/servers}" class="btn btn-outline-secondary btn-pill">Back</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{'https://code.jquery.com/jquery-3.5.1.slim.min.js'}"></script>
+<script th:src="@{'https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js'}"></script>
+<script th:src="@{'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js'}"></script>
+</body>
+</html>
