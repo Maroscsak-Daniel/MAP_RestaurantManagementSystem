@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Order</title>
+</head>
+<body>
+<h2>Add New Order</h2>
+
+<form action="/orders" method="post">
+    <label>ID:</label>
+    <input type="text" name="id"><br>
+
+    <label>Customer ID:</label>
+    <input type="text" name="customerId"><br>
+
+    <label>Table ID:</label>
+    <input type="text" name="tableId"><br>
+
+    <label>Status:</label>
+    <input type="text" name="status" value="Open"><br>
+
+    <button type="submit">Save</button>
+</form>
+
+<a href="/orders">Back</a>
+</body>
+</html>

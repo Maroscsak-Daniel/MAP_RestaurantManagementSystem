@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Order Assignment</title>
+</head>
+<body>
+<h2>Add New Order Assignment</h2>
+
+<form action="/assignments" method="post">
+    <label>ID:</label>
+    <input type="text" name="id"><br>
+
+    <label>Order ID:</label>
+    <input type="text" name="orderId"><br>
+
+    <label>Staff ID:</label>
+    <input type="text" name="staffId"><br>
+
+    <button type="submit">Save</button>
+</form>
+
+<a href="/assignments">Back</a>
+</body>
+</html>
