@@ -9,4 +9,5 @@ public interface RestaurantTableRepository extends JpaRepository<RestaurantTable
     Page<RestaurantTable> findByNumber(Integer number, Pageable pageable);
     Page<RestaurantTable> findByOccupiedStatusContainingIgnoreCase(String status, Pageable pageable);
     Page<RestaurantTable> findByNumberAndOccupiedStatusContainingIgnoreCase(Integer number, String status, Pageable pageable);
+    boolean existsByNumber(Integer number);
 }

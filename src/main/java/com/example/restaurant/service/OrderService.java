@@ -1,6 +1,7 @@
 package com.example.restaurant.service;
 
 import com.example.restaurant.model.Order;
+import com.example.restaurant.model.OrderStatus;
 import com.example.restaurant.repository.BillRepository;
 import com.example.restaurant.repository.OrderAssignmentRepository;
 import com.example.restaurant.repository.OrderLineRepository;
@@ -81,6 +82,15 @@ public class OrderService {
 
     public Order update(Long id, Order data) {
         Order existing = getById(id);
+
+        // Business rule: if order is already COMPLETED, allow only changing status to CANCELLED.
+        if (existing.getStatus() == OrderStatus.COMPLETED) {
+            if (data.getStatus() == null || data.getStatus() != OrderStatus.CANCELLED) {
+                throw new IllegalStateException("Completed orders can only be changed to CANCELLED.");
+            }
+            existing.setStatus(OrderStatus.CANCELLED);
+            return orderRepository.save(existing);
+        }
 
         existing.setStatus(data.getStatus());
         existing.setPaymentMethod(data.getPaymentMethod());

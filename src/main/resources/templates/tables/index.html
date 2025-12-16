@@ -6,6 +6,10 @@
     <title>Tables</title>
     <link th:href="@{'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'}" rel="stylesheet" crossorigin="anonymous" />
     <link th:href="@{/css/app.css}" rel="stylesheet" />
+    <style>
+        /* keep tiny tweaks local */
+        body { padding-top: 66px; }
+    </style>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top" style="border-bottom:1px solid #e9ecef;">
@@ -18,7 +22,9 @@
 </nav>
 
 <div class="container mt-4">
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
     <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+    <div th:if="${param.error}" class="alert alert-danger" th:text="${param.error}"></div>
 
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
@@ -38,7 +44,8 @@
         <div class="card-body">
             <form method="get" class="form-inline filter-row">
                 <label for="number" class="mr-2">Number</label>
-                <input id="number" name="number" class="form-control mr-3" placeholder="Table #" th:value="${number}" />
+                <input id="number" name="number" type="number" inputmode="numeric" min="1" step="1" class="form-control mr-3" placeholder="Table #" th:value="${number}" />
+                <div th:if="${filterError}" class="text-danger small ml-2" th:text="${filterError}"></div>
 
                 <label for="status" class="mr-2">Status</label>
                 <select id="status" name="status" class="form-control mr-3">

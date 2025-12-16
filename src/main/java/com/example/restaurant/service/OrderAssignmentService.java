@@ -60,12 +60,8 @@ public class OrderAssignmentService {
         return repo.findByOrder_Id(orderId);
     }
 
-    public OrderAssignment create(OrderAssignment a) {
-        return createInternal(a);
-    }
-
     @Transactional
-    protected OrderAssignment createInternal(OrderAssignment a) {
+    public OrderAssignment create(OrderAssignment a) {
         // prevent creating assignments if the order already has a bill
         if (a.getOrder() == null || a.getOrder().getId() == null) {
             throw new IllegalArgumentException("Order must be set for assignment.");
@@ -84,21 +80,20 @@ public class OrderAssignmentService {
 
         OrderAssignment existing = getById(id);
 
-        // Validate order exists
-        Long newOrderId = data.getOrder().getId();
-        if (!orderRepository.existsById(newOrderId)) {
-            throw new IllegalArgumentException("Order ID " + newOrderId + " does not exist.");
+        // Only update staffId (chef/server). Do NOT change the associated order on edit.
+        // Validate existing order and business rules using existing order id.
+        if (existing.getOrder() == null || existing.getOrder().getId() == null) {
+            throw new IllegalStateException("Existing assignment has no associated order.");
         }
 
-        var bill = billRepository.findByOrder_Id(newOrderId);
+        Long existingOrderId = existing.getOrder().getId();
+        var bill = billRepository.findByOrder_Id(existingOrderId);
         if (bill != null && bill.getPaymentStatus() == PaymentStatus.PAID) {
             throw new IllegalStateException("Cannot modify assignment because the order has a PAID bill.");
         }
 
-        // Do the update
-        existing.setOrder(orderRepository.findById(newOrderId).orElseThrow());
+        // Update staffId only
         existing.setStaffId(data.getStaffId());
-
         repo.save(existing);
     }
 
@@ -107,17 +102,9 @@ public class OrderAssignmentService {
     }
 
     @Transactional
-    protected void deleteInternal(Long id) {
+    public void deleteInternal(Long id) {
         OrderAssignment existing = getById(id);
-        if (existing.getOrder() != null) {
-            Long orderId = existing.getOrder().getId();
-            // Block deletion if the related order is COMPLETED
-            com.example.restaurant.model.Order ord = orderRepository.findById(orderId).orElse(null);
-            if (ord != null && ord.getStatus() == com.example.restaurant.model.OrderStatus.COMPLETED) {
-                throw new IllegalStateException("Cannot delete assignment because the order is COMPLETED.");
-            }
-        }
-
+        // Allow deletion regardless of order status (restore previous behavior)
         repo.deleteById(id);
     }
 

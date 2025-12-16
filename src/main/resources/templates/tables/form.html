@@ -6,6 +6,9 @@
     <title th:text="${table.id == null} ? 'Add Table' : 'Edit Table'"></title>
     <link th:href="@{'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'}" rel="stylesheet" crossorigin="anonymous" />
     <link th:href="@{/css/app.css}" rel="stylesheet" />
+    <style>
+        body { padding-top: 66px; }
+    </style>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top" style="border-bottom:1px solid #e9ecef;">
@@ -13,6 +16,9 @@
 </nav>
 
 <div class="container mt-4">
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
     <div class="card">
         <div class="card-header">
             <h4 th:text="${table.id == null} ? 'Create Table' : 'Edit Table'">Form</h4>
@@ -23,7 +29,8 @@
             <form th:if="${table.id == null}" method="post" th:action="@{/tables}" th:object="${table}">
                 <div class="form-group">
                     <label for="numberCreate">Number</label>
-                    <input id="numberCreate" type="number" th:field="*{number}" class="form-control" required />
+                    <input id="numberCreate" type="number" th:field="*{number}" class="form-control" th:classappend="${#fields.hasErrors('number')} ? ' is-invalid' : ''" min="1" required />
+                    <div class="text-danger small" th:if="${#fields.hasErrors('number')}" th:errors="*{number}"></div>
                 </div>
 
                 <div class="form-group">
@@ -42,7 +49,9 @@
             <form th:if="${table.id != null}" method="post" th:action="@{/tables/{id}(id=${table.id})}" th:object="${table}">
                 <div class="form-group">
                     <label for="numberEdit">Number</label>
-                    <input id="numberEdit" type="number" th:field="*{number}" class="form-control" required />
+                    <!-- Show number as readonly (not editable at update) -->
+                    <input id="numberEdit" type="number" th:field="*{number}" class="form-control" readonly />
+                    <div class="text-danger small" th:if="${#fields.hasErrors('number')}" th:errors="*{number}"></div>
                 </div>
 
                 <div class="form-group">

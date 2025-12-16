@@ -27,17 +27,45 @@ public class RestaurantTableService {
     }
 
     public RestaurantTable create(RestaurantTable table) {
+        // Business validation: number must be positive
+        if (table.getNumber() == null || table.getNumber() < 1) {
+            throw new IllegalArgumentException("Table number must be >= 1");
+        }
+        // Unique number validation
+        if (repo.existsByNumber(table.getNumber())) {
+            throw new IllegalArgumentException("Table number already exists: " + table.getNumber());
+        }
         return repo.save(table);
     }
 
     public RestaurantTable update(Long id, RestaurantTable data) {
         RestaurantTable existing = getById(id);
-        existing.setNumber(data.getNumber());
-        existing.setOccupiedStatus(data.getOccupiedStatus());
+        // Only allow editing occupiedStatus on update (do not change number)
+        String newStatus = data.getOccupiedStatus();
+        // If trying to set table to "free", ensure all associated orders are COMPLETED or CANCELLED
+        if ("free".equalsIgnoreCase(newStatus)) {
+            if (existing.getOrders() != null && !existing.getOrders().isEmpty()) {
+                boolean allFinished = existing.getOrders().stream()
+                        .allMatch(o -> o.getStatus() != null && (o.getStatus().name().equals("COMPLETED") || o.getStatus().name().equals("CANCELLED")));
+                if (!allFinished) {
+                    throw new IllegalStateException("Cannot set table to free while it has active orders.");
+                }
+            }
+        }
+        existing.setOccupiedStatus(newStatus);
         return repo.save(existing);
     }
 
     public void delete(Long id) {
+        RestaurantTable t = getById(id);
+        // Allow delete only if there are no orders OR all orders are COMPLETED or CANCELLED
+        if (t.getOrders() != null && !t.getOrders().isEmpty()) {
+            boolean allFinished = t.getOrders().stream()
+                    .allMatch(o -> o.getStatus() != null && (o.getStatus().name().equals("COMPLETED") || o.getStatus().name().equals("CANCELLED")));
+            if (!allFinished) {
+                throw new IllegalStateException("Cannot delete table while it has active orders.");
+            }
+        }
         repo.deleteById(id);
     }
 

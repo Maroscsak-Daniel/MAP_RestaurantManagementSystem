@@ -1,23 +1,51 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Table Details</title>
+    <link th:href="@{'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'}" rel="stylesheet" crossorigin="anonymous" />
+    <link th:href="@{/css/app.css}" rel="stylesheet" />
+    <style>body { padding-top: 66px; }</style>
 </head>
 <body>
+<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top" style="border-bottom:1px solid #e9ecef;">
+    <div class="container"><a class="navbar-brand text-dark" th:href="@{/}">Restaurant</a></div>
+</nav>
 
-<h1>Table Details</h1>
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="mb-0">Table Details</h4>
+        </div>
+        <div class="card-body">
+            <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+            <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
-<p><strong>ID:</strong> <span th:text="${table.id}"></span></p>
-<p><strong>Number:</strong> <span th:text="${table.number}"></span></p>
-<p><strong>Status:</strong> <span th:text="${table.occupiedStatus}"></span></p>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <p><strong>ID:</strong> <span th:text="${table.id}"></span></p>
+                    <p><strong>Number:</strong> <span th:text="${table.number}"></span></p>
+                    <p><strong>Status:</strong> <span th:text="${table.occupiedStatus}"></span></p>
+                </div>
+            </div>
 
-<h3>Orders at this table</h3>
-<ul>
-    <li th:each="o : ${table.orders}" th:text="${'Order #' + o.id}"></li>
-    <li th:if="${#lists.isEmpty(table.orders)}">No orders</li>
-</ul>
+            <h5>Orders at this table</h5>
+            <ul>
+                <li th:each="o : ${table.orders}">
+                    <a th:href="@{/orders/{id}(id=${o.id})}" th:text="${'Order #' + o.id}"></a>
+                </li>
+                <li th:if="${#lists.isEmpty(table.orders)}">No orders</li>
+            </ul>
 
-<p><a th:href="@{/tables}">Back to list</a></p>
+            <a th:href="@{/tables}" class="btn btn-outline-secondary btn-pill">Back to list</a>
+            <a th:href="@{/tables/{id}/edit(id=${table.id})}" class="btn btn-outline-secondary btn-pill">Edit</a>
+        </div>
+    </div>
+</div>
 
+<script th:src="@{'https://code.jquery.com/jquery-3.5.1.slim.min.js'}"></script>
+<script th:src="@{'https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js'}"></script>
+<script th:src="@{'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js'}"></script>
 </body>
 </html>

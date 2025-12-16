@@ -1,6 +1,8 @@
 package com.example.restaurant.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +14,9 @@ public class RestaurantTable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int number;
+    @NotNull
+    @Min(1)
+    private Integer number;
     private String occupiedStatus;
 
     @OneToMany(mappedBy = "restaurantTable", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -28,8 +32,8 @@ public class RestaurantTable {
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public int getNumber() { return number; }
-    public void setNumber(int number) { this.number = number; }
+    public Integer getNumber() { return number; }
+    public void setNumber(Integer number) { this.number = number; }
 
     public String getOccupiedStatus() { return occupiedStatus; }
     public void setOccupiedStatus(String occupiedStatus) { this.occupiedStatus = occupiedStatus; }
@@ -37,4 +41,3 @@ public class RestaurantTable {
     public List<Order> getOrders() { return orders; }
     public void setOrders(List<Order> orders) { this.orders = orders; }
 }
-

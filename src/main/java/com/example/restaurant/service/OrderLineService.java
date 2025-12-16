@@ -3,6 +3,7 @@ package com.example.restaurant.service;
 import com.example.restaurant.model.Order;
 import com.example.restaurant.model.OrderLine;
 import com.example.restaurant.model.MenuItem;
+import com.example.restaurant.model.OrderStatus;
 import com.example.restaurant.model.PaymentStatus;
 import com.example.restaurant.repository.OrderLineRepository;
 import com.example.restaurant.repository.OrderRepository;
@@ -51,6 +52,11 @@ public class OrderLineService {
         Order order = orderRepo.findById(line.getOrderId())
                 .orElseThrow(() -> new IllegalArgumentException("Order does not exist: " + line.getOrderId()));
 
+        // Do not allow adding order lines to a COMPLETED order
+        if (order.getStatus() == OrderStatus.COMPLETED) {
+            throw new IllegalStateException("Cannot add order line to a COMPLETED order.");
+        }
+
         // Only prevent modification if there's a PAID bill for the order
         var bill = billRepo.findByOrder_Id(order.getId());
         if (bill != null && bill.getPaymentStatus() == PaymentStatus.PAID) {
@@ -78,28 +84,18 @@ public class OrderLineService {
     protected OrderLine updateInternal(Long id, OrderLine data) {
         OrderLine existing = getById(id);
 
-        Long orderId = data.getOrderId();
-        if (orderId == null)
-            throw new IllegalArgumentException("Order ID cannot be null.");
+        // Only allow editing quantity and allergens. Do not change order/menu item.
+        Order order = existing.getOrder();
+        if (order == null) throw new IllegalStateException("OrderLine has no associated Order.");
 
-        Order order = orderRepo.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("Order does not exist: " + orderId));
-
-        var bill = billRepo.findByOrder_Id(orderId);
-        if (bill != null && bill.getPaymentStatus() == PaymentStatus.PAID) {
-            throw new IllegalStateException("Cannot modify this order line because the order has a PAID bill.");
+        // Allow updates ONLY if the order is COMPLETED or CANCELLED (per request)
+        if (!(order.getStatus() == OrderStatus.COMPLETED || order.getStatus() == OrderStatus.CANCELLED)) {
+            throw new IllegalStateException("Order lines may be edited only when the order is COMPLETED or CANCELLED.");
         }
 
-        MenuItem menu = null;
-        if (data.getMenuItemId() != null) {
-            menu = menuItemRepo.findById(data.getMenuItemId())
-                    .orElseThrow(() -> new IllegalArgumentException("MenuItem does not exist: " + data.getMenuItemId()));
-        }
-
+        // Optionally keep PAID-bill restriction removed (policy: edits allowed when order finished).
         existing.setQuantity(data.getQuantity());
         existing.setAllergens(data.getAllergens());
-        existing.setOrder(order);
-        existing.setMenuItem(menu);
 
         return repo.save(existing);
     }
@@ -113,11 +109,12 @@ public class OrderLineService {
         OrderLine line = getById(id);
         Long orderId = line.getOrder().getId();
 
-        var bill = billRepo.findByOrder_Id(orderId);
-        if (bill != null && bill.getPaymentStatus() == PaymentStatus.PAID) {
-            throw new IllegalStateException(
-                    "Cannot delete this order line because the order has a PAID bill."
-            );
+        Order order = line.getOrder();
+        if (order == null) throw new IllegalStateException("OrderLine has no associated Order.");
+
+        // Allow delete ONLY when order is COMPLETED or CANCELLED
+        if (!(order.getStatus() == OrderStatus.COMPLETED || order.getStatus() == OrderStatus.CANCELLED)) {
+            throw new IllegalStateException("Order lines may be deleted only when the order is COMPLETED or CANCELLED.");
         }
 
         repo.delete(line);

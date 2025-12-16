@@ -39,7 +39,8 @@
         <div class="card-body">
             <form method="get" class="form-inline filter-row">
                 <label for="orderId" class="mr-2">Order ID</label>
-                <input id="orderId" name="orderId" class="form-control mr-3" th:value="${orderId}" placeholder="Order id" />
+                <input id="orderId" name="orderId" type="number" inputmode="numeric" min="1" step="1" class="form-control mr-3" th:value="${orderId}" placeholder="Order id" />
+                <div th:if="${filterError}" class="text-danger small ml-2" th:text="${filterError}"></div>
 
                 <label for="menuName" class="mr-2">Menu item</label>
                 <input id="menuName" name="menuName" class="form-control mr-3" th:value="${menuName}" placeholder="Item name" />
@@ -86,10 +87,16 @@
                 <td th:text="${line.allergens}"></td>
                 <td class="table-actions text-right">
                     <a class="btn btn-sm btn-outline-primary btn-pill" th:href="@{/orderlines/{id}(id=${line.id})}">Details</a>
-                    <a class="btn btn-sm btn-outline-secondary btn-pill" th:href="@{/orderlines/{id}/edit(id=${line.id})}">Edit</a>
-                    <form th:action="@{/orderlines/{id}/delete(id=${line.id})}" method="post" style="display:inline-block;">
-                        <button type="submit" class="btn btn-sm btn-danger btn-pill">Delete</button>
-                    </form>
+                    <span th:if="${lineEditableMap[line.id]}">
+                        <a class="btn btn-sm btn-outline-secondary btn-pill" th:href="@{/orderlines/{id}/edit(id=${line.id})}">Edit</a>
+                        <form th:action="@{/orderlines/{id}/delete(id=${line.id})}" method="post" style="display:inline-block;">
+                            <button type="submit" class="btn btn-sm btn-danger btn-pill">Delete</button>
+                        </form>
+                    </span>
+                    <span th:if="${!lineEditableMap[line.id]}">
+                        <button class="btn btn-sm btn-outline-secondary btn-pill" disabled>Edit</button>
+                        <button class="btn btn-sm btn-danger btn-pill" disabled>Delete</button>
+                    </span>
                 </td>
             </tr>
             <tr th:if="${#lists.isEmpty(orderlines)}">

@@ -24,10 +24,8 @@
             <div th:if="${param.error}" class="alert alert-danger" th:text="${param.error}"></div>
             <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
-            <form method="post"
-                  th:action="${assignment.id} == null ? @{/assignments} : @{/assignments/{id}(id=${assignment.id})}"
-                  th:object="${assignment}">
-
+            <!-- Create form -->
+            <form th:if="${assignment.id == null}" method="post" th:action="@{/assignments}" th:object="${assignment}">
                 <div class="form-group">
                     <label for="orderSelect">Order</label>
                     <select id="orderSelect" th:field="*{order.id}" class="form-control" required>
@@ -42,8 +40,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="staffChef">Chef</label>
-                    <select id="staffChef" name="chefId" class="form-control">
+                    <label for="staffChefCreate">Chef</label>
+                    <select id="staffChefCreate" name="chefId" class="form-control">
                         <option value="">-- select chef (optional) --</option>
                         <option th:each="c : ${chefs}"
                                 th:value="${c.id}"
@@ -53,8 +51,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="staffServer">Server</label>
-                    <select id="staffServer" name="serverId" class="form-control">
+                    <label for="staffServerCreate">Server</label>
+                    <select id="staffServerCreate" name="serverId" class="form-control">
                         <option value="">-- select server (optional) --</option>
                         <option th:each="s : ${servers}"
                                 th:value="${s.id}"
@@ -63,7 +61,40 @@
                     </select>
                 </div>
 
-                <button type="submit" class="btn btn-brand btn-pill" th:text="${assignment.id} == null ? 'Create' : 'Save'"></button>
+                <button type="submit" class="btn btn-brand btn-pill">Create</button>
+                <a th:href="@{/assignments}" class="btn btn-outline-secondary btn-pill">Cancel</a>
+            </form>
+
+            <!-- Edit form (order fixed) -->
+            <form th:if="${assignment.id != null}" method="post" th:action="@{/assignments/{id}(id=${assignment.id})}" th:object="${assignment}">
+                <div class="form-group">
+                    <label>Order</label>
+                    <input type="text" class="form-control" th:value="${assignment.order != null ? assignment.order.id : ''}" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label for="staffChefEdit">Chef</label>
+                    <select id="staffChefEdit" name="chefId" class="form-control">
+                        <option value="">-- select chef (optional) --</option>
+                        <option th:each="c : ${chefs}"
+                                th:value="${c.id}"
+                                th:text="${c.name}"
+                                th:selected="${selectedChef != null and selectedChef == c.id}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="staffServerEdit">Server</label>
+                    <select id="staffServerEdit" name="serverId" class="form-control">
+                        <option value="">-- select server (optional) --</option>
+                        <option th:each="s : ${servers}"
+                                th:value="${s.id}"
+                                th:text="${s.name}"
+                                th:selected="${selectedServer != null and selectedServer == s.id}"></option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-brand btn-pill">Save</button>
                 <a th:href="@{/assignments}" class="btn btn-outline-secondary btn-pill">Cancel</a>
             </form>
 
